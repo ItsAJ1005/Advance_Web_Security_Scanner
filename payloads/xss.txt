@@ -1,0 +1,4 @@
+<script>alert('XSS')</script>
+<img src=x onerror=alert('XSS')>
+javascript:alert('XSS')
+"><script>alert(document.cookie)</script>
