@@ -1,3 +1,4 @@
 .venv
 __pycache__/
-results/scanner.log
+results\scan_results.json
+results\scanner.log
