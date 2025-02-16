@@ -1,52 +1,45 @@
-import requests
-import logging
-from typing import Dict, List, Any
+import time
 from abc import ABC, abstractmethod
+import concurrent.futures
+from typing import List, Dict, Optional
+import logging
+import requests
+from core.utils import URLUtils, RequestUtils
 
 class BaseScanner(ABC):
-    def __init__(self, target_url: str, config: Dict[str, Any] = None):
-        self.target_url = target_url
-        self.config = config or {}
+    def __init__(self, target_url: str, config: Dict):
+        self.target_url = URLUtils.normalize_url(target_url)
+        self.config = config
         self.session = requests.Session()
+        self.session.headers.update({
+            'User-Agent': config.get('user_agent', 'Security-Scanner-v1.0')
+        })
         self.results = []
         self.setup_logging()
 
     def setup_logging(self):
         logging.basicConfig(
             level=logging.INFO,
-            format='%(asctime)s - %(levelname)s: %(message)s',
+            format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
             handlers=[
-                logging.FileHandler('vulnerability_scan.log'),
+                logging.FileHandler('results/scanner.log'),
                 logging.StreamHandler()
             ]
         )
-        self.logger = logging.getLogger(self.__class__.__name__)
 
     @abstractmethod
-    def scan(self) -> List[Dict[str, Any]]:
-        """Abstract method to be implemented by specific attack scanners"""
+    def scan(self) -> Dict:
         pass
 
-    def _send_request(self, method: str = 'GET', 
-                      path: str = '', 
-                      params: Dict = None, 
-                      data: Dict = None) -> requests.Response:
-        """Helper method to send HTTP requests"""
-        full_url = f"{self.target_url}{path}"
+    def make_request(self, url: str, method: str = 'GET', **kwargs) -> Optional[requests.Response]:
         try:
-            response = self.session.request(
-                method, 
-                full_url, 
-                params=params, 
-                data=data
+            time.sleep(self.config.get('request_delay', 0.5))
+            return self.session.request(
+                method,
+                url,
+                timeout=self.config.get('timeout', 30),
+                **kwargs
             )
-            return response
-        except requests.RequestException as e:
-            self.logger.error(f"Request failed: {e}")
+        except requests.exceptions.RequestException as e:
+            logging.error(f"Request failed: {e}")
             return None
-
-    def save_results(self, results: List[Dict[str, Any]]):
-        """Save scan results to a file"""
-        import json
-        with open(f'results/{self.__class__.__name__}_results.json', 'w') as f:
-            json.dump(results, f, indent=4)
