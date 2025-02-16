@@ -1,0 +1,3 @@
+2025-02-16 13:33:42,211 - root - INFO - Starting scan of http://127.0.0.1:5000cls
+2025-02-16 13:33:42,733 - root - ERROR - Request failed: Failed to parse: http://127.0.0.1:5000cls
+2025-02-16 13:33:42,733 - root - ERROR - Request failed: Failed to parse: http://127.0.0.1:5000cls
