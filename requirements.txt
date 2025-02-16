@@ -7,3 +7,4 @@ selenium>=4.7.2
 aiohttp>=3.8.3
 pyjwt>=2.6.0
 cryptography>=38.0.4
+html5lib
