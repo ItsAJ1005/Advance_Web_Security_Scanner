@@ -2,5 +2,9 @@
   "max_threads": 5,
   "request_delay": 0.5,
   "timeout": 30,
-  "user_agent": "Security-Scanner-v1.0"
+  "user_agent": "Security-Scanner-v1.0",
+
+  "enabled_attacks": [
+    "session_hijacking"
+  ]
 }
