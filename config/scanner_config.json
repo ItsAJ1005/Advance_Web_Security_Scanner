@@ -1,18 +1,6 @@
 {
-    "global_timeout": 10,
-    "max_retries": 3,
-    "user_agents": [
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)"
-    ],
-    "attack_config": {
-        "sql_injection": {
-            "enabled": true,
-            "risk_threshold": "high"
-        },
-        "xss": {
-            "enabled": true,
-            "contexts": ["input", "url_parameter"]
-        }
-    }
+  "max_threads": 5,
+  "request_delay": 0.5,
+  "timeout": 30,
+  "user_agent": "Security-Scanner-v1.0"
 }
