@@ -2,8 +2,12 @@ import argparse
 import json
 import logging
 import os
-from typing import Dict, List
+from typing import Dict
 from concurrent.futures import ThreadPoolExecutor
+from attacks.advanced.ssrf import SSRFScanner
+from attacks.authentication.brute_force import BruteForceScanner
+from attacks.authentication.session_hijacking import SessionHijackingScanner
+from attacks.injection.xxe_injection import XXEInjectionScanner
 from core.base_scanner import BaseScanner
 from attacks.injection.sql_injection import SQLInjectionScanner
 from attacks.xss.xss_scanner import XSSScanner
@@ -47,25 +51,34 @@ def setup_logging():
 def main():
     parser = argparse.ArgumentParser(description="Web Vulnerability Scanner")
     parser.add_argument("--url", required=True, help="Target URL to scan")
-    parser.add_argument("--config", default="config/scanner_config.json", 
-                      help="Path to configuration file")
-    parser.add_argument("--output", default="results/scan_results.json",
-                      help="Path to output results file")
+    parser.add_argument("--config", default="config/scanner_config.json", help="Path to configuration file")
+    parser.add_argument("--output", default="results/scan_results.json", help="Path to output results file")
     args = parser.parse_args()
-
-    setup_logging()
-    logging.info(f"Starting scan of {args.url}")
-
-    config = load_config(args.config)
-    results = {}
-
-    # Create scanner instances
-    scanners = [
-        SQLInjectionScanner(args.url, config),
-        XSSScanner(args.url, config)
-    ]
     
-    # Run scanners
+    setup_logging()
+    config = load_config(args.config)
+    enabled_attacks = config.get("enabled_attacks", [])
+    
+    results = {}
+    scanners = []
+    
+    if "sql_injection" in enabled_attacks:
+        scanners.append(SQLInjectionScanner(args.url, config))
+    if "xss" in enabled_attacks:
+        scanners.append(XSSScanner(args.url, config))
+    if "ssrf" in enabled_attacks:
+        scanners.append(SSRFScanner(args.url, config))
+    if "xxe_injection" in enabled_attacks:
+        scanners.append(XXEInjectionScanner(args.url, config))
+    if "brute_force" in enabled_attacks:
+        scanners.append(BruteForceScanner(args.url, config))
+    if "session_hijacking" in enabled_attacks:
+        scanners.append(SessionHijackingScanner(args.url, config))
+    # Add additional scanners here based on the enabled attacks
+    #....ADD HERE
+    #
+    
+
     with ThreadPoolExecutor(max_workers=config.get('max_threads', 5)) as executor:
         future_to_scanner = {
             executor.submit(scanner.scan): scanner.__class__.__name__
@@ -85,67 +98,5 @@ def main():
     save_results(results, args.output)
     logging.info(f"Scan completed. Results saved to {args.output}")
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
-
-# attacks/xss/xss_scanner.py
-from core.base_scanner import BaseScanner
-from core.utils import RequestUtils
-from typing import List, Dict
-import logging
-from urllib.parse import urljoin
-
-class XSSScanner(BaseScanner):
-    def __init__(self, target_url: str, config: Dict):
-        super().__init__(target_url, config)
-        self.payloads = [
-            "<script>alert('XSS')</script>",
-            "<img src=x onerror=alert('XSS')>",
-            "<svg onload=alert('XSS')>",
-            "javascript:alert('XSS')"
-        ]
-
-    def scan(self) -> Dict:
-        results = []
-        response = self.make_request(self.target_url)
-        
-        if not response:
-            return {'xss': []}
-            
-        forms = RequestUtils.extract_forms(response.text)
-        
-        for form in forms:
-            form_url = urljoin(self.target_url, form['action'] or self.target_url)
-            for input_field in form['inputs']:
-                if input_field['type'] not in ['submit', 'button', 'image']:
-                    for payload in self.payloads:
-                        if self.test_xss(form_url, form['method'], input_field['name'], payload):
-                            results.append({
-                                'url': form_url,
-                                'method': form['method'],
-                                'parameter': input_field['name'],
-                                'payload': payload,
-                                'vulnerability': 'Cross-Site Scripting (XSS)',
-                                'severity': 'Medium'
-                            })
-        
-        return {'xss': results}
-
-    def test_xss(self, url: str, method: str, param: str, payload: str) -> bool:
-        try:
-            data = {param: payload}
-            response = self.make_request(
-                url,
-                method=method.upper(),
-                data=data if method.lower() == 'post' else None,
-                params=data if method.lower() == 'get' else None
-            )
-            
-            if response and payload in response.text:
-                logging.info(f"Found XSS vulnerability at {url} with parameter {param}")
-                return True
-                
-            return False
-        except Exception as e:
-            logging.error(f"Error testing XSS: {e}")
-            return False

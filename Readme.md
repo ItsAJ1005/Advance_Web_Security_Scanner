@@ -16,7 +16,7 @@ python test_app.py
 
 2) Run the following command to test the vulnerabilities
 ```py
-python scanner.py --url http://127.0.0.1:5000
+python scanner.py --url http://127.0.0.1:5000 --config config/scanner_config.json --output results/scan_results.json
 ```
 
 3) Find the vulnerability results in the `scan_results.json` file in you `results/` folder in the root directory.
