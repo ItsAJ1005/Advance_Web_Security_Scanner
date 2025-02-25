@@ -1,0 +1,14 @@
+Metadata-Version: 2.1
+Name: python-owasp-zap-v2.4
+Version: 0.1.0
+Summary: python-owasp-zap-v2.4 is now zaproxy
+Classifier: Development Status :: 7 - Inactive
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: zaproxy
+
+# python-owasp-zap-v2.4 is now zaproxy
+
+This package has been renamed. Use `pip install zaproxy` instead.
+
+New package: https://pypi.org/project/zaproxy/
