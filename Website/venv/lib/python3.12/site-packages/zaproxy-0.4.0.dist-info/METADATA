@@ -1,0 +1,51 @@
+Metadata-Version: 2.1
+Name: zaproxy
+Version: 0.4.0
+Summary: ZAP API Client
+Home-page: https://www.zaproxy.org/
+License: Apache-2.0
+Author: ZAP Development Team
+Author-email: zaproxy-develop@googlegroups.com
+Requires-Python: >=3.9,<4.0
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Information Technology
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Topic :: Security
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Requires-Dist: requests (>=2.31.0,<3.0.0)
+Requires-Dist: six (>=1.16.0,<2.0.0)
+Project-URL: Documentation, https://www.zaproxy.org/docs/api/
+Project-URL: Repository, https://github.com/zaproxy/zap-api-python.git
+Description-Content-Type: text/markdown
+
+# ZAP Python API
+
+[![Version](https://img.shields.io/pypi/v/zaproxy.svg)](https://pypi.python.org/pypi/zaproxy)
+[![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
+
+The Python implementation to access the [ZAP API](https://www.zaproxy.org/docs/api/). For more information
+about ZAP consult the (main) [ZAP project](https://github.com/zaproxy/zaproxy/).
+
+## How to Obtain
+
+The latest released version can be downloaded from the [https://pypi.python.org/pypi/zaproxy](https://pypi.python.org/pypi/zaproxy) using:
+
+    pip install zaproxy
+
+## Getting Help
+
+For help using the ZAP API, refer to:
+  * [Examples](https://github.com/zaproxy/zap-api-python/tree/main/src/examples) - collection of examples using the library;
+  * [API Documentation](https://www.zaproxy.org/docs/api/)
+  * [ZAP User Group](https://groups.google.com/group/zaproxy-users) - for asking questions;
+  
+## Issues
+
+To report issues related to ZAP API, bugs and enhancements requests, use the [issue tracker of the main ZAP project](https://github.com/zaproxy/zaproxy/issues).
+
