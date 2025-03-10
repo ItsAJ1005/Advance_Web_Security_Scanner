@@ -709,6 +709,23 @@ def ssrf():
             return f"<div class='container mt-5'><h1>SSRF Test</h1><p>Error fetching URL: {e}</p></div>"
     return "<div class='container mt-5'><h1>SSRF Test</h1><p>No URL provided</p></div>"
 
+@app.route('/ldap-login', methods=['POST'])
+def ldap_login():
+    username = request.form.get('username', '')
+    password = request.form.get('password', '')
+    
+    # Simulate LDAP authentication with vulnerabilities
+    if '*' in username or '*' in password:
+        return jsonify({'error': 'LDAP Error: Invalid distinguished name'}), 400
+    
+    if '(' in username or ')' in username:
+        return jsonify({'error': 'LDAP Error: Invalid filter'}), 400
+        
+    if username == 'admin' and password == 'password':
+        return jsonify({'success': True, 'message': 'Login successful'})
+        
+    return jsonify({'success': False, 'message': 'Invalid credentials'})
+
 if SOCKET_AVAILABLE:
     @app.route('/ws')
     def ws_index():
