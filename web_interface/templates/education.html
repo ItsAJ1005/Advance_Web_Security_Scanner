@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Web Security Learning Platform</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/education.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo">Web Security Learning Platform</div>
+            <div class="nav-links">
+                <a href="/detection" class="nav-link">Vulnerability Detection</a>
+                <a href="/attacks" class="nav-link">Launch Attacks</a>
+                <a href="/learning" class="nav-link">Learning Resources</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Vulnerability Detection Section -->
+        <section id="detection-section" class="section">
+            <h2>OWASP Vulnerability Detection</h2>
+            <p>Scan your target for the OWASP Top 10 vulnerabilities and other security issues.</p>
+            <form id="scanForm" class="scan-form">
+                <input type="url" name="target_url" required placeholder="Enter target URL">
+                <button type="submit">Start Scan</button>
+            </form>
+        </section>
+
+        <!-- Attack Learning Section -->
+        <section id="attacks-section" class="section">
+            <h2>Available Attacks</h2>
+            <div class="attack-grid">
+                {% for attack in attacks %}
+                <div class="attack-card">
+                    <h3>{{ attack.name }}</h3>
+                    <p>{{ attack.description }}</p>
+                    <div class="attack-details">
+                        <h4>How it works:</h4>
+                        <p>{{ attack.how_it_works }}</p>
+                        
+                        <h4>Mitigation:</h4>
+                        <ul>
+                            {% for mitigation in attack.mitigations %}
+                            <li>{{ mitigation }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <button onclick="launchAttack('{{ attack.id }}')">Launch Attack</button>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section id="results-section" class="section">
+            <h2>Scan Results</h2>
+            <div class="results-container">
+                <div class="terminal">
+                    <div class="terminal-header">
+                        <span>Scanner Output</span>
+                    </div>
+                    <div id="terminalOutput" class="terminal-content"></div>
+                </div>
+                <div id="resultsContent"></div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Attack Modal -->
+    <div id="attackModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modalTitle"></h2>
+            <div id="modalDescription"></div>
+            <form id="attackForm">
+                <input type="url" name="target_url" required placeholder="Target URL">
+                <div id="attackParams"></div>
+                <button type="submit">Execute Attack</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/education.js') }}"></script>
+</body>
+</html>
