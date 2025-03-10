@@ -17,7 +17,6 @@ from attacks.authentication.session_hijacking import SessionHijackingScanner
 from attacks.authentication.brute_force import BruteForceScanner
 from attacks.advanced.ssrf import SSRFScanner
 from attacks.advanced.api_scanner import APISecurityScanner
-from attacks.injection.ldap_injection import LDAPInjectionScanner
 
 app = Flask(__name__)
 
@@ -49,8 +48,7 @@ def scan():
         'session_hijacking': SessionHijackingScanner,
         'brute_force': BruteForceScanner,
         'ssrf': SSRFScanner,
-        'api_security': APISecurityScanner,
-        'ldap_injection': LDAPInjectionScanner
+        'api_security': APISecurityScanner
     }
 
     for attack in selected_attacks:
@@ -76,56 +74,6 @@ def scan():
     log_progress("Scan completed")
     
     return jsonify(results)
-
-@app.route('/education')
-def education():
-    return render_template('education.html')
-
-@app.route('/launch_attack', methods=['POST'])
-def launch_attack():
-    attack_type = request.form.get('attack_type')
-    target_url = request.form.get('target_url')
-    payload = request.form.get('payload')
-    
-    # Initialize appropriate scanner
-    scanner_mapping = {
-        'sql_injection': SQLInjectionScanner,
-        'xss': XSSScanner,
-        'xxe_injection': XXEInjectionScanner,
-        'ldap_injection': LDAPInjectionScanner
-        # ... add other scanners ...
-    }
-    
-    if attack_type in scanner_mapping:
-        scanner = scanner_mapping[attack_type](target_url, config)
-        results = scanner.scan()
-        return jsonify({
-            'results': results,
-            'educational_content': get_educational_content(attack_type)
-        })
-    
-    return jsonify({'error': 'Invalid attack type'})
-
-def get_educational_content(attack_type: str) -> Dict:
-    # Load educational content from a JSON file or database
-    educational_content = {
-        'sql_injection': {
-            'description': 'SQL Injection is a web security vulnerability...',
-            'impact': 'Can lead to unauthorized data access...',
-            'mitigation': [
-                'Use prepared statements',
-                'Input validation',
-                'Parameterized queries'
-            ],
-            'references': [
-                'https://owasp.org/www-community/attacks/SQL_Injection',
-                'https://portswigger.net/web-security/sql-injection'
-            ]
-        }
-        # ... add content for other attacks ...
-    }
-    
-    return educational_content.get(attack_type, {})
 
 if __name__ == '__main__':
     app.run(debug=True)
