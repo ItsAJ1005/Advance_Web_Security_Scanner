@@ -1,0 +1,101 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row">
+    <!-- Left Column - Attack Information -->
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3>{{ attack_info.name }}</h3>
+            </div>
+            <div class="card-body">
+                <h5>Description</h5>
+                <p>{{ attack_info.description }}</p>
+
+                <h5>How it Works</h5>
+                <p>{{ attack_info.how_it_works }}</p>
+
+                <h5>Common Vulnerabilities</h5>
+                <ul>
+                    {% for vuln in attack_info.vulnerabilities %}
+                    <li>{{ vuln }}</li>
+                    {% endfor %}
+                </ul>
+
+                <h5>Mitigation Strategies</h5>
+                <ul>
+                    {% for strategy in attack_info.mitigations %}
+                    <li>{{ strategy }}</li>
+                    {% endfor %}
+                </ul>
+
+                <h5>OWASP References</h5>
+                <ul>
+                    {% for ref in attack_info.references %}
+                    <li><a href="{{ ref.url }}" target="_blank">{{ ref.title }}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column - Scanner Interface -->
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3>Scanner Interface</h3>
+            </div>
+            <div class="card-body">
+                <form id="scanForm">
+                    <div class="mb-3">
+                        <label for="target_url" class="form-label">Target URL:</label>
+                        <input type="url" class="form-control" id="target_url" name="target_url" required>
+                    </div>
+
+                    {% if attack_info.has_options %}
+                    <div class="mb-3">
+                        <label class="form-label">Attack Options:</label>
+                        {% for option in attack_info.options %}
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" 
+                                   name="options" value="{{ option.value }}" 
+                                   id="option_{{ option.value }}">
+                            <label class="form-check-label" for="option_{{ option.value }}">
+                                {{ option.label }}
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <button type="submit" class="btn btn-primary">Launch Attack</button>
+                </form>
+
+                <!-- Terminal Output -->
+                <div class="terminal mt-4">
+                    <div class="terminal-header">
+                        <span class="terminal-title">Scanner Output</span>
+                        <div class="terminal-buttons">
+                            <span class="terminal-button red"></span>
+                            <span class="terminal-button yellow"></span>
+                            <span class="terminal-button green"></span>
+                        </div>
+                    </div>
+                    <div class="terminal-content" id="terminalOutput">
+                        <div class="terminal-line">$ Scanner initialized...</div>
+                    </div>
+                </div>
+
+                <!-- Results Section -->
+                <div id="results" class="mt-4">
+                    <div class="loader" style="display: none;">
+                        <div class="spinner"></div>
+                        <div class="scan-status">Scanning...</div>
+                    </div>
+                    <div id="resultsContent"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

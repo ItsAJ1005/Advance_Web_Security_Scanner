@@ -3,3 +3,5 @@ results\scan_results.json
 results\scanner.logvenv/
 .qodo
 venv
+results\scanner.log
+.qodo
