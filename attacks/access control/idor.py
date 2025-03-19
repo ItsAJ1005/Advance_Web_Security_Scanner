@@ -43,7 +43,7 @@ banner = f"""
 {blue}  _/ // /_/ / /_/ / _, _/  _/ // /|  /  
 {red} /___/_____/\____/_/ |_|  /___/_/ |_/ 
 {blue}A IDOR Vulnerability Scanner Tool For Web Applications
-{red}  Made With L3v By @GManOfficial
+{red}  
 {yellow}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 """
 
