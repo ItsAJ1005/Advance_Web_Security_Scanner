@@ -120,3 +120,125 @@
 2025-02-25 15:10:34,003 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/xxe with parameter xml (different response lengths)
 2025-02-25 15:10:35,008 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/xxe with parameter xml (different response lengths)
 2025-02-25 15:10:36,014 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/xxe with parameter xml (different response lengths)
+2025-03-18 03:07:58,536 - root - ERROR - Error extracting CSRF token: name 're' is not defined
+2025-03-18 03:07:58,537 - root - ERROR - Error extracting CSRF token: name 're' is not defined
+2025-03-18 03:07:58,538 - root - ERROR - Error extracting CSRF token: name 're' is not defined
+2025-03-18 03:07:58,539 - root - ERROR - Error extracting CSRF token: name 're' is not defined
+2025-03-18 03:07:58,540 - root - ERROR - Error extracting CSRF token: name 're' is not defined
+2025-03-18 03:07:58,541 - root - ERROR - Error extracting CSRF token: name 're' is not defined
+2025-03-18 03:07:58,541 - root - ERROR - Error extracting CSRF token: name 're' is not defined
+2025-03-18 03:07:58,664 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: 127.0.0.1. Connection pool size: 10
+2025-03-18 03:07:58,826 - root - INFO - Found potential XSS (encoded) at http://127.0.0.1:5000/dom with parameter data
+2025-03-18 03:07:58,843 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/xxe with parameter xml (different response lengths)
+2025-03-18 03:07:58,852 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/ldap with parameter username (different response lengths)
+2025-03-18 03:07:58,858 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/dom with parameter data (different response lengths)
+2025-03-18 03:07:58,859 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/nosql_search with parameter q (different response lengths)
+2025-03-18 03:07:58,860 - root - INFO - Found XSS vulnerability at http://127.0.0.1:5000/ldap with parameter username
+2025-03-18 03:07:58,861 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/reset with parameter username (different response lengths)
+2025-03-18 03:07:58,861 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/include with parameter file (different response lengths)
+2025-03-18 03:07:58,864 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/ssrf with parameter url (different response lengths)
+2025-03-18 03:07:58,867 - root - INFO - Found XSS vulnerability at http://127.0.0.1:5000/reset with parameter username
+2025-03-18 03:07:58,870 - root - INFO - Found XSS vulnerability at http://127.0.0.1:5000/include with parameter file
+2025-03-18 03:07:58,888 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/search with parameter q (different response lengths)
+2025-03-18 03:07:58,892 - root - INFO - Found XSS vulnerability at http://127.0.0.1:5000/ssrf with parameter url
+2025-03-18 03:07:58,910 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/message with parameter message (different response lengths)
+2025-03-18 03:07:58,949 - root - INFO - Found potential XSS (encoded) at http://127.0.0.1:5000/message with parameter message
+2025-03-18 03:08:04,590 - root - INFO - Completed SQLInjectionScanner scan
+2025-03-18 03:08:04,591 - root - INFO - Completed XSSScanner scan
+2025-03-18 03:08:04,591 - root - INFO - Completed SSRFScanner scan
+2025-03-18 03:08:04,591 - root - INFO - Completed XXEInjectionScanner scan
+2025-03-18 03:08:04,591 - root - INFO - Completed BruteForceScanner scan
+2025-03-18 03:08:04,592 - root - INFO - Completed SessionHijackingScanner scan
+2025-03-18 03:08:04,594 - root - INFO - Results saved to results/scan_results.json
+2025-03-18 03:08:04,594 - root - INFO - Scan completed. Results saved to results/scan_results.json
+2025-03-18 03:08:15,125 - root - ERROR - Error extracting CSRF token: name 're' is not defined
+2025-03-18 03:08:15,128 - root - ERROR - Error extracting CSRF token: name 're' is not defined
+2025-03-18 03:08:15,131 - root - ERROR - Error extracting CSRF token: name 're' is not defined
+2025-03-18 03:08:15,133 - root - ERROR - Error extracting CSRF token: name 're' is not defined
+2025-03-18 03:08:15,135 - root - ERROR - Error extracting CSRF token: name 're' is not defined
+2025-03-18 03:08:15,137 - root - ERROR - Error extracting CSRF token: name 're' is not defined
+2025-03-18 03:08:15,139 - root - ERROR - Error extracting CSRF token: name 're' is not defined
+2025-03-18 03:08:15,237 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: 127.0.0.1. Connection pool size: 10
+2025-03-18 03:08:15,391 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/search with parameter q (different response lengths)
+2025-03-18 03:08:15,392 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/nosql_search with parameter q (different response lengths)
+2025-03-18 03:08:15,393 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/dom with parameter data (different response lengths)
+2025-03-18 03:08:15,414 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/xxe with parameter xml (different response lengths)
+2025-03-18 03:08:15,420 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/reset with parameter username (different response lengths)
+2025-03-18 03:08:15,420 - root - INFO - Found XSS vulnerability at http://127.0.0.1:5000/reset with parameter username
+2025-03-18 03:08:15,421 - root - INFO - Found XSS vulnerability at http://127.0.0.1:5000/ldap with parameter username
+2025-03-18 03:08:15,427 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/ssrf with parameter url (different response lengths)
+2025-03-18 03:08:15,428 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/ldap with parameter username (different response lengths)
+2025-03-18 03:08:15,428 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/include with parameter file (different response lengths)
+2025-03-18 03:08:15,430 - root - INFO - Found XSS vulnerability at http://127.0.0.1:5000/include with parameter file
+2025-03-18 03:08:15,456 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/message with parameter message (different response lengths)
+2025-03-18 03:08:15,468 - root - INFO - Found potential XSS (encoded) at http://127.0.0.1:5000/message with parameter message
+2025-03-18 03:08:15,474 - root - INFO - Found potential XSS (encoded) at http://127.0.0.1:5000/dom with parameter data
+2025-03-18 03:08:15,474 - root - INFO - Found XSS vulnerability at http://127.0.0.1:5000/ssrf with parameter url
+2025-03-18 03:08:21,203 - root - INFO - Completed SQLInjectionScanner scan
+2025-03-18 03:08:21,203 - root - INFO - Completed XSSScanner scan
+2025-03-18 03:08:21,204 - root - INFO - Completed SSRFScanner scan
+2025-03-18 03:08:21,204 - root - INFO - Completed XXEInjectionScanner scan
+2025-03-18 03:08:21,204 - root - INFO - Completed BruteForceScanner scan
+2025-03-18 03:08:21,204 - root - INFO - Completed SessionHijackingScanner scan
+2025-03-18 03:08:21,205 - root - INFO - Results saved to results/scan_results.json
+2025-03-18 03:08:21,205 - root - INFO - Scan completed. Results saved to results/scan_results.json
+2025-03-18 10:34:14,547 - root - ERROR - Error extracting CSRF token: name 're' is not defined
+2025-03-18 10:34:14,548 - root - ERROR - Error extracting CSRF token: name 're' is not defined
+2025-03-18 10:34:14,549 - root - ERROR - Error extracting CSRF token: name 're' is not defined
+2025-03-18 10:34:14,549 - root - ERROR - Error extracting CSRF token: name 're' is not defined
+2025-03-18 10:34:14,550 - root - ERROR - Error extracting CSRF token: name 're' is not defined
+2025-03-18 10:34:14,551 - root - ERROR - Error extracting CSRF token: name 're' is not defined
+2025-03-18 10:34:14,551 - root - ERROR - Error extracting CSRF token: name 're' is not defined
+2025-03-18 10:34:14,658 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: 127.0.0.1. Connection pool size: 10
+2025-03-18 10:34:14,828 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/nosql_search with parameter q (different response lengths)
+2025-03-18 10:34:14,831 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/search with parameter q (different response lengths)
+2025-03-18 10:34:14,833 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/ldap with parameter username (different response lengths)
+2025-03-18 10:34:14,834 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/dom with parameter data (different response lengths)
+2025-03-18 10:34:14,846 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/xxe with parameter xml (different response lengths)
+2025-03-18 10:34:14,887 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/include with parameter file (different response lengths)
+2025-03-18 10:34:14,891 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/reset with parameter username (different response lengths)
+2025-03-18 10:34:14,893 - root - INFO - Found XSS vulnerability at http://127.0.0.1:5000/ldap with parameter username
+2025-03-18 10:34:14,893 - root - INFO - Found XSS vulnerability at http://127.0.0.1:5000/include with parameter file
+2025-03-18 10:34:14,894 - root - INFO - Found XSS vulnerability at http://127.0.0.1:5000/reset with parameter username
+2025-03-18 10:34:14,929 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/ssrf with parameter url (different response lengths)
+2025-03-18 10:34:14,935 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/message with parameter message (different response lengths)
+2025-03-18 10:34:15,297 - root - INFO - Found XSS vulnerability at http://127.0.0.1:5000/ssrf with parameter url
+2025-03-18 10:34:19,011 - root - INFO - Found XSS vulnerability at http://127.0.0.1:5000/nosql_search with parameter q
+2025-03-18 10:34:20,637 - root - INFO - Completed SQLInjectionScanner scan
+2025-03-18 10:34:20,638 - root - INFO - Completed XSSScanner scan
+2025-03-18 10:34:20,638 - root - INFO - Completed SSRFScanner scan
+2025-03-18 10:34:20,638 - root - INFO - Completed XXEInjectionScanner scan
+2025-03-18 10:34:20,638 - root - INFO - Completed BruteForceScanner scan
+2025-03-18 10:34:20,638 - root - INFO - Completed SessionHijackingScanner scan
+2025-03-18 10:34:20,640 - root - INFO - Results saved to results/scan_results.json
+2025-03-18 10:34:20,641 - root - INFO - Scan completed. Results saved to results/scan_results.json
+2025-03-18 10:34:35,831 - root - ERROR - Error extracting CSRF token: name 're' is not defined
+2025-03-18 10:34:35,832 - root - ERROR - Error extracting CSRF token: name 're' is not defined
+2025-03-18 10:34:35,832 - root - ERROR - Error extracting CSRF token: name 're' is not defined
+2025-03-18 10:34:35,833 - root - ERROR - Error extracting CSRF token: name 're' is not defined
+2025-03-18 10:34:35,834 - root - ERROR - Error extracting CSRF token: name 're' is not defined
+2025-03-18 10:34:35,834 - root - ERROR - Error extracting CSRF token: name 're' is not defined
+2025-03-18 10:34:35,835 - root - ERROR - Error extracting CSRF token: name 're' is not defined
+2025-03-18 10:34:35,971 - urllib3.connectionpool - WARNING - Connection pool is full, discarding connection: 127.0.0.1. Connection pool size: 10
+2025-03-18 10:34:36,120 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/dom with parameter data (different response lengths)
+2025-03-18 10:34:36,121 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/ldap with parameter username (different response lengths)
+2025-03-18 10:34:36,127 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/search with parameter q (different response lengths)
+2025-03-18 10:34:36,176 - root - INFO - Found XSS vulnerability at http://127.0.0.1:5000/include with parameter file
+2025-03-18 10:34:36,180 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/xxe with parameter xml (different response lengths)
+2025-03-18 10:34:36,184 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/ssrf with parameter url (different response lengths)
+2025-03-18 10:34:36,187 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/reset with parameter username (different response lengths)
+2025-03-18 10:34:36,188 - root - INFO - Found XSS vulnerability at http://127.0.0.1:5000/reset with parameter username
+2025-03-18 10:34:36,195 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/message with parameter message (different response lengths)
+2025-03-18 10:34:36,208 - root - INFO - Found XSS vulnerability at http://127.0.0.1:5000/ldap with parameter username
+2025-03-18 10:34:36,210 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/nosql_search with parameter q (different response lengths)
+2025-03-18 10:34:36,210 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/include with parameter file (different response lengths)
+2025-03-18 10:34:36,597 - root - INFO - Found XSS vulnerability at http://127.0.0.1:5000/ssrf with parameter url
+2025-03-18 10:34:40,336 - root - INFO - Found XSS vulnerability at http://127.0.0.1:5000/nosql_search with parameter q
+2025-03-18 10:34:41,948 - root - INFO - Completed SQLInjectionScanner scan
+2025-03-18 10:34:41,948 - root - INFO - Completed XSSScanner scan
+2025-03-18 10:34:41,948 - root - INFO - Completed SSRFScanner scan
+2025-03-18 10:34:41,948 - root - INFO - Completed XXEInjectionScanner scan
+2025-03-18 10:34:41,949 - root - INFO - Completed BruteForceScanner scan
+2025-03-18 10:34:41,949 - root - INFO - Completed SessionHijackingScanner scan
+2025-03-18 10:34:41,951 - root - INFO - Results saved to results/scan_results.json
+2025-03-18 10:34:41,951 - root - INFO - Scan completed. Results saved to results/scan_results.json

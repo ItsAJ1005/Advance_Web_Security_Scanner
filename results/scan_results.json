@@ -1,4 +1,179 @@
 {
+    "SQLInjectionScanner": {
+        "sql_injection": [
+            {
+                "url": "http://127.0.0.1:5000/dom",
+                "method": "get",
+                "parameter": "data",
+                "payload": "' OR '1'='1",
+                "type": "Error-based SQL Injection",
+                "severity": "High"
+            },
+            {
+                "url": "http://127.0.0.1:5000/ldap",
+                "method": "get",
+                "parameter": "username",
+                "payload": "' OR '1'='1",
+                "type": "Error-based SQL Injection",
+                "severity": "High"
+            },
+            {
+                "url": "http://127.0.0.1:5000/search",
+                "method": "get",
+                "parameter": "q",
+                "payload": "' OR '1'='1",
+                "type": "Error-based SQL Injection",
+                "severity": "High"
+            },
+            {
+                "url": "http://127.0.0.1:5000/xxe",
+                "method": "post",
+                "parameter": "xml",
+                "payload": "' OR '1'='1",
+                "type": "Error-based SQL Injection",
+                "severity": "High"
+            },
+            {
+                "url": "http://127.0.0.1:5000/ssrf",
+                "method": "get",
+                "parameter": "url",
+                "payload": "' OR '1'='1",
+                "type": "Error-based SQL Injection",
+                "severity": "High"
+            },
+            {
+                "url": "http://127.0.0.1:5000/reset",
+                "method": "post",
+                "parameter": "username",
+                "payload": "' OR '1'='1",
+                "type": "Error-based SQL Injection",
+                "severity": "High"
+            },
+            {
+                "url": "http://127.0.0.1:5000/message",
+                "method": "post",
+                "parameter": "message",
+                "payload": "' OR '1'='1",
+                "type": "Error-based SQL Injection",
+                "severity": "High"
+            },
+            {
+                "url": "http://127.0.0.1:5000/nosql_search",
+                "method": "get",
+                "parameter": "q",
+                "payload": "' OR '1'='1",
+                "type": "Error-based SQL Injection",
+                "severity": "High"
+            },
+            {
+                "url": "http://127.0.0.1:5000/include",
+                "method": "get",
+                "parameter": "file",
+                "payload": "' OR '1'='1",
+                "type": "Error-based SQL Injection",
+                "severity": "High"
+            }
+        ]
+    },
+    "XSSScanner": {
+        "xss": [
+            {
+                "url": "http://127.0.0.1:5000/include",
+                "method": "get",
+                "parameter": "file",
+                "payload": "<script>toastr.info('XSS Test')</script>",
+                "type": "Cross-Site Scripting (XSS)",
+                "severity": "Medium",
+                "evidence": "XSS payload successfully reflected"
+            },
+            {
+                "url": "http://127.0.0.1:5000/reset",
+                "method": "post",
+                "parameter": "username",
+                "payload": "<script>toastr.info('XSS Test')</script>",
+                "type": "Cross-Site Scripting (XSS)",
+                "severity": "Medium",
+                "evidence": "XSS payload successfully reflected"
+            },
+            {
+                "url": "http://127.0.0.1:5000/ldap",
+                "method": "get",
+                "parameter": "username",
+                "payload": "<script>toastr.info('XSS Test')</script>",
+                "type": "Cross-Site Scripting (XSS)",
+                "severity": "Medium",
+                "evidence": "XSS payload successfully reflected"
+            },
+            {
+                "url": "http://127.0.0.1:5000/ssrf",
+                "method": "get",
+                "parameter": "url",
+                "payload": "<script>toastr.info('XSS Test')</script>",
+                "type": "Cross-Site Scripting (XSS)",
+                "severity": "Medium",
+                "evidence": "XSS payload successfully reflected"
+            },
+            {
+                "url": "http://127.0.0.1:5000/nosql_search",
+                "method": "get",
+                "parameter": "q",
+                "payload": "\"-toastr.warning('XSS')-\"",
+                "type": "Cross-Site Scripting (XSS)",
+                "severity": "Medium",
+                "evidence": "XSS payload successfully reflected"
+            }
+        ]
+    },
+    "SSRFScanner": {
+        "ssrf": [
+            {
+                "url": "http://127.0.0.1:5000/ssrf",
+                "method": "GET",
+                "parameter": "url",
+                "payload": "http://127.0.0.1",
+                "type": "Server-Side Request Forgery",
+                "severity": "High",
+                "evidence": "Significant response length difference detected"
+            },
+            {
+                "url": "http://127.0.0.1:5000/include",
+                "method": "GET",
+                "parameter": "file",
+                "payload": "http://metadata.google.internal",
+                "type": "Server-Side Request Forgery",
+                "severity": "High",
+                "evidence": "Cloud metadata access detected"
+            }
+        ]
+    },
+    "XXEInjectionScanner": {
+        "xxe_injection": [
+            {
+                "url": "http://127.0.0.1:5000/dom",
+                "method": "get",
+                "payload": "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n               <!DOCTYPE foo [ <!ELEMENT foo ANY >\n               <!ENTITY xxe SYSTEM \"file:///etc/passwd\" >]>\n               <foo>&xxe;</foo>",
+                "type": "XXE Injection",
+                "severity": "High",
+                "evidence": "XXE pattern detected: <!DOCTYPE.*>"
+            }
+        ]
+    },
+    "BruteForceScanner": {
+        "brute_force": [
+            {
+                "url": "http://127.0.0.1:5000/login",
+                "username": "admin",
+                "password": "password",
+                "type": "Successful Brute Force",
+                "severity": "High",
+                "evidence": {
+                    "status_code": 200,
+                    "response_length": 78,
+                    "cookies_set": true
+                }
+            }
+        ]
+    },
     "SessionHijackingScanner": {
         "session_hijacking": []
     }
