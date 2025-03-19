@@ -452,15 +452,27 @@ def home():
 @app.route('/search')
 def search():
     query = request.args.get('q', '')
-    results = g.db.execute(
-        f"SELECT message FROM messages WHERE message LIKE '%{query}%'"
-    ).fetchall()
-    
-    return render_template_string(
-        BASE_TEMPLATE,
-        messages=[r[0] for r in results],
-        search_query=query
-    )
+    # Sanitize input by removing null characters
+    query = query.replace('\x00', '')
+    try:
+        # Use parameterized query instead of string formatting
+        results = g.db.execute(
+            "SELECT message FROM messages WHERE message LIKE ?",
+            ('%' + query + '%',)
+        ).fetchall()
+        
+        return render_template_string(
+            BASE_TEMPLATE,
+            messages=[r[0] for r in results],
+            search_query=query
+        )
+    except Exception as e:
+        logging.error(f"Search error: {e}")
+        return render_template_string(
+            BASE_TEMPLATE,
+            messages=[],
+            error_message="An error occurred during search"
+        )
 
 @app.route('/nosql_search')
 def nosql_search():
