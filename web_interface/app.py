@@ -1,8 +1,19 @@
+import logging
+
+# Configure logging
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('scanner_debug.log'),
+        logging.StreamHandler()
+    ]
+)
+
 from flask import Flask, render_template, request, jsonify
 import sys
 import os
 import json
-import logging
 import threading
 from concurrent.futures import ThreadPoolExecutor
 import uuid
@@ -20,6 +31,7 @@ from attacks.authentication.session_hijacking import SessionHijackingScanner
 from attacks.authentication.brute_force import BruteForceScanner
 from attacks.advanced.ssrf import SSRFScanner
 from attacks.advanced.api_scanner import APISecurityScanner
+from attacks.owasp.owasp_scanner import OWASPScanner
 
 app = Flask(__name__)
 
@@ -57,7 +69,8 @@ class ScanTask:
                 'brute_force': ('Brute Force', BruteForceScanner),
                 'session_hijacking': ('Session Hijacking', SessionHijackingScanner),
                 'ssrf': ('SSRF', SSRFScanner),
-                'api_security': ('API Security', APISecurityScanner)
+                'api_security': ('API Security', APISecurityScanner),
+                'owasp': ('OWASP Top 10', OWASPScanner)
             }
 
             total = len(self.selected_attacks)
@@ -72,7 +85,11 @@ class ScanTask:
                         result = scanner.scan()
                         
                         if result:
-                            self.results[attack] = result
+                            # Special handling for OWASP scan
+                            if attack == 'owasp':
+                                self.results[attack] = result.get('owasp_top_10', [])
+                            else:
+                                self.results[attack] = result
                             logging.info(f"Found vulnerabilities in {name}")
 
                         self.completed_attacks.append(name)
@@ -116,6 +133,26 @@ def scan():
     
     return jsonify({'scan_id': scan_task.id})
 
+@app.route('/owasp_scan', methods=['POST'])
+def owasp_scan():
+    target_url = request.form.get('target_url')
+    
+    if not target_url:
+        return jsonify({'error': 'No target URL provided'}), 400
+
+    if not target_url.startswith(('http://', 'https://')):
+        target_url = 'http://' + target_url
+
+    config = load_config()
+    scan_task = ScanTask(target_url, ['owasp'], config)
+    active_scans[scan_task.id] = scan_task
+    
+    thread = threading.Thread(target=scan_task.run)
+    thread.daemon = True
+    thread.start()
+    
+    return jsonify({'scan_id': scan_task.id})
+
 @app.route('/scan_status/<scan_id>')
 def scan_status(scan_id):
     scan_task = active_scans.get(scan_id)
@@ -124,7 +161,7 @@ def scan_status(scan_id):
 
     response = {
         'status': scan_task.status,
-        'progress': scan_task.progress,
+        'progress': '100' if scan_task.status == 'completed' else str(scan_task.progress),
         'current_attack': scan_task.current_attack,
         'completed_attacks': scan_task.completed_attacks,
         'results': None,
