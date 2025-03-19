@@ -1,5 +1,6 @@
 import time
 import logging
+import re  # Add this import
 from typing import Dict, Optional
 from core.base_scanner import BaseScanner
 
@@ -111,20 +112,28 @@ class BruteForceScanner(BaseScanner):
             from bs4 import BeautifulSoup
             soup = BeautifulSoup(html, 'html.parser')
             
-            # Check common CSRF token patterns
-            csrf_patterns = [
-                {'name': 'csrf_token'},
-                {'name': '_csrf'},
-                {'name': '_token'},
-                {'name': re.compile('csrf', re.I)},
+            # Search by common CSRF field names
+            csrf_fields = [
+                'csrf_token',
+                'csrftoken',
+                '_csrf',
+                '_csrf_token',
+                'authenticity_token'
             ]
             
-            for pattern in csrf_patterns:
-                token_elem = soup.find(['input', 'meta'], attrs=pattern)
-                if token_elem:
-                    return token_elem.get('value', token_elem.get('content'))
+            # Try finding by input field
+            for field in csrf_fields:
+                token_input = soup.find('input', attrs={'name': re.compile(field, re.I)})
+                if token_input and token_input.get('value'):
+                    return token_input['value']
             
+            # Try finding in meta tags
+            meta_token = soup.find('meta', attrs={'name': re.compile('csrf', re.I)})
+            if meta_token:
+                return meta_token.get('content')
+                
             return None
+            
         except Exception as e:
             logging.error(f"Error extracting CSRF token: {e}")
             return None

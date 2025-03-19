@@ -1,7 +1,7 @@
 {
   "max_threads": 10,
-  "request_delay": 0.2,
-  "timeout": 30,
+  "request_delay": 0.5,
+  "timeout": 10,
   "user_agent": "Security-Scanner-v1.0",
   "enabled_attacks": [
     "sql_injection",
@@ -32,8 +32,16 @@
     "insufficient_logging": true
   },
   "thread_config": {
-    "max_concurrent_requests": 5,
+    "max_concurrent_requests": 10,
     "per_scanner_threads": 3,
     "timeout_per_request": 10
+  },
+  "max_workers": 5,
+  "max_retries": 3,
+  "connection_pool_size": 20,
+  "scan_delay": 0.5,
+  "request_headers": {
+    "User-Agent": "Security Scanner v1.0",
+    "Accept": "*/*"
   }
 }
