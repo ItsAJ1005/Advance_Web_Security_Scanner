@@ -392,9 +392,10 @@ document.addEventListener('DOMContentLoaded', function() {
         resultsContent.innerHTML = html;
     }
 
-    function displayOWASPResults(results) {
+    function displayOWASPResults(results, url) {
         console.group('OWASP Results Display');
         console.log('Received results:', results);
+        console.log('Target URL:', url);  // Log the URL
 
         // Find or create results container with multiple selectors
         const resultsContent = document.getElementById('resultsContent') || 
@@ -424,7 +425,7 @@ document.addEventListener('DOMContentLoaded', function() {
             resultsContent.innerHTML = `
                 <div class="alert alert-info">
                     <strong>No vulnerabilities detected</strong>
-                    <p>The scan was completed, but no specific vulnerabilities were found for ${url}.</p>
+                    <p>The scan was completed for ${url}, but no specific vulnerabilities were found.</p>
                 </div>
             `;
             console.log('No vulnerabilities found');
@@ -433,7 +434,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Build results HTML
-        let resultsHTML = '<h3>OWASP Top 10 Vulnerabilities</h3>';
+        let resultsHTML = `<h3>OWASP Top 10 Vulnerabilities for ${url}</h3>`;
 
         Object.entries(results).forEach(([category, vulnerabilities]) => {
             if (Array.isArray(vulnerabilities) && vulnerabilities.length > 0) {
@@ -666,7 +667,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Process scan results
             if (scanResponse.status === 'completed') {
                 console.log('Scan completed successfully');
-                displayOWASPResults(scanResponse.results || {});
+                displayOWASPResults(scanResponse.results || {}, url);
             } else {
                 logError('Scan not completed', scanResponse.error);
             }
