@@ -1,8 +1,19 @@
+import logging
+
+# Configure logging
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        logging.FileHandler('scanner_debug.log'),
+        logging.StreamHandler()
+    ]
+)
+
 from flask import Flask, render_template, request, jsonify
 import sys
 import os
 import json
-import logging
 import threading
 from concurrent.futures import ThreadPoolExecutor
 import uuid
