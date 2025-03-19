@@ -1072,3 +1072,5 @@
 2025-03-19 23:50:57,991 - root - INFO - Scan completed
 2025-03-19 23:50:59,007 - root - INFO - Status update for scan 53a00a9a-0e65-4cf9-bedc-c6c4856dad42: {'status': 'completed', 'progress': '100', 'current_attack': 'OWASP Top 10', 'completed_attacks': [], 'results': {}, 'error': None}
 2025-03-19 23:50:59,007 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:50:59] "GET /scan_status/53a00a9a-0e65-4cf9-bedc-c6c4856dad42 HTTP/1.1" 200 -
+2025-03-20 01:06:05,057 - werkzeug - WARNING -  * Debugger is active!
+2025-03-20 01:06:05,057 - werkzeug - INFO -  * Debugger PIN: 122-818-596
