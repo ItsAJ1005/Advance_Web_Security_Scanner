@@ -1,4 +1,5 @@
-.venv
+venv
+.ven
 __pycache__/
 results\scan_results.json
 results\scanner.logvenv/
