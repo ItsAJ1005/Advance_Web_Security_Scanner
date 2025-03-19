@@ -1,9 +1,23 @@
 venv/
 __pycache__/
-results\scan_results.json
-results\scanner.logvenv/
+results/scan_results.json
+results/scanner.log
 .qodo
-venv
-results\scanner.log
-results\scanner.log
-.qodo
+
+# Ignore ZAP related large files
+zap/
+zap/*
+zap/ZAP_Linux.tar.gz
+zap/zap_*
+*.tar.gz
+
+# Ignore log files
+*.log
+
+# Python bytecode
+*.pyc
+__pycache__/
+
+# Virtual environment
+venv/
+.env
