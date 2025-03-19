@@ -32,209 +32,59 @@ BASE_TEMPLATE = '''
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Test Application</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  
-  <!-- Bootstrap CSS (CDN) -->
-  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-        rel="stylesheet"
-        integrity="sha384-JcB8Q3iqJ61gNV6RZ5aZeX9haBvEI60g1GJt6vX0sgK3MX6vrJc9ByqJ7S/e0Bg"
-        crossorigin="anonymous">
-  
-  <!-- Custom Style -->
-  <style>
-    :root {
-      --primary-dark: #1a237e;
-      --primary-main: #283593;
-      --primary-light: #534bae;
-      --secondary: #00acc1;
-      --secondary-light: #5ddef4;
-      --white: #ffffff;
-      --gray-100: #f5f6fa;
-      --gray-200: #e9ecef;
-      --gray-300: #dee2e6;
-      --gray-800: #343a40;
-      --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      --hover-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    }
+    <meta charset="UTF-8">
+    <title>Test Application</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <!-- Update Bootstrap CSS with latest version and correct integrity -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" 
+          rel="stylesheet" 
+          integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" 
+          crossorigin="anonymous">
+    
+    <!-- Add Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    
+    <!-- Add Toastr CSS from CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    
+    <!-- Add Toastify CSS and JS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
-    body {
-      font-size: 1rem;
-      padding-top: 70px;
-      background-color: var(--gray-100);
-      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      line-height: 1.6;
-      color: var(--gray-800);
-    }
-
-    .navbar {
-      background: linear-gradient(135deg, var(--primary-dark), var(--primary-main)) !important;
-      box-shadow: var(--card-shadow);
-    }
-
-    .navbar-brand {
-      font-weight: 600;
-      font-size: 1.4rem;
-      color: var(--white) !important;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-    }
-
-    .nav-link {
-      font-weight: 500;
-      color: rgba(255,255,255,0.9) !important;
-      transition: all 0.3s ease;
-    }
-
-    .nav-link:hover {
-      color: var(--white) !important;
-      transform: translateY(-1px);
-    }
-
-    .card {
-      background: var(--white);
-      border: none;
-      border-radius: 10px;
-      box-shadow: var(--card-shadow);
-      margin-bottom: 1.5rem;
-      transition: all 0.3s ease;
-      overflow: hidden;
-    }
-
-    .card:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--hover-shadow);
-    }
-
-    .card-header {
-      background: linear-gradient(135deg, var(--primary-main), var(--primary-light));
-      color: var(--white);
-      font-weight: 600;
-      padding: 1rem 1.25rem;
-      border: none;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-    }
-
-    .card-body {
-      padding: 1.5rem;
-    }
-
-    .form-control {
-      border-radius: 8px;
-      border: 2px solid var(--gray-200);
-      padding: 0.75rem;
-      transition: all 0.3s ease;
-      background-color: var(--white);
-    }
-
-    .form-control:focus {
-      border-color: var(--primary-light);
-      box-shadow: 0 0 0 0.2rem rgba(26, 35, 126, 0.15);
-    }
-
-    .btn {
-      border-radius: 8px;
-      padding: 0.75rem 1.5rem;
-      font-weight: 500;
-      transition: all 0.3s ease;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--secondary), var(--secondary-light));
-      border: none;
-      color: var(--white);
-      box-shadow: 0 2px 4px rgba(0,172,193,0.3);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 4px 8px rgba(0,172,193,0.4);
-    }
-
-    .btn-primary:active {
-      transform: translateY(1px);
-    }
-
-    h1 {
-      color: var(--primary-dark);
-      font-weight: 700;
-      margin-bottom: 1.5rem;
-      position: relative;
-      padding-bottom: 0.5rem;
-    }
-
-    h1::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 50px;
-      height: 3px;
-      background: linear-gradient(135deg, var(--secondary), var(--secondary-light));
-      border-radius: 2px;
-    }
-
-    footer {
-      margin-top: 3rem;
-      padding: 1.5rem 0;
-      text-align: center;
-      color: var(--gray-800);
-      border-top: 1px solid var(--gray-200);
-      background-color: var(--white);
-    }
-
-    .container {
-      max-width: 1200px;
-      padding: 0 1rem;
-    }
-
-    textarea.form-control {
-      min-height: 120px;
-      resize: vertical;
-    }
-
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: var(--gray-100);
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: var(--primary-light);
-      border-radius: 4px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: var(--primary-main);
-    }
-
-    @media (max-width: 768px) {
-      body {
-        padding-top: 60px;
+    <!-- Custom Style -->
+    <style>
+        /* Increase base font size */
+        body {
+          font-size: 1.65rem; 
+          padding-top: 70px;  
+        }
+        footer {
+          margin-top: 50px;
+          text-align: center;
+          color: #777;
+        }
+        .nav-flex {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
       }
-      
-      .card {
-        margin-bottom: 1rem;
-      }
-      
-      .container {
-        padding: 0 0.75rem;
-      }
-
-      h1 {
-        font-size: 1.75rem;
-      }
-
-      .btn {
-        width: 100%;
-      }
-    }
-  </style>
+        /* Toastify custom styles */
+        .toastify {
+            font-size: 1rem;
+            padding: 12px 20px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.16);
+        }
+        .toast-success {
+            background: linear-gradient(to right, #00b09b, #96c93d);
+        }
+        .toast-error {
+            background: linear-gradient(to right, #ff5f6d, #ffc371);
+        }
+        .toast-info {
+            background: linear-gradient(to right, #2193b0, #6dd5ed);
+        }
+    </style>
 </head>
 <body>
   <!-- Navigation Bar -->
@@ -455,17 +305,7 @@ BASE_TEMPLATE = '''
       </div>
     </div>
     
-    <!-- Messages Section -->
-    {% if messages %}
-      <div class="card mb-4">
-        <div class="card-header">Messages</div>
-        <div class="card-body">
-          {% for message in messages %}
-            <div class="alert alert-info">{{ message|safe }}</div>
-          {% endfor %}
-        </div>
-      </div>
-    {% endif %}
+    <!-- Remove Messages Section -->
     
     <!-- Search Query Section -->
     {% if search_query %}
@@ -492,13 +332,102 @@ BASE_TEMPLATE = '''
     <p>&copy; 2025 Test Application. All rights reserved.</p>
   </footer>
   
-  <!-- Bootstrap JS + dependencies -->
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-          integrity="sha384-DfXD5I0F5t2W/n6j5gv8R7T/1fQ7VxLC1q6w5R3uXvwGb1N6KtP97b+ZgYyJ7/m"
+  <!-- Update JavaScript dependencies -->
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+          integrity="sha384-NXgwF8Kv9SSAr+jemKKcbvQsz+teULH/dRtq6VMRd/KB6n2yh8lpF6QUYokmQy+1"
           crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"
-          integrity="sha384-LtrjvnR4/Jqs1QxX5JZDFQ6aSQrMxF/R7L2Q6o67eX1IQAw/6BifO5fP8/2rTnF0"
+          
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+          integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
           crossorigin="anonymous"></script>
+          
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"
+          integrity="sha384-fbbOQedDUMZZ5KreZpsbe1LCZPVmfTnH7ois6mU1QK+m14rQ1l2bGBq41eYeM/fS"
+          crossorigin="anonymous"></script>
+          
+  <!-- Add Toastr JS from CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+  <!-- Add notification helper functions -->
+  <script>
+      // Notification helper functions
+      const notify = {
+          success: (message) => {
+              Toastify({
+                  text: message,
+                  duration: 3000,
+                  gravity: "top",
+                  position: "right",
+                  className: "toast-success",
+                  stopOnFocus: true
+              }).showToast();
+          },
+          error: (message) => {
+              Toastify({
+                  text: message,
+                  duration: 3000,
+                  gravity: "top",
+                  position: "right",
+                  className: "toast-error",
+                  stopOnFocus: true
+              }).showToast();
+          },
+          info: (message) => {
+              Toastify({
+                  text: message,
+                  duration: 3000,
+                  gravity: "top",
+                  position: "right",
+                  className: "toast-info",
+                  stopOnFocus: true
+              }).showToast();
+          }
+      };
+
+      // Replace console.log with notify.info for XSS detection
+      const originalLog = console.log;
+      console.log = function(message) {
+          if (typeof message === 'string' && message.toLowerCase().includes('xss')) {
+              notify.info('XSS Test: ' + message);
+          }
+          originalLog.apply(console, arguments);
+      };
+
+      // Handle XSS test inputs
+      function handleXSSTest(input) {
+          if (input && input.toLowerCase().includes('xss')) {
+              notify.info('XSS Test: Input contains potential XSS payload');
+          }
+      }
+
+      // Add event listeners to inputs
+      document.addEventListener('DOMContentLoaded', () => {
+          document.querySelectorAll('input[type="text"], textarea').forEach(input => {
+              input.addEventListener('change', (e) => handleXSSTest(e.target.value));
+          });
+      });
+
+      // Handle form submissions
+      document.querySelectorAll('form').forEach(form => {
+          form.addEventListener('submit', (e) => {
+              notify.info('Form submitted: ' + form.action);
+          });
+      });
+
+      // Show notifications for successful actions
+      {% if success_message %}
+          notify.success("{{ success_message }}");
+      {% endif %}
+      
+      {% if error_message %}
+          notify.error("{{ error_message }}");
+      {% endif %}
+  </script>
+
+  <!-- XSS testing functionality -->
+  <script>
+      // ... existing XSS test code ...
+  </script>
 </body>
 </html>
 '''
@@ -593,29 +522,13 @@ def login():
     if request.method == 'POST':
         username = request.form.get('username', '')
         password = request.form.get('password', '')
-        # Insecure: Hardcoded admin/password
         if username == 'admin' and password == 'password':
-            session['logged_in'] = True
-            session['username'] = username
-            return "<div class='container mt-5'><h1>Login</h1><p>Logged in successfully!</p></div>"
+            return render_template_string(BASE_TEMPLATE, 
+                success_message='Logged in successfully!')
         else:
-            return "<div class='container mt-5'><h1>Login</h1><p>Invalid credentials!</p></div>"
-    return '''
-    <div class="container mt-5">
-      <h1>Login</h1>
-      <form method="POST" action="/login">
-        <div class="form-group">
-          <label>Username:</label>
-          <input type="text" class="form-control" name="username">
-        </div>
-        <div class="form-group">
-          <label>Password:</label>
-          <input type="password" class="form-control" name="password">
-        </div>
-        <button type="submit" class="btn btn-primary">Login</button>
-      </form>
-    </div>
-    '''
+            return render_template_string(BASE_TEMPLATE, 
+                error_message='Invalid credentials')
+    return render_template_string(BASE_TEMPLATE)
 
 @app.route('/reset', methods=['GET', 'POST'])
 def reset():
@@ -708,23 +621,6 @@ def ssrf():
         except Exception as e:
             return f"<div class='container mt-5'><h1>SSRF Test</h1><p>Error fetching URL: {e}</p></div>"
     return "<div class='container mt-5'><h1>SSRF Test</h1><p>No URL provided</p></div>"
-
-@app.route('/ldap-login', methods=['POST'])
-def ldap_login():
-    username = request.form.get('username', '')
-    password = request.form.get('password', '')
-    
-    # Simulate LDAP authentication with vulnerabilities
-    if '*' in username or '*' in password:
-        return jsonify({'error': 'LDAP Error: Invalid distinguished name'}), 400
-    
-    if '(' in username or ')' in username:
-        return jsonify({'error': 'LDAP Error: Invalid filter'}), 400
-        
-    if username == 'admin' and password == 'password':
-        return jsonify({'success': True, 'message': 'Login successful'})
-        
-    return jsonify({'success': False, 'message': 'Invalid credentials'})
 
 if SOCKET_AVAILABLE:
     @app.route('/ws')

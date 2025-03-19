@@ -20,53 +20,9 @@ from attacks.advanced.api_scanner import APISecurityScanner
 
 app = Flask(__name__)
 
-# Attack information dictionary
-ATTACK_INFO = {
-    'sql-injection': {
-        'name': 'SQL Injection',
-        'description': 'SQL injection is a code injection technique that might destroy your database.',
-        'how_it_works': 'Attackers insert malicious SQL queries via input fields.',
-        'vulnerabilities': [
-            'Unsanitized input in SQL queries',
-            'Direct use of user input in queries',
-            'Improper error handling'
-        ],
-        'mitigations': [
-            'Use prepared statements',
-            'Input validation',
-            'Proper error handling',
-            'Least privilege principle'
-        ],
-        'references': [
-            {'title': 'OWASP SQL Injection', 'url': 'https://owasp.org/www-community/attacks/SQL_Injection'}
-        ],
-        'has_options': True,
-        'options': [
-            {'value': 'error_based', 'label': 'Error-based Injection'},
-            {'value': 'time_based', 'label': 'Time-based Injection'},
-            {'value': 'boolean_based', 'label': 'Boolean-based Injection'}
-        ]
-    },
-    # Add other attacks similarly
-}
-
 @app.route('/')
 def index():
     return render_template('index.html')
-
-@app.route('/attack/<attack_type>')
-def attack_module(attack_type):
-    if attack_type in ATTACK_INFO:
-        return render_template('attack_module.html', attack_info=ATTACK_INFO[attack_type])
-    return "Attack module not found", 404
-
-@app.route('/owasp-scan')
-def owasp_scan():
-    return render_template('owasp_scan.html')
-
-@app.route('/learning')
-def learning():
-    return render_template('learning.html')
 
 @app.route('/scan', methods=['POST'])
 def scan():
