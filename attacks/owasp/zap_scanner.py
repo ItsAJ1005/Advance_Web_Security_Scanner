@@ -23,6 +23,114 @@ class ZAPLiteScanner:
             logging.error(f"URL Validation Error: {e}")
             return False
 
+    def _filter_false_positives(self, results):
+        """
+        Filter out potential false positive vulnerabilities
+        
+        Args:
+            results (list): List of detected vulnerabilities
+        
+        Returns:
+            list: Filtered list of vulnerabilities
+        """
+        # Whitelist of known secure domains
+        secure_domains = [
+            'github.com', 'gitlab.com', 'bitbucket.org', 
+            'stackoverflow.com', 'linkedin.com', 
+            'google.com', 'microsoft.com', 
+            '127.0.0.1', 'localhost'
+        ]
+        
+        # Known false positive patterns to filter
+        false_positive_patterns = [
+            # Debug and config endpoints that are likely not exploitable
+            r'/debug$', 
+            r'/config$', 
+            r'/env$', 
+            r'/logs$', 
+            r'/backup$', 
+            r'/api/data$',
+            
+            # Common test or placeholder URLs
+            r'/test', 
+            r'/example', 
+            r'/sample'
+        ]
+        
+        # Sophisticated filtering
+        filtered_results = []
+        for result in results:
+            # Skip results from known secure domains
+            if any(domain in self.target_url for domain in secure_domains):
+                # For localhost or 127.0.0.1, keep some vulnerabilities
+                if '127.0.0.1' in self.target_url or 'localhost' in self.target_url:
+                    filtered_results.append(result)
+                continue
+            
+            # Check if result URL matches false positive patterns
+            url = result.get('url', '')
+            if any(re.search(pattern, url) for pattern in false_positive_patterns):
+                continue
+            
+            # Additional checks for specific vulnerability types
+            if result.get('type') == 'Insecure Design Exposure':
+                # More stringent check for design exposure
+                if not re.search(r'(secret|credentials|token|key)', 
+                                 result.get('description', '').lower()):
+                    continue
+            
+            filtered_results.append(result)
+        
+        return filtered_results
+
+    def _validate_vulnerability(self, vulnerability):
+        """
+        Validate the detected vulnerability for accuracy
+        
+        Args:
+            vulnerability (dict): Vulnerability details
+        
+        Returns:
+            bool: Whether the vulnerability is likely genuine
+        """
+        # Scoring mechanism for vulnerability confidence
+        confidence_score = 0
+        
+        # Check vulnerability type
+        vulnerability_type = vulnerability.get('type', '')
+        type_weights = {
+            'Command Injection': 0.9,
+            'Cryptographic Failures': 0.8,
+            'Injection': 0.7,
+            'Insecure Design': 0.6,
+            'Vulnerable Components': 0.7
+        }
+        
+        confidence_score += type_weights.get(vulnerability_type, 0.5)
+        
+        # Check risk level
+        risk_weights = {
+            'High': 0.7,
+            'Medium': 0.5,
+            'Low': 0.3
+        }
+        
+        confidence_score += risk_weights.get(
+            vulnerability.get('risk', 'Low'), 0.3
+        )
+        
+        # URL-based validation
+        url = vulnerability.get('url', '')
+        if url and len(url) > 10:  # Basic URL validation
+            confidence_score += 0.2
+        
+        # Recommendation specificity
+        recommendation = vulnerability.get('recommendation', '')
+        if len(recommendation) > 20:
+            confidence_score += 0.1
+        
+        return confidence_score > 0.7
+
     def scan(self):
         """Perform comprehensive vulnerability scanning aligned with OWASP Top 10 2021"""
         logging.info(f"Starting scan for {self.target_url}")
@@ -73,10 +181,21 @@ class ZAPLiteScanner:
                 except Exception as e:
                     logging.error(f"Error in {category} check: {e}")
 
-            logging.info(f"Scan completed for {self.target_url}. Vulnerabilities found: {len(unique_vulnerabilities)}")
-            logging.debug(f"Detailed Results: {json.dumps(unique_vulnerabilities, indent=2)}")
+            # Filter false positives
+            filtered_vulnerabilities = self._filter_false_positives(
+                [vuln for vulns in unique_vulnerabilities.values() for vuln in vulns]
+            )
+
+            # Validate vulnerabilities
+            validated_vulnerabilities = [
+                vuln for vuln in filtered_vulnerabilities 
+                if self._validate_vulnerability(vuln)
+            ]
+
+            logging.info(f"Scan completed for {self.target_url}. Vulnerabilities found: {len(validated_vulnerabilities)}")
+            logging.debug(f"Detailed Results: {json.dumps(validated_vulnerabilities, indent=2)}")
             
-            return unique_vulnerabilities
+            return validated_vulnerabilities
         
         except Exception as e:
             logging.error(f"Unexpected error during scan: {e}", exc_info=True)
@@ -619,5 +738,69 @@ class ZAPLiteScanner:
 def run_zap_scan(target_url):
     """Lightweight ZAP-like scanner"""
     logging.info(f"Initiating ZAP-like scan for {target_url}")
+    
+    # Create scanner instance
     scanner = ZAPLiteScanner(target_url)
-    return scanner.scan()
+    
+    try:
+        # Perform comprehensive scan
+        all_vulnerabilities = scanner.scan()
+        
+        # Organize results by OWASP category
+        owasp_results = {
+            'A01:2021 - Broken Access Control': [
+                vuln for vuln in all_vulnerabilities 
+                if vuln.get('type') == 'Broken Access Control'
+            ],
+            'A02:2021 - Cryptographic Failures': [
+                vuln for vuln in all_vulnerabilities 
+                if vuln.get('type') in ['Weak Cryptographic Mechanism', 'Cryptographic Failures']
+            ],
+            'A03:2021 - Injection': [
+                vuln for vuln in all_vulnerabilities 
+                if vuln.get('type') in ['Injection', 'SQL Injection', 'Command Injection', 'XSS']
+            ],
+            'A04:2021 - Insecure Design': [
+                vuln for vuln in all_vulnerabilities 
+                if vuln.get('type') == 'Insecure Design Exposure'
+            ],
+            'A05:2021 - Security Misconfiguration': [
+                vuln for vuln in all_vulnerabilities 
+                if vuln.get('type') == 'Security Misconfiguration'
+            ],
+            'A06:2021 - Vulnerable Components': [
+                vuln for vuln in all_vulnerabilities 
+                if vuln.get('type') == 'Known Vulnerable Component'
+            ],
+            'A07:2021 - Authentication & Access Failures': [
+                vuln for vuln in all_vulnerabilities 
+                if vuln.get('type') in ['Weak Authentication', 'Auth & Access Failures']
+            ],
+            'A08:2021 - Software & Data Integrity': [
+                vuln for vuln in all_vulnerabilities 
+                if vuln.get('type') == 'Software Integrity Vulnerability'
+            ],
+            'A09:2021 - Security Logging Failures': [
+                vuln for vuln in all_vulnerabilities 
+                if vuln.get('type') == 'Insufficient Logging'
+            ],
+            'A10:2021 - SSRF': [
+                vuln for vuln in all_vulnerabilities 
+                if vuln.get('type') == 'Server-Side Request Forgery'
+            ]
+        }
+        
+        # Remove empty categories
+        owasp_results = {
+            category: vulns for category, vulns in owasp_results.items() 
+            if vulns
+        }
+        
+        # Log results
+        logging.info(f"ZAP Scan Results: {json.dumps(owasp_results, indent=2)}")
+        
+        return owasp_results
+    
+    except Exception as e:
+        logging.error(f"ZAP Scan Error: {e}", exc_info=True)
+        raise

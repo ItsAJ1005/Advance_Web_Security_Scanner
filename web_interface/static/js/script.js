@@ -393,40 +393,77 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function displayOWASPResults(results) {
-        const resultsContent = document.getElementById('resultsContent');
-        if (!resultsContent) return;
+        console.group('OWASP Results Display');
+        console.log('Received results:', results);
 
-        // Clear previous results
-        resultsContent.innerHTML = '';
+        // Find or create results container with multiple selectors
+        const resultsContent = document.getElementById('resultsContent') || 
+                                document.querySelector('.results-container') || 
+                                (() => {
+                                    const newElement = document.createElement('div');
+                                    newElement.id = 'resultsContent';
+                                    newElement.classList.add('results-container');
+                                    document.body.appendChild(newElement);
+                                    return newElement;
+                                })();
 
-        // Check if results are empty
-        if (Object.keys(results).length === 0) {
-            resultsContent.innerHTML = '<div class="alert alert-info">No vulnerabilities detected</div>';
+        // Validate results
+        if (!results || typeof results !== 'object') {
+            console.warn('Invalid results format');
+            resultsContent.innerHTML = '<div class="alert alert-warning">Invalid scan results</div>';
+            console.groupEnd();
             return;
         }
 
-        // Create results HTML
-        let resultsHTML = '<h3>OWASP Top 10 Vulnerabilities</h3>';
+        // Check if any vulnerabilities exist
+        const hasVulnerabilities = Object.values(results).some(
+            category => Array.isArray(category) && category.length > 0
+        );
 
-        // Iterate through vulnerability categories
-        Object.entries(results).forEach(([category, vulnerabilities]) => {
-            resultsHTML += `
-                <div class="vulnerability-category">
-                    <h4>${category}</h4>
-                    ${vulnerabilities.map(vuln => `
-                        <div class="vulnerability-item ${vuln.risk.toLowerCase()}">
-                            <strong>Type:</strong> ${vuln.type || vuln.header || 'Unknown'}<br>
-                            <strong>Risk:</strong> ${vuln.risk || 'Not specified'}<br>
-                            ${vuln.url ? `<strong>URL:</strong> ${vuln.url}<br>` : ''}
-                            ${vuln.description ? `<strong>Description:</strong> ${vuln.description}<br>` : ''}
-                            ${vuln.recommendation ? `<strong>Recommendation:</strong> ${vuln.recommendation}` : ''}
-                        </div>
-                    `).join('')}
+        if (!hasVulnerabilities) {
+            resultsContent.innerHTML = `
+                <div class="alert alert-info">
+                    <strong>No vulnerabilities detected</strong>
+                    <p>The scan was completed, but no specific vulnerabilities were found for ${url}.</p>
                 </div>
             `;
+            console.log('No vulnerabilities found');
+            console.groupEnd();
+            return;
+        }
+
+        // Build results HTML
+        let resultsHTML = '<h3>OWASP Top 10 Vulnerabilities</h3>';
+
+        Object.entries(results).forEach(([category, vulnerabilities]) => {
+            if (Array.isArray(vulnerabilities) && vulnerabilities.length > 0) {
+                resultsHTML += `
+                    <div class="vulnerability-category">
+                        <h4>${category}</h4>
+                        ${vulnerabilities.map(vuln => `
+                            <div class="vulnerability-item ${(vuln.risk || '').toLowerCase()}">
+                                <strong>Type:</strong> ${vuln.type || vuln.header || 'Unknown'}<br>
+                                <strong>Risk:</strong> ${vuln.risk || 'Not specified'}<br>
+                                ${vuln.url ? `<strong>URL:</strong> ${vuln.url}<br>` : ''}
+                                ${vuln.description ? `<strong>Description:</strong> ${vuln.description}<br>` : ''}
+                                ${vuln.recommendation ? `<strong>Recommendation:</strong> ${vuln.recommendation}` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
         });
 
-        resultsContent.innerHTML = resultsHTML;
+        // Set results with error handling
+        try {
+            resultsContent.innerHTML = resultsHTML;
+            console.log('Results displayed successfully');
+        } catch (error) {
+            console.error('Error displaying results:', error);
+            resultsContent.textContent = 'Error displaying scan results';
+        }
+
+        console.groupEnd();
     }
 
     function formatScanType(scanType) {
@@ -467,63 +504,142 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function runOWASPSan(url) {
-        console.log('OWASP Scan started for URL:', url);
+        console.group('OWASP Scan Initialization');
+        console.log('Scan started for URL:', url);
 
-        // Debugging: Log all potential loader elements
+        // Advanced element creation and selection utility
+        function findOrCreateElement(selectors, type = 'div', fallbackClass = '', fallbackId = '') {
+            console.log('Searching for elements with selectors:', selectors);
+
+            // Try existing selectors first
+            for (let selector of selectors) {
+                const element = document.querySelector(selector);
+                if (element) {
+                    console.log('Found existing element:', element);
+                    return element;
+                }
+            }
+
+            // Create fallback element if no existing element found
+            const newElement = document.createElement(type);
+            
+            if (fallbackClass) {
+                newElement.classList.add(fallbackClass);
+            }
+            
+            if (fallbackId) {
+                newElement.id = fallbackId;
+            }
+
+            // Ensure element is visible and in the document
+            newElement.style.display = 'block';
+            document.body.appendChild(newElement);
+
+            console.warn('Created fallback element:', newElement);
+            return newElement;
+        }
+
+        // Find or create loader and results elements with more robust selection
         const loaderSelectors = [
             '.loader', 
             '#loader', 
             '.scan-loader', 
-            '.loading-spinner'
+            '.loading-spinner',
+            'div[id*="loader"]'
+        ];
+
+        const resultsSelectors = [
+            '#resultsContent', 
+            '.results-container',
+            'div[id*="results"]'
         ];
 
         let loader = null;
-        for (let selector of loaderSelectors) {
-            loader = document.querySelector(selector);
-            if (loader) {
-                console.log('Loader found with selector:', selector);
-                break;
+        let resultsContent = null;
+
+        // Multiple attempts to find elements
+        const elementAttempts = [
+            () => document.querySelector('.loader'),
+            () => document.getElementById('loader'),
+            () => document.querySelector('#resultsContent'),
+            () => document.querySelector('.results-container')
+        ];
+
+        for (let attempt of elementAttempts) {
+            const element = attempt();
+            if (element) {
+                if (element.classList.contains('loader') || element.id.includes('loader')) {
+                    loader = element;
+                } else if (element.id.includes('results') || element.classList.contains('results-container')) {
+                    resultsContent = element;
+                }
             }
         }
 
-        const resultsContent = document.getElementById('resultsContent');
-        
-        // Extensive logging for debugging
-        console.log('Loader element:', loader);
-        console.log('Results content element:', resultsContent);
-        
+        // Fallback creation if elements are missing
         if (!loader) {
-            console.error('No loader element found. Checked selectors:', loaderSelectors);
-            alert('Loader element not found');
-            return;
+            loader = document.createElement('div');
+            loader.classList.add('loader');
+            loader.id = 'scan-loader';
+            loader.style.display = 'none';
+            document.body.appendChild(loader);
         }
-        
+
         if (!resultsContent) {
-            console.error('Results content element not found');
-            alert('Results display area missing');
+            resultsContent = document.createElement('div');
+            resultsContent.id = 'resultsContent';
+            resultsContent.classList.add('results-container');
+            document.body.appendChild(resultsContent);
+        }
+
+        // Comprehensive error logging function
+        function logError(message, error = null) {
+            console.error(message, error);
+            
+            // Ensure resultsContent exists and is in the document
+            if (!resultsContent.parentNode) {
+                document.body.appendChild(resultsContent);
+            }
+
+            // Update results content with error message
+            resultsContent.innerHTML = `
+                <div class="alert alert-danger">
+                    <strong>${message}</strong>
+                    ${error ? `<p>${error.toString()}</p>` : ''}
+                </div>
+            `;
+        }
+
+        // Ensure loader and results content are ready
+        try {
+            // Ensure elements are visible and in the document
+            if (loader) {
+                loader.style.display = 'block';
+                loader.textContent = 'Scanning...';
+                if (!loader.parentNode) {
+                    document.body.appendChild(loader);
+                }
+            }
+
+            if (resultsContent) {
+                resultsContent.innerHTML = '';
+                if (!resultsContent.parentNode) {
+                    document.body.appendChild(resultsContent);
+                }
+            }
+        } catch (initError) {
+            logError('Initialization error', initError);
+            console.groupEnd();
             return;
         }
-        
-        // Safe loader display
-        try {
-            if (loader.style) {
-                loader.style.display = 'block';
-            } else {
-                loader.classList.add('loading');
-            }
-        } catch (e) {
-            console.error('Error showing loader:', e);
-        }
-        
-        // Clear previous results
-        resultsContent.innerHTML = '';
-        
+
         // Ensure URL has protocol
-        if (!url.startsWith('http://') && !url.startsWith('https://')) {
-            url = 'https://' + url;
-        }
-        
-        fetch('/owasp_scan', {  // Ensure this matches your Flask route exactly
+        url = url.startsWith('http://') || url.startsWith('https://') 
+            ? url 
+            : 'https://' + url;
+
+        // Perform scan with comprehensive error handling
+        fetch('/owasp-scan', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -532,50 +648,39 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => {
             console.log('Scan response received:', response);
+            
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
+            
             return response.json();
         })
         .then(scanResponse => {
             console.log('Full scan response:', scanResponse);
             
-            // Hide loader safely
-            try {
-                if (loader.style) {
-                    loader.style.display = 'none';
-                } else {
-                    loader.classList.remove('loading');
-                }
-            } catch (e) {
-                console.error('Error hiding loader:', e);
+            // Hide loader
+            if (loader) {
+                loader.style.display = 'none';
             }
-            
+
+            // Process scan results
             if (scanResponse.status === 'completed') {
-                console.log('Scan completed, results:', scanResponse.results);
-                displayOWASPResults(scanResponse.results);
+                console.log('Scan completed successfully');
+                displayOWASPResults(scanResponse.results || {});
             } else {
-                console.warn('Scan not completed:', scanResponse);
-                showToast('Scan failed', 'error');
-                resultsContent.innerHTML = `<div class="alert alert-danger">Scan Failed: ${scanResponse.error || 'Unknown error'}</div>`;
+                logError('Scan not completed', scanResponse.error);
             }
         })
         .catch(error => {
-            console.error('FULL OWASP Scan Error:', error);
+            logError('Scan failed', error);
             
-            // Hide loader safely
-            try {
-                if (loader.style) {
-                    loader.style.display = 'none';
-                } else {
-                    loader.classList.remove('loading');
-                }
-            } catch (e) {
-                console.error('Error hiding loader:', e);
+            // Ensure loader is hidden
+            if (loader) {
+                loader.style.display = 'none';
             }
-            
-            showToast(`Scan failed: ${error.message}`, 'error');
-            resultsContent.innerHTML = `<div class="alert alert-danger">Failed to start scan: ${error.message}</div>`;
+        })
+        .finally(() => {
+            console.groupEnd();
         });
     }
 

@@ -134,10 +134,11 @@ def scan():
     
     return jsonify({'scan_id': scan_task.id})
 
-@app.route('/owasp_scan', methods=['POST'])
+@app.route('/owasp-scan', methods=['POST'])
 def owasp_scan():
     target_url = request.form.get('target_url')
     
+    # Validate input
     if not target_url:
         return jsonify({
             'status': 'error', 
@@ -148,25 +149,30 @@ def owasp_scan():
     if not target_url.startswith(('http://', 'https://')):
         target_url = 'https://' + target_url
     
+    # Logging for debugging
+    app.logger.info(f"Starting OWASP scan for URL: {target_url}")
+    
     try:
-        # Run ZAP scan
+        # Run ZAP scan with extended timeout and error handling
         scan_results = run_zap_scan(target_url)
         
         # Log the results for debugging
-        logging.info(f"Scan Results for {target_url}: {scan_results}")
+        app.logger.info(f"Scan Results for {target_url}: {scan_results}")
         
+        # Ensure results are returned even if empty
         return jsonify({
             'status': 'completed',
-            'results': scan_results
+            'results': scan_results or {}
         })
     
     except Exception as e:
-        # Log the full error for debugging
-        logging.error(f"OWASP Scan Error: {str(e)}", exc_info=True)
+        # Detailed error logging
+        app.logger.error(f"OWASP Scan Error for {target_url}: {str(e)}", exc_info=True)
         
         return jsonify({
             'status': 'failed',
-            'error': str(e)
+            'error': str(e),
+            'results': {}
         }), 500
 
 @app.route('/scan_status/<scan_id>')
