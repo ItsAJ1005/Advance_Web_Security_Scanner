@@ -126,38 +126,40 @@ class LDAPInjectionScanner(BaseScanner):
 
     def execute_task(self, task: Dict) -> Optional[Dict]:
         try:
+            # Make baseline request
+            normal_response = self.make_request(
+                task['url'],
+                method=task['method'],
+                data={task['parameter']: 'normal_user'} if task['method'] == 'POST' else None,
+                params={task['parameter']: 'normal_user'} if task['method'] == 'GET' else None
+            )
+
+            if not normal_response:
+                return None
+
+            # Test with payloads
             for payload in self.payloads:
-                # Make baseline request
-                normal_response = self.make_request(
-                    task['url'],
-                    method=task['method'],
-                    data={task['parameter']: 'normal_user'} if task['method'] == 'POST' else None,
-                    params={task['parameter']: 'normal_user'} if task['method'] == 'GET' else None,
-                    timeout=5  # Add timeout
-                )
+                try:
+                    response = self.make_request(
+                        task['url'],
+                        method=task['method'],
+                        data={task['parameter']: payload} if task['method'] == 'POST' else None,
+                        params={task['parameter']: payload} if task['method'] == 'GET' else None
+                    )
 
-                # Test payload
-                response = self.make_request(
-                    task['url'],
-                    method=task['method'],
-                    data={task['parameter']: payload} if task['method'] == 'POST' else None,
-                    params={task['parameter']: payload} if task['method'] == 'GET' else None,
-                    timeout=5  # Add timeout
-                )
+                    if response and self.is_vulnerable(response):
+                        return {
+                            'type': 'LDAP Injection',
+                            'url': task['url'],
+                            'parameter': task['parameter'],
+                            'payload': payload,
+                            'severity': 'High',
+                            'evidence': 'LDAP injection pattern detected'
+                        }
 
-                if not response or not normal_response:
+                except Exception as e:
+                    logging.debug(f"Error testing payload {payload}: {e}")
                     continue
-
-                # Check for LDAP injection indicators
-                if self.detect_ldap_injection(normal_response, response):
-                    return {
-                        'url': task['url'],
-                        'parameter': task['parameter'],
-                        'type': 'LDAP Injection',
-                        'payload': payload,
-                        'severity': 'High',
-                        'evidence': 'LDAP injection pattern detected in response'
-                    }
 
             return None
 
