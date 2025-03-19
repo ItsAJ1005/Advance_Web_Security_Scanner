@@ -44,21 +44,196 @@ BASE_TEMPLATE = '''
   
   <!-- Custom Style -->
   <style>
-    /* Increase base font size */
+    :root {
+      --primary-dark: #1a237e;
+      --primary-main: #283593;
+      --primary-light: #534bae;
+      --secondary: #00acc1;
+      --secondary-light: #5ddef4;
+      --white: #ffffff;
+      --gray-100: #f5f6fa;
+      --gray-200: #e9ecef;
+      --gray-300: #dee2e6;
+      --gray-800: #343a40;
+      --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      --hover-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
     body {
-      font-size: 1.65rem; 
-      padding-top: 70px;  
+      font-size: 1rem;
+      padding-top: 70px;
+      background-color: var(--gray-100);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      line-height: 1.6;
+      color: var(--gray-800);
     }
+
+    .navbar {
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary-main)) !important;
+      box-shadow: var(--card-shadow);
+    }
+
+    .navbar-brand {
+      font-weight: 600;
+      font-size: 1.4rem;
+      color: var(--white) !important;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .nav-link {
+      font-weight: 500;
+      color: rgba(255,255,255,0.9) !important;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link:hover {
+      color: var(--white) !important;
+      transform: translateY(-1px);
+    }
+
+    .card {
+      background: var(--white);
+      border: none;
+      border-radius: 10px;
+      box-shadow: var(--card-shadow);
+      margin-bottom: 1.5rem;
+      transition: all 0.3s ease;
+      overflow: hidden;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--hover-shadow);
+    }
+
+    .card-header {
+      background: linear-gradient(135deg, var(--primary-main), var(--primary-light));
+      color: var(--white);
+      font-weight: 600;
+      padding: 1rem 1.25rem;
+      border: none;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .card-body {
+      padding: 1.5rem;
+    }
+
+    .form-control {
+      border-radius: 8px;
+      border: 2px solid var(--gray-200);
+      padding: 0.75rem;
+      transition: all 0.3s ease;
+      background-color: var(--white);
+    }
+
+    .form-control:focus {
+      border-color: var(--primary-light);
+      box-shadow: 0 0 0 0.2rem rgba(26, 35, 126, 0.15);
+    }
+
+    .btn {
+      border-radius: 8px;
+      padding: 0.75rem 1.5rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--secondary), var(--secondary-light));
+      border: none;
+      color: var(--white);
+      box-shadow: 0 2px 4px rgba(0,172,193,0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(0,172,193,0.4);
+    }
+
+    .btn-primary:active {
+      transform: translateY(1px);
+    }
+
+    h1 {
+      color: var(--primary-dark);
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      position: relative;
+      padding-bottom: 0.5rem;
+    }
+
+    h1::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 50px;
+      height: 3px;
+      background: linear-gradient(135deg, var(--secondary), var(--secondary-light));
+      border-radius: 2px;
+    }
+
     footer {
-      margin-top: 50px;
+      margin-top: 3rem;
+      padding: 1.5rem 0;
       text-align: center;
-      color: #777;
+      color: var(--gray-800);
+      border-top: 1px solid var(--gray-200);
+      background-color: var(--white);
     }
-    .nav-flex {
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-  }
+
+    .container {
+      max-width: 1200px;
+      padding: 0 1rem;
+    }
+
+    textarea.form-control {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--gray-100);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--primary-light);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--primary-main);
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding-top: 60px;
+      }
+      
+      .card {
+        margin-bottom: 1rem;
+      }
+      
+      .container {
+        padding: 0 0.75rem;
+      }
+
+      h1 {
+        font-size: 1.75rem;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
