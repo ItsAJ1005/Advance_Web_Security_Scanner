@@ -5,3 +5,5 @@ results\scanner.logvenv/
 .qodo
 venv
 results\scanner.log
+results\scanner.log
+.qodo
