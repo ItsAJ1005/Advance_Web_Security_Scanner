@@ -1,8 +1,12 @@
 from core.base_scanner import BaseScanner
+from core.utils import RequestUtils
 from typing import Dict, List
 import logging
 import re
-from urllib.parse import urljoin
+import traceback
+from urllib.parse import urljoin, urlparse
+import requests
+from bs4 import BeautifulSoup
 
 class OWASPScanner(BaseScanner):
     def __init__(self, target_url: str, config: Dict):
@@ -23,30 +27,50 @@ class OWASPScanner(BaseScanner):
     def scan(self) -> Dict:
         results = []
         
-        for vuln_type, check_function in self.vulnerabilities.items():
-            try:
-                vuln_results = check_function()
-                if vuln_results:
-                    results.extend(vuln_results)
-            except Exception as e:
-                logging.error(f"Error checking {vuln_type}: {e}")
+        try:
+            # Initial request to get base information
+            initial_response = self.make_request(self.target_url)
+            if not initial_response:
+                logging.error(f"Failed to fetch initial response for {self.target_url}")
+                return {'owasp_top_10': []}
+
+            # Add debug logging
+            logging.info(f"Initial response status: {initial_response.status_code}")
+            logging.info(f"Initial response headers: {initial_response.headers}")
+            logging.info(f"Initial response content length: {len(initial_response.text)}")
+
+            # Run all vulnerability checks
+            for vuln_type, check_function in self.vulnerabilities.items():
+                try:
+                    vuln_results = check_function(initial_response)
+                    logging.info(f"{vuln_type} check results: {vuln_results}")
+                    if vuln_results:
+                        results.extend(vuln_results)
+                except Exception as e:
+                    logging.error(f"Error in {vuln_type} check: {e}")
+                    logging.error(traceback.format_exc())
+        
+        except Exception as e:
+            logging.error(f"Unexpected error in OWASP scanner: {e}")
+            logging.error(traceback.format_exc())
+        
+        # Add debug logging for final results
+        logging.info(f"Total OWASP vulnerabilities found: {len(results)}")
         
         return {'owasp_top_10': results}
 
-    def check_injection(self) -> List[Dict]:
+    def check_injection(self, response) -> List[Dict]:
         results = []
-        response = self.make_request(self.target_url)
-        if not response:
-            return []
-
-        # Check for SQL Injection indicators
+        
+        # SQL Injection error patterns
         sql_errors = [
             "SQL syntax.*MySQL", "Warning.*mysql_.*",
             "PostgreSQL.*ERROR", "Warning.*pg_.*",
             "ORA-[0-9][0-9][0-9][0-9]",
-            "Microsoft SQL Server"
+            "Microsoft SQL Server", "SQLITE_ERROR"
         ]
         
+        # Check response for SQL error patterns
         for error in sql_errors:
             if re.search(error, response.text, re.I):
                 results.append({
@@ -54,120 +78,101 @@ class OWASPScanner(BaseScanner):
                     'type': 'SQL Injection',
                     'severity': 'High',
                     'url': self.target_url,
-                    'details': f'SQL error pattern found: {error}'
+                    'details': f'SQL error pattern found: {error}',
+                    'recommendation': 'Use parameterized queries, prepared statements, and input validation.'
                 })
-
+        
+        # Test potential injection points
+        forms = RequestUtils.extract_forms(response.text)
+        for form in forms:
+            for input_field in form.get('inputs', []):
+                if input_field.get('type') not in ['submit', 'hidden', 'file']:
+                    results.append({
+                        'vulnerability': 'Injection',
+                        'type': 'Potential Injection Point',
+                        'severity': 'Medium',
+                        'url': urljoin(self.target_url, form.get('action', '')),
+                        'parameter': input_field.get('name'),
+                        'details': f'Unsanitized input field: {input_field.get("name")}',
+                        'recommendation': 'Implement strict input validation and sanitization.'
+                    })
+        
         return results
 
-    def check_broken_auth(self) -> List[Dict]:
+    def check_broken_auth(self, response) -> List[Dict]:
         results = []
-        response = self.make_request(self.target_url)
-        if not response:
-            return []
-
-        # Check for secure session cookies
-        for cookie in response.cookies:
-            if not cookie.secure or 'httponly' not in cookie._rest:
+        
+        # Check for weak authentication indicators
+        weak_indicators = [
+            'login', 'signin', 'authentication', 'session'
+        ]
+        
+        # Check for login forms without HTTPS
+        forms = RequestUtils.extract_forms(response.text)
+        for form in forms:
+            form_url = urljoin(self.target_url, form.get('action', ''))
+            if not form_url.startswith('https://'):
                 results.append({
                     'vulnerability': 'Broken Authentication',
-                    'type': 'Insecure Cookie Configuration',
+                    'type': 'Insecure Login Form',
+                    'severity': 'High',
+                    'url': form_url,
+                    'details': 'Login form not served over HTTPS',
+                    'recommendation': 'Enforce HTTPS for all authentication endpoints.'
+                })
+        
+        # Check cookies
+        for cookie in response.cookies:
+            if not cookie.secure or 'httponly' not in str(cookie).lower():
+                results.append({
+                    'vulnerability': 'Broken Authentication',
+                    'type': 'Insecure Cookie',
                     'severity': 'Medium',
                     'url': self.target_url,
-                    'details': f'Cookie {cookie.name} is not properly secured'
+                    'details': f'Insecure cookie: {cookie.name}',
+                    'recommendation': 'Set Secure and HttpOnly flags for all cookies.'
                 })
-
+        
         return results
 
-    def check_sensitive_data(self) -> List[Dict]:
+    def check_sensitive_data(self, response) -> List[Dict]:
         results = []
-        response = self.make_request(self.target_url)
-        if not response:
-            return []
-
-        # Check for sensitive data patterns
+        
+        # Sensitive data patterns
         patterns = {
             'Credit Card': r'\b\d{4}[- ]?\d{4}[- ]?\d{4}[- ]?\d{4}\b',
+            'SSN': r'\b\d{3}-\d{2}-\d{4}\b',
             'Email': r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}',
             'API Key': r'api[_-]?key[_-]?([\'"|`])([a-zA-Z0-9]{32,45})\1'
         }
-
+        
         for pattern_name, pattern in patterns.items():
-            if re.search(pattern, response.text):
+            matches = re.findall(pattern, response.text)
+            if matches:
                 results.append({
                     'vulnerability': 'Sensitive Data Exposure',
-                    'type': f'{pattern_name} Exposed',
+                    'type': f'{pattern_name} Exposure',
                     'severity': 'High',
                     'url': self.target_url,
-                    'details': f'Found potential {pattern_name.lower()} in response'
+                    'details': f'Found {len(matches)} potential {pattern_name.lower()} matches',
+                    'recommendation': 'Remove sensitive data from responses, use encryption and masking.'
                 })
-
+        
         return results
 
-    # ... Add other OWASP Top 10 checks ...
-    def check_xxe(self) -> List[Dict]:
-        # Implementation for XXE vulnerability check
-        return []
-
-    def check_broken_access(self) -> List[Dict]:
-        # Implementation for Broken Access Control check
-        return []
-
-    def check_security_misconfig(self) -> List[Dict]:
+    def check_xss(self, response) -> List[Dict]:
         results = []
-        response = self.make_request(self.target_url)
-        if not response:
-            return []
-
-        # Check security headers
-        security_headers = {
-            'X-Frame-Options': 'Missing X-Frame-Options header',
-            'X-Content-Type-Options': 'Missing X-Content-Type-Options header',
-            'X-XSS-Protection': 'Missing X-XSS-Protection header',
-            'Content-Security-Policy': 'Missing Content-Security-Policy header',
-            'Strict-Transport-Security': 'Missing HSTS header'
-        }
-
-        for header, message in security_headers.items():
-            if header not in response.headers:
-                results.append({
-                    'vulnerability': 'Security Misconfiguration',
-                    'type': 'Missing Security Header',
-                    'severity': 'Medium',
-                    'url': self.target_url,
-                    'details': message
-                })
-
-        return results
-
-    def check_xss(self) -> List[Dict]:
-        results = []
-        response = self.make_request(self.target_url)
-        if not response:
-            return []
-
-        # Check for XSS vulnerabilities
-        test_payloads = [
+        
+        # XSS test payloads
+        xss_payloads = [
             "<script>alert('XSS')</script>",
+            "javascript:alert('XSS')",
             "<img src=x onerror=alert('XSS')>",
-            "javascript:alert('XSS')"
+            "'\"><script>alert(document.domain)</script>",
+            "<svg/onload=alert('XSS')>"
         ]
-
-        # Check response for reflected content
-        for payload in test_payloads:
-            test_url = f"{self.target_url}?q={payload}"
-            test_response = self.make_request(test_url)
-            
-            if test_response and payload in test_response.text:
-                results.append({
-                    'vulnerability': 'Cross-Site Scripting (XSS)',
-                    'type': 'Reflected XSS',
-                    'severity': 'High',
-                    'url': test_url,
-                    'details': f'XSS payload was reflected: {payload}'
-                })
-
+        
         # Check forms for potential XSS
-        from bs4 import BeautifulSoup
         soup = BeautifulSoup(response.text, 'html.parser')
         for form in soup.find_all('form'):
             for input_field in form.find_all(['input', 'textarea']):
@@ -177,74 +182,72 @@ class OWASPScanner(BaseScanner):
                         'type': 'Potential Form-based XSS',
                         'severity': 'Medium',
                         'url': self.target_url,
-                        'details': f'Unsanitized input field found: {input_field.get("name")}'
+                        'parameter': input_field.get('name'),
+                        'details': f'Unsanitized input field: {input_field.get("name")}',
+                        'recommendation': 'Implement input validation, output encoding, and Content Security Policy (CSP).'
                     })
-
-        return results
-
-    def check_insecure_deserialization(self) -> List[Dict]:
-        results = []
-        # Check for common serialization endpoints
-        endpoints = ['/api/data', '/deserialize', '/object']
         
-        test_payload = 'O:8:"stdClass":0:{}'  # PHP object injection test
-        
-        for endpoint in endpoints:
-            url = urljoin(self.target_url, endpoint)
-            response = self.make_request(url, method='POST', data={'data': test_payload})
-            
-            if response and any(err in response.text.lower() for err in ['unserialize', 'deserialize']):
-                results.append({
-                    'vulnerability': 'Insecure Deserialization',
-                    'type': 'Potential Object Injection',
-                    'severity': 'High',
-                    'url': url,
-                    'details': 'Endpoint appears vulnerable to insecure deserialization'
-                })
+        # Test XSS on URL parameters
+        parsed_url = urlparse(self.target_url)
+        if parsed_url.query:
+            for payload in xss_payloads:
+                test_url = f"{self.target_url}?test={payload}"
+                test_response = self.make_request(test_url)
+                
+                if test_response and payload in test_response.text:
+                    results.append({
+                        'vulnerability': 'Cross-Site Scripting (XSS)',
+                        'type': 'Reflected XSS',
+                        'severity': 'High',
+                        'url': test_url,
+                        'payload': payload,
+                        'details': f'XSS payload was reflected: {payload}',
+                        'recommendation': 'Implement strict input validation and output encoding.'
+                    })
         
         return results
 
-    def check_vulnerable_components(self) -> List[Dict]:
+    def check_security_misconfig(self, response) -> List[Dict]:
         results = []
-        response = self.make_request(self.target_url)
-        if not response:
-            return []
-
-        # Check for common vulnerable component signatures
-        vulnerable_components = {
-            'jquery-1.': 'jQuery 1.x (Outdated)',
-            'bootstrap.min.js v2': 'Bootstrap 2.x (Outdated)',
-            'angular.js/1.': 'AngularJS 1.x (Outdated)',
-            'symfony/2.': 'Symfony 2.x (Outdated)'
+        
+        # Security headers to check
+        security_headers = {
+            'X-Frame-Options': 'Missing X-Frame-Options header (protect against clickjacking)',
+            'X-Content-Type-Options': 'Missing X-Content-Type-Options header (prevent MIME type sniffing)',
+            'X-XSS-Protection': 'Missing X-XSS-Protection header',
+            'Content-Security-Policy': 'Missing Content-Security-Policy header',
+            'Strict-Transport-Security': 'Missing HTTP Strict Transport Security (HSTS) header'
         }
-
-        for signature, component in vulnerable_components.items():
-            if signature in response.text:
+        
+        for header, message in security_headers.items():
+            if header.lower() not in [h.lower() for h in response.headers]:
                 results.append({
-                    'vulnerability': 'Using Components with Known Vulnerabilities',
-                    'type': 'Outdated Component',
+                    'vulnerability': 'Security Misconfiguration',
+                    'type': 'Missing Security Header',
                     'severity': 'Medium',
                     'url': self.target_url,
-                    'details': f'Detected {component}'
+                    'details': message,
+                    'recommendation': f'Add {header} header to improve security.'
                 })
-
-        return results
-
-    def check_insufficient_logging(self) -> List[Dict]:
-        results = []
-        sensitive_endpoints = ['/login', '/admin', '/api/users', '/checkout']
         
-        for endpoint in sensitive_endpoints:
-            url = urljoin(self.target_url, endpoint)
-            response = self.make_request(url)
-            
-            if response and response.status_code != 404:
-                results.append({
-                    'vulnerability': 'Insufficient Logging & Monitoring',
-                    'type': 'Sensitive Endpoint Without Proper Logging',
-                    'severity': 'Medium',
-                    'url': url,
-                    'details': 'Sensitive endpoint should implement proper logging'
-                })
-
         return results
+
+    def check_xxe(self, response) -> List[Dict]:
+        # Placeholder for XXE vulnerability check
+        return []
+
+    def check_broken_access(self, response) -> List[Dict]:
+        # Placeholder for Broken Access Control check
+        return []
+
+    def check_insecure_deserialization(self, response) -> List[Dict]:
+        # Placeholder for Insecure Deserialization check
+        return []
+
+    def check_vulnerable_components(self, response) -> List[Dict]:
+        # Placeholder for Vulnerable and Outdated Components check
+        return []
+
+    def check_insufficient_logging(self, response) -> List[Dict]:
+        # Placeholder for Insufficient Logging & Monitoring check
+        return []

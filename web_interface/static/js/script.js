@@ -418,24 +418,26 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function runOWASPSan(url) {
+        // Add null checks and error handling
         const loader = document.querySelector('.loader');
         const resultsContent = document.getElementById('resultsContent');
-        const scanProgress = document.getElementById('scanProgress');
-        const scanResults = document.getElementById('scanResults');
         
-        if (loader) {
+        if (!loader || !resultsContent) {
+            console.error('Required DOM elements not found');
+            showToast('UI elements missing', 'error');
+            return;
+        }
+        
+        // Clear previous results
+        resultsContent.innerHTML = '';
+        
+        // Ensure loader is displayed
+        if (loader.style) {
             loader.style.display = 'block';
+        } else {
+            console.warn('Loader element does not have style property');
         }
         
-        if (resultsContent) {
-            resultsContent.innerHTML = '';
-        }
-        
-        // Reset and show progress
-        resetScanProgress();
-        scanProgress.style.display = 'block';
-        scanResults.style.display = 'none';
-
         fetch('/owasp_scan', {
             method: 'POST',
             headers: {
@@ -449,23 +451,71 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             return response.json();
         })
-        .then(data => {
-            if (data.scan_id) {
-                pollScanStatus(data.scan_id);
-            } else {
-                throw new Error('No scan ID received');
+        .then(scanResponse => {
+            console.log('OWASP Scan Initiated:', scanResponse);
+            
+            // Poll for scan status
+            function checkScanStatus() {
+                fetch(`/scan_status/${scanResponse.scan_id}`)
+                .then(response => response.json())
+                .then(statusData => {
+                    console.log('OWASP Scan Status:', JSON.stringify(statusData, null, 2));
+                    
+                    if (statusData.status === 'completed') {
+                        // Hide loader
+                        if (loader && loader.style) {
+                            loader.style.display = 'none';
+                        }
+                        
+                        // Log raw results for debugging
+                        console.log('Raw OWASP Scan Results:', JSON.stringify(statusData.results, null, 2));
+                        
+                        // Ensure results are displayed
+                        if (statusData.results && statusData.results.owasp_top_10 && statusData.results.owasp_top_10.length > 0) {
+                            displayResults(statusData.results);
+                        } else {
+                            showToast('No OWASP vulnerabilities found', 'info');
+                            resultsContent.innerHTML = '<div class="alert alert-info">No vulnerabilities detected</div>';
+                        }
+                    } else if (statusData.status === 'failed') {
+                        // Hide loader
+                        if (loader && loader.style) {
+                            loader.style.display = 'none';
+                        }
+                        
+                        showToast(`OWASP Scan failed: ${statusData.error || 'Unknown error'}`, 'error');
+                        resultsContent.innerHTML = `<div class="alert alert-danger">Scan Failed: ${statusData.error || 'Unknown error'}</div>`;
+                    } else {
+                        // Continue polling if not completed
+                        setTimeout(checkScanStatus, 1000);
+                    }
+                })
+                .catch(error => {
+                    console.error('OWASP Scan Status Check Error:', error);
+                    
+                    // Hide loader
+                    if (loader && loader.style) {
+                        loader.style.display = 'none';
+                    }
+                    
+                    showToast(`Scan status error: ${error.message}`, 'error');
+                    resultsContent.innerHTML = `<div class="alert alert-danger">Error checking scan status: ${error.message}</div>`;
+                });
             }
+            
+            // Start polling
+            checkScanStatus();
         })
         .catch(error => {
-            console.error('OWASP Scan Error:', error);
-            if (loader) {
+            console.error('OWASP Scan Initiation Error:', error);
+            
+            // Hide loader
+            if (loader && loader.style) {
                 loader.style.display = 'none';
             }
-            scanProgress.style.display = 'none';
-            if (resultsContent) {
-                resultsContent.innerHTML = `<div class="alert alert-danger">Error: ${error.message}</div>`;
-            }
+            
             showToast(`Scan failed: ${error.message}`, 'error');
+            resultsContent.innerHTML = `<div class="alert alert-danger">Failed to start scan: ${error.message}</div>`;
         });
     }
 });

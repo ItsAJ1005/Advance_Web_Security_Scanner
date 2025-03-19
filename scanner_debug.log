@@ -1,0 +1,1074 @@
+2025-03-19 23:46:59,301 - werkzeug - WARNING -  * Debugger is active!
+2025-03-19 23:46:59,303 - werkzeug - INFO -  * Debugger PIN: 104-349-985
+2025-03-19 23:48:06,071 - root - INFO - Starting OWASP Top 10 scan
+2025-03-19 23:48:06,071 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:06] "POST /owasp_scan HTTP/1.1" 200 -
+2025-03-19 23:48:06,071 - root - ERROR - Error in OWASP Top 10: Can't instantiate abstract class OWASPScanner without an implementation for abstract method 'execute_task'
+2025-03-19 23:48:06,072 - root - INFO - Scan completed
+2025-03-19 23:48:07,077 - root - INFO - Status update for scan f43a4ece-73cb-4693-b488-ec613224f372: {'status': 'completed', 'progress': '100', 'current_attack': 'OWASP Top 10', 'completed_attacks': [], 'results': {}, 'error': None}
+2025-03-19 23:48:07,078 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:07] "GET /scan_status/f43a4ece-73cb-4693-b488-ec613224f372 HTTP/1.1" 200 -
+2025-03-19 23:48:18,124 - root - INFO - Starting SQL Injection scan
+2025-03-19 23:48:18,125 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:18] "POST /scan HTTP/1.1" 200 -
+2025-03-19 23:48:18,125 - urllib3.util.retry - DEBUG - Converted retries value: 3 -> Retry(total=3, connect=None, read=None, redirect=None, status=None)
+2025-03-19 23:48:18,628 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2025-03-19 23:48:18,635 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:19,132 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '0', 'current_attack': 'SQL Injection', 'completed_attacks': [], 'results': None, 'error': None}
+2025-03-19 23:48:19,133 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:19] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:48:19,140 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:19,141 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (2): 127.0.0.1:5000
+2025-03-19 23:48:19,141 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (3): 127.0.0.1:5000
+2025-03-19 23:48:19,142 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (4): 127.0.0.1:5000
+2025-03-19 23:48:19,142 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (5): 127.0.0.1:5000
+2025-03-19 23:48:19,143 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (6): 127.0.0.1:5000
+2025-03-19 23:48:19,143 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (7): 127.0.0.1:5000
+2025-03-19 23:48:19,144 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (8): 127.0.0.1:5000
+2025-03-19 23:48:19,144 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (9): 127.0.0.1:5000
+2025-03-19 23:48:19,145 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (10): 127.0.0.1:5000
+2025-03-19 23:48:19,147 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (11): 127.0.0.1:5000
+2025-03-19 23:48:19,151 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /dom?data=normal HTTP/1.1" 200 475
+2025-03-19 23:48:19,155 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /nosql_search?q=normal HTTP/1.1" 200 100
+2025-03-19 23:48:19,156 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:19,162 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /ldap?username=normal HTTP/1.1" 200 106
+2025-03-19 23:48:19,162 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:19,164 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /reset HTTP/1.1" 200 192
+2025-03-19 23:48:19,165 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /xxe HTTP/1.1" 200 117
+2025-03-19 23:48:19,165 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /include?file=normal HTTP/1.1" 200 131
+2025-03-19 23:48:19,166 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /ssrf?url=normal HTTP/1.1" 200 153
+2025-03-19 23:48:19,171 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /search?q=normal HTTP/1.1" 200 13848
+2025-03-19 23:48:19,175 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:19,176 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:19,184 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:19,656 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:19,657 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:19,657 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:19,658 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /dom?data=%27+OR+%271%27%3D%271 HTTP/1.1" 200 496
+2025-03-19 23:48:19,658 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/dom with parameter data (different response lengths)
+2025-03-19 23:48:19,662 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /nosql_search?q=%27+OR+%271%27%3D%271 HTTP/1.1" 200 105
+2025-03-19 23:48:19,662 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:19,663 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/nosql_search with parameter q (different response lengths)
+2025-03-19 23:48:19,664 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:19,664 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:19,667 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:19,668 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:19,668 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:19,669 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:19,673 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:19,673 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /ldap?username=%27+OR+%271%27%3D%271 HTTP/1.1" 200 111
+2025-03-19 23:48:19,674 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/ldap with parameter username (different response lengths)
+2025-03-19 23:48:19,677 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /reset HTTP/1.1" 200 202
+2025-03-19 23:48:19,677 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/reset with parameter username (different response lengths)
+2025-03-19 23:48:19,679 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:19,682 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /xxe HTTP/1.1" 200 136
+2025-03-19 23:48:19,682 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /include?file=%27+OR+%271%27%3D%271 HTTP/1.1" 200 136
+2025-03-19 23:48:19,683 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/xxe with parameter xml (different response lengths)
+2025-03-19 23:48:19,683 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/include with parameter file (different response lengths)
+2025-03-19 23:48:19,683 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /ssrf?url=%27+OR+%271%27%3D%271 HTTP/1.1" 200 163
+2025-03-19 23:48:19,684 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/ssrf with parameter url (different response lengths)
+2025-03-19 23:48:19,685 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:19,689 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /search?q=%27+OR+%271%27%3D%271 HTTP/1.1" 200 13853
+2025-03-19 23:48:19,690 - root - INFO - Found potential SQL injection at http://127.0.0.1:5000/search with parameter q (different response lengths)
+2025-03-19 23:48:19,706 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:19,707 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:19,714 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:20,134 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '0', 'current_attack': 'SQL Injection', 'completed_attacks': [], 'results': None, 'error': None}
+2025-03-19 23:48:20,134 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:20] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:48:20,167 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:20,171 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:20,182 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:20,187 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:20,217 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:20,230 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:20,231 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:20,237 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:20,673 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:20,677 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:20,688 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:20,693 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:20,738 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:20,758 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:20,759 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:20,765 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:21,132 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '0', 'current_attack': 'SQL Injection', 'completed_attacks': [], 'results': None, 'error': None}
+2025-03-19 23:48:21,132 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:21] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:48:21,180 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:21,184 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:21,195 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:21,200 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:21,268 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:21,281 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:21,281 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:21,288 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:21,685 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:21,689 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:21,702 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:21,706 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:21,789 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:21,806 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:21,807 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:21,813 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:22,132 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '0', 'current_attack': 'SQL Injection', 'completed_attacks': [], 'results': None, 'error': None}
+2025-03-19 23:48:22,133 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:22] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:48:22,192 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:22,197 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:22,209 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:22,214 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:22,316 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:22,338 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:22,338 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:22,345 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:22,698 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:22,702 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:22,715 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:22,720 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:22,847 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:22,860 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:22,861 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:22,867 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:23,132 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '0', 'current_attack': 'SQL Injection', 'completed_attacks': [], 'results': None, 'error': None}
+2025-03-19 23:48:23,132 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:23] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:48:23,205 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:23,209 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:23,223 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:23,227 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:23,369 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:23,387 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:23,388 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:23,394 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:23,710 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:23,714 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:23,728 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:23,735 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:23,895 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:23,918 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:23,919 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:23,925 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:24,134 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '0', 'current_attack': 'SQL Injection', 'completed_attacks': [], 'results': None, 'error': None}
+2025-03-19 23:48:24,134 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:24] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:48:24,217 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:24,221 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:24,239 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:24,244 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:24,428 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:24,449 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:24,449 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:24,456 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:24,722 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:24,726 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:24,745 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:24,751 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:24,958 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:24,975 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:24,976 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:24,982 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:25,132 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '0', 'current_attack': 'SQL Injection', 'completed_attacks': [], 'results': None, 'error': None}
+2025-03-19 23:48:25,133 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:25] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:48:25,229 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:25,233 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:25,254 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:25,259 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:25,485 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:25,513 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:25,514 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:25,520 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:25,734 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:25,738 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:25,761 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:25,766 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:26,021 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:26,043 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:26,043 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:26,049 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:26,133 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '0', 'current_attack': 'SQL Injection', 'completed_attacks': [], 'results': None, 'error': None}
+2025-03-19 23:48:26,134 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:26] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:48:26,242 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:26,247 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:26,268 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:26,273 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:26,552 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:26,580 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:26,581 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:26,587 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:26,748 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:26,752 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:26,775 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:26,780 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:27,089 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:27,112 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:27,114 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:27,125 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:27,133 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '0', 'current_attack': 'SQL Injection', 'completed_attacks': [], 'results': None, 'error': None}
+2025-03-19 23:48:27,134 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:27] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:48:27,255 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:27,259 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:27,283 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:27,288 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:27,628 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:27,645 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:27,645 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:27,651 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:27,760 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:27,765 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:27,790 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:27,795 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:28,133 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '0', 'current_attack': 'SQL Injection', 'completed_attacks': [], 'results': None, 'error': None}
+2025-03-19 23:48:28,134 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:28] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:48:28,153 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:28,183 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:28,184 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:28,191 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:28,267 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:28,271 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:28,298 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:28,303 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:28,693 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:28,710 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:28,711 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:28,717 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:28,773 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:28,778 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:28,805 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:28,810 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:29,133 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '0', 'current_attack': 'SQL Injection', 'completed_attacks': [], 'results': None, 'error': None}
+2025-03-19 23:48:29,133 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:29] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:48:29,218 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:29,238 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:29,239 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:29,245 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:29,280 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:29,285 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:29,312 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:29,318 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:29,748 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:29,765 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:29,766 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:29,772 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:29,786 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:29,792 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:29,819 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:29,824 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:30,132 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '0', 'current_attack': 'SQL Injection', 'completed_attacks': [], 'results': None, 'error': None}
+2025-03-19 23:48:30,133 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:30] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:48:30,273 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:30,290 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:30,291 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:30,293 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:30,299 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:30,305 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:30,326 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:30,332 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:30,801 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:30,806 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:30,806 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:30,828 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:30,829 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:30,833 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:30,837 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:30,842 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:31,133 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '0', 'current_attack': 'SQL Injection', 'completed_attacks': [], 'results': None, 'error': None}
+2025-03-19 23:48:31,133 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:31] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:48:31,307 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:31,312 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:31,339 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:31,343 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:31,349 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:31,349 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:31,356 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:31,359 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:31,813 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:31,817 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:31,857 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:31,860 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:31,879 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:31,880 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:31,883 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:31,890 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:32,134 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '0', 'current_attack': 'SQL Injection', 'completed_attacks': [], 'results': None, 'error': None}
+2025-03-19 23:48:32,134 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:32] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:48:32,319 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:32,323 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:32,384 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:32,389 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:32,392 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:32,401 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:32,402 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:32,409 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:32,825 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:32,829 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:32,890 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:32,894 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:32,910 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:32,920 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:32,921 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:32,929 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:33,132 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '0', 'current_attack': 'SQL Injection', 'completed_attacks': [], 'results': None, 'error': None}
+2025-03-19 23:48:33,132 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:33] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:48:33,330 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:33,335 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:33,395 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:33,400 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:33,431 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:33,450 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:33,451 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:33,462 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:33,836 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:33,842 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:33,901 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:33,906 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:33,963 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:33,980 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:33,981 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:33,988 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:34,133 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '0', 'current_attack': 'SQL Injection', 'completed_attacks': [], 'results': None, 'error': None}
+2025-03-19 23:48:34,133 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:34] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:48:34,489 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:34,498 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:34,499 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:34,507 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:34,508 - root - INFO - Found vulnerabilities in SQL Injection
+2025-03-19 23:48:34,508 - root - INFO - Progress: 16%
+2025-03-19 23:48:34,508 - root - INFO - Starting Cross-Site Scripting scan
+2025-03-19 23:48:34,508 - urllib3.util.retry - DEBUG - Converted retries value: 3 -> Retry(total=3, connect=None, read=None, redirect=None, status=None)
+2025-03-19 23:48:35,009 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2025-03-19 23:48:35,016 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:35,132 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '16', 'current_attack': 'Cross-Site Scripting', 'completed_attacks': ['SQL Injection'], 'results': None, 'error': None}
+2025-03-19 23:48:35,132 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:35] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:48:35,521 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:35,522 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (2): 127.0.0.1:5000
+2025-03-19 23:48:35,523 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (3): 127.0.0.1:5000
+2025-03-19 23:48:35,523 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (4): 127.0.0.1:5000
+2025-03-19 23:48:35,524 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (5): 127.0.0.1:5000
+2025-03-19 23:48:35,531 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /dom?data=test123 HTTP/1.1" 200 476
+2025-03-19 23:48:35,531 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /nosql_search?q=test123 HTTP/1.1" 200 101
+2025-03-19 23:48:35,535 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /search?q=test123 HTTP/1.1" 200 13849
+2025-03-19 23:48:35,550 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:35,550 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /ldap?username=test123 HTTP/1.1" 200 107
+2025-03-19 23:48:35,551 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:35,560 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:36,032 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:36,033 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:36,036 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:36,036 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /dom?data=%3Cscript%3EToastify%28%7Btext%3A%22XSS+Test%22%2Cduration%3A3000%7D%29.showToast%28%29%3B%3C%2Fscript%3E HTTP/1.1" 200 560
+2025-03-19 23:48:36,037 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /nosql_search?q=%3Cscript%3EToastify%28%7Btext%3A%22XSS+Test%22%2Cduration%3A3000%7D%29.showToast%28%29%3B%3C%2Fscript%3E HTTP/1.1" 200 105
+2025-03-19 23:48:36,037 - root - INFO - Found XSS vulnerability at http://127.0.0.1:5000/dom with parameter data
+2025-03-19 23:48:36,041 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /search?q=%3Cscript%3EToastify%28%7Btext%3A%22XSS+Test%22%2Cduration%3A3000%7D%29.showToast%28%29%3B%3C%2Fscript%3E HTTP/1.1" 200 13913
+2025-03-19 23:48:36,051 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:36,054 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /ldap?username=%3Cscript%3EToastify%28%7Btext%3A%22XSS+Test%22%2Cduration%3A3000%7D%29.showToast%28%29%3B%3C%2Fscript%3E HTTP/1.1" 200 171
+2025-03-19 23:48:36,055 - root - INFO - Found XSS vulnerability at http://127.0.0.1:5000/ldap with parameter username
+2025-03-19 23:48:36,061 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:36,091 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:36,093 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:36,100 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:36,136 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '16', 'current_attack': 'Cross-Site Scripting', 'completed_attacks': ['SQL Injection'], 'results': None, 'error': None}
+2025-03-19 23:48:36,136 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:36] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:48:36,538 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:36,538 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:36,541 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /xxe HTTP/1.1" 200 117
+2025-03-19 23:48:36,541 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /nosql_search?q=test123 HTTP/1.1" 200 101
+2025-03-19 23:48:36,543 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:36,547 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /search?q=test123 HTTP/1.1" 200 13849
+2025-03-19 23:48:36,556 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:36,561 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:36,601 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:36,613 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:36,614 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:36,621 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:37,043 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:37,044 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:37,046 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /nosql_search?q=%3Cimg+src%3Dx+onerror%3D%22Toastify%28%7Btext%3A%27XSS+Found%27%2CclassName%3A%27toast-error%27%7D%29.showToast%28%29%22%3E HTTP/1.1" 200 105
+2025-03-19 23:48:37,047 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /xxe HTTP/1.1" 200 100
+2025-03-19 23:48:37,049 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:37,055 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /search?q=%3Cimg+src%3Dx+onerror%3D%22Toastify%28%7Btext%3A%27XSS+Found%27%2CclassName%3A%27toast-error%27%7D%29.showToast%28%29%22%3E HTTP/1.1" 200 13928
+2025-03-19 23:48:37,062 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:37,069 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:37,123 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:37,132 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '16', 'current_attack': 'Cross-Site Scripting', 'completed_attacks': ['SQL Injection'], 'results': None, 'error': None}
+2025-03-19 23:48:37,133 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:37] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:48:37,133 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:37,134 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:37,142 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:37,547 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:37,548 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:37,550 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /nosql_search?q=test123 HTTP/1.1" 200 101
+2025-03-19 23:48:37,550 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /xxe HTTP/1.1" 200 117
+2025-03-19 23:48:37,556 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:37,561 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /search?q=test123 HTTP/1.1" 200 13849
+2025-03-19 23:48:37,570 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:37,576 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:37,644 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:37,655 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:37,656 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:37,664 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:38,051 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:38,052 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:38,055 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /xxe HTTP/1.1" 200 136
+2025-03-19 23:48:38,056 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /nosql_search?q=%3Csvg+onload%3D%22Toastify%28%7Btext%3A%27XSS+Success%27%2CclassName%3A%27toast-success%27%7D%29.showToast%28%29%22%3E HTTP/1.1" 200 105
+2025-03-19 23:48:38,063 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:38,068 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /search?q=%3Csvg+onload%3D%22Toastify%28%7Btext%3A%27XSS+Success%27%2CclassName%3A%27toast-success%27%7D%29.showToast%28%29%22%3E HTTP/1.1" 200 13925
+2025-03-19 23:48:38,078 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:38,084 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:38,133 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '16', 'current_attack': 'Cross-Site Scripting', 'completed_attacks': ['SQL Injection'], 'results': None, 'error': None}
+2025-03-19 23:48:38,133 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:38] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:48:38,166 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:38,175 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:38,176 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:38,185 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:38,556 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:38,557 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:38,559 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /xxe HTTP/1.1" 200 117
+2025-03-19 23:48:38,560 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /nosql_search?q=test123 HTTP/1.1" 200 101
+2025-03-19 23:48:38,569 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:38,575 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /search?q=test123 HTTP/1.1" 200 13849
+2025-03-19 23:48:38,586 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:38,592 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:38,686 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:38,696 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:38,697 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:38,705 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:39,060 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:39,061 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:39,064 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /nosql_search?q=%3Cscript%3Econsole.log%28%27XSS+Test%27%29%3C%2Fscript%3E HTTP/1.1" 200 105
+2025-03-19 23:48:39,065 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /xxe HTTP/1.1" 200 122
+2025-03-19 23:48:39,076 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:39,082 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /search?q=%3Cscript%3Econsole.log%28%27XSS+Test%27%29%3C%2Fscript%3E HTTP/1.1" 200 13882
+2025-03-19 23:48:39,093 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:39,099 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:39,136 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '16', 'current_attack': 'Cross-Site Scripting', 'completed_attacks': ['SQL Injection'], 'results': None, 'error': None}
+2025-03-19 23:48:39,136 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:39] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:48:39,206 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:39,216 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:39,217 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:39,224 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:39,566 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:39,567 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:39,569 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /xxe HTTP/1.1" 200 117
+2025-03-19 23:48:39,570 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /nosql_search?q=test123 HTTP/1.1" 200 101
+2025-03-19 23:48:39,583 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:39,590 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /search?q=test123 HTTP/1.1" 200 13849
+2025-03-19 23:48:39,600 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:39,606 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:39,725 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:39,735 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:39,736 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:39,744 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:40,070 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:40,071 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:40,073 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /xxe HTTP/1.1" 200 100
+2025-03-19 23:48:40,074 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /nosql_search?q=%3Cimg+src%3Dx+onerror%3D%22console.log%28%27XSS+Found%27%29%22%3E HTTP/1.1" 200 105
+2025-03-19 23:48:40,091 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:40,097 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /search?q=%3Cimg+src%3Dx+onerror%3D%22console.log%28%27XSS+Found%27%29%22%3E HTTP/1.1" 200 13888
+2025-03-19 23:48:40,107 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:40,117 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:40,138 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '16', 'current_attack': 'Cross-Site Scripting', 'completed_attacks': ['SQL Injection'], 'results': None, 'error': None}
+2025-03-19 23:48:40,139 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:40] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:48:40,246 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:40,257 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:40,258 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:40,266 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:40,575 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:40,576 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:40,578 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /xxe HTTP/1.1" 200 117
+2025-03-19 23:48:40,579 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /nosql_search?q=test123 HTTP/1.1" 200 101
+2025-03-19 23:48:40,599 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:40,604 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /search?q=test123 HTTP/1.1" 200 13849
+2025-03-19 23:48:40,619 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:40,625 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:40,768 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:40,777 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:40,778 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:40,786 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:41,079 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:41,080 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:41,082 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /xxe HTTP/1.1" 200 136
+2025-03-19 23:48:41,083 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /nosql_search?q=%3Cxss+id%3D%22test%22%3E%3C%2Fxss%3E HTTP/1.1" 200 105
+2025-03-19 23:48:41,106 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:41,111 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /search?q=%3Cxss+id%3D%22test%22%3E%3C%2Fxss%3E HTTP/1.1" 200 13863
+2025-03-19 23:48:41,127 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:41,132 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:41,134 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '16', 'current_attack': 'Cross-Site Scripting', 'completed_attacks': ['SQL Injection'], 'results': None, 'error': None}
+2025-03-19 23:48:41,134 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:41] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:48:41,287 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:41,299 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:41,300 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:41,307 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:41,584 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:41,585 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:41,588 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /nosql_search?q=test123 HTTP/1.1" 200 101
+2025-03-19 23:48:41,588 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /xxe HTTP/1.1" 200 117
+2025-03-19 23:48:41,613 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:41,618 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /search?q=test123 HTTP/1.1" 200 13849
+2025-03-19 23:48:41,635 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:41,640 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:41,808 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:41,819 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:41,820 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:41,827 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:42,089 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:42,090 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:42,092 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /nosql_search?q=javascript%3Aconsole.log%28%27XSS%27%29 HTTP/1.1" 200 105
+2025-03-19 23:48:42,092 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /xxe HTTP/1.1" 200 97
+2025-03-19 23:48:42,120 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:42,125 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /search?q=javascript%3Aconsole.log%28%27XSS%27%29 HTTP/1.1" 200 13871
+2025-03-19 23:48:42,133 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '16', 'current_attack': 'Cross-Site Scripting', 'completed_attacks': ['SQL Injection'], 'results': None, 'error': None}
+2025-03-19 23:48:42,133 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:42] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:48:42,142 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:42,148 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:42,328 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:42,351 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:42,352 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:42,360 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:42,594 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:42,594 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:42,598 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /xxe HTTP/1.1" 200 117
+2025-03-19 23:48:42,598 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /nosql_search?q=test123 HTTP/1.1" 200 101
+2025-03-19 23:48:42,627 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:42,633 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /search?q=test123 HTTP/1.1" 200 13849
+2025-03-19 23:48:42,649 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:42,656 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:42,861 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:42,874 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:42,875 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:42,882 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:43,099 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:43,100 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:43,102 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /nosql_search?q=%27onmouseover%3D%22console.log%28%27XSS%27%29%22+t%3D%27 HTTP/1.1" 200 105
+2025-03-19 23:48:43,103 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /xxe HTTP/1.1" 200 137
+2025-03-19 23:48:43,134 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:43,135 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '16', 'current_attack': 'Cross-Site Scripting', 'completed_attacks': ['SQL Injection'], 'results': None, 'error': None}
+2025-03-19 23:48:43,136 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:43] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:48:43,142 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /search?q=%27onmouseover%3D%22console.log%28%27XSS%27%29%22+t%3D%27 HTTP/1.1" 200 13879
+2025-03-19 23:48:43,158 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:43,164 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:43,383 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:43,392 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /message HTTP/1.1" 302 189
+2025-03-19 23:48:43,393 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:43,400 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:43,603 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:43,604 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:43,609 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:43,610 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /xxe HTTP/1.1" 200 117
+2025-03-19 23:48:43,643 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:43,645 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /reset HTTP/1.1" 200 194
+2025-03-19 23:48:43,666 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:43,671 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:43,901 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:43,903 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /include?file=test123 HTTP/1.1" 200 132
+2025-03-19 23:48:44,111 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:44,111 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:44,116 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:44,117 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /xxe HTTP/1.1" 200 137
+2025-03-19 23:48:44,137 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '16', 'current_attack': 'Cross-Site Scripting', 'completed_attacks': ['SQL Injection'], 'results': None, 'error': None}
+2025-03-19 23:48:44,137 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:44] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:48:44,147 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:44,149 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /reset HTTP/1.1" 200 322
+2025-03-19 23:48:44,150 - root - INFO - Found XSS vulnerability at http://127.0.0.1:5000/reset with parameter username
+2025-03-19 23:48:44,173 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:44,178 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:44,404 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:44,407 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /include?file=%3Cscript%3EToastify%28%7Btext%3A%22XSS+Test%22%2Cduration%3A3000%7D%29.showToast%28%29%3B%3C%2Fscript%3E HTTP/1.1" 200 196
+2025-03-19 23:48:44,407 - root - INFO - Found XSS vulnerability at http://127.0.0.1:5000/include with parameter file
+2025-03-19 23:48:44,617 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:44,618 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:44,623 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:44,625 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /ssrf?url=test123 HTTP/1.1" 200 155
+2025-03-19 23:48:45,125 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:45,126 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:45,131 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:45,131 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /ssrf?url=%3Cscript%3EToastify%28%7Btext%3A%22XSS+Test%22%2Cduration%3A3000%7D%29.showToast%28%29%3B%3C%2Fscript%3E HTTP/1.1" 200 190
+2025-03-19 23:48:45,133 - root - INFO - Found XSS vulnerability at http://127.0.0.1:5000/ssrf with parameter url
+2025-03-19 23:48:45,133 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '16', 'current_attack': 'Cross-Site Scripting', 'completed_attacks': ['SQL Injection'], 'results': None, 'error': None}
+2025-03-19 23:48:45,134 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:45] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:48:45,633 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:45,639 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:46,132 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '16', 'current_attack': 'Cross-Site Scripting', 'completed_attacks': ['SQL Injection'], 'results': None, 'error': None}
+2025-03-19 23:48:46,133 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:46] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:48:46,140 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:46,144 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:46,645 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:46,650 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:47,133 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '16', 'current_attack': 'Cross-Site Scripting', 'completed_attacks': ['SQL Injection'], 'results': None, 'error': None}
+2025-03-19 23:48:47,134 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:47] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:48:47,151 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:47,157 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:47,659 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:47,674 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:48,136 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '16', 'current_attack': 'Cross-Site Scripting', 'completed_attacks': ['SQL Injection'], 'results': None, 'error': None}
+2025-03-19 23:48:48,136 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:48] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:48:48,175 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:48,180 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:48,681 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:48,687 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:49,133 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '16', 'current_attack': 'Cross-Site Scripting', 'completed_attacks': ['SQL Injection'], 'results': None, 'error': None}
+2025-03-19 23:48:49,133 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:49] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:48:49,188 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:49,193 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:49,694 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:49,699 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:50,132 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '16', 'current_attack': 'Cross-Site Scripting', 'completed_attacks': ['SQL Injection'], 'results': None, 'error': None}
+2025-03-19 23:48:50,133 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:50] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:48:50,200 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:50,205 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:50,706 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:50,712 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:51,133 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '16', 'current_attack': 'Cross-Site Scripting', 'completed_attacks': ['SQL Injection'], 'results': None, 'error': None}
+2025-03-19 23:48:51,134 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:51] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:48:51,214 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:51,219 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /login HTTP/1.1" 200 13707
+2025-03-19 23:48:51,220 - root - INFO - Found vulnerabilities in Cross-Site Scripting
+2025-03-19 23:48:51,220 - root - INFO - Progress: 33%
+2025-03-19 23:48:51,220 - root - INFO - Starting SSRF scan
+2025-03-19 23:48:51,221 - urllib3.util.retry - DEBUG - Converted retries value: 3 -> Retry(total=3, connect=None, read=None, redirect=None, status=None)
+2025-03-19 23:48:51,722 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2025-03-19 23:48:51,729 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:48:52,136 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '33', 'current_attack': 'SSRF', 'completed_attacks': ['SQL Injection', 'Cross-Site Scripting'], 'results': None, 'error': None}
+2025-03-19 23:48:52,136 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:52] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:48:52,236 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:52,237 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (2): 127.0.0.1:5000
+2025-03-19 23:48:52,237 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (3): 127.0.0.1:5000
+2025-03-19 23:48:52,238 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (4): 127.0.0.1:5000
+2025-03-19 23:48:52,239 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (5): 127.0.0.1:5000
+2025-03-19 23:48:52,242 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /upload HTTP/1.1" 200 74
+2025-03-19 23:48:52,243 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /proxy?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:48:52,243 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /include?file=https%3A%2F%2Fwww.example.com HTTP/1.1" 200 148
+2025-03-19 23:48:52,244 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /fetch?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:48:52,361 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /ssrf?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 200 1319
+2025-03-19 23:48:52,744 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:52,745 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:52,746 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:52,746 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:52,750 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /proxy?url=http%3A%2F%2F127.0.0.1 HTTP/1.1" 404 207
+2025-03-19 23:48:52,752 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /fetch?url=http%3A%2F%2F127.0.0.1 HTTP/1.1" 404 207
+2025-03-19 23:48:52,753 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /upload HTTP/1.1" 200 74
+2025-03-19 23:48:52,753 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /include?file=http%3A%2F%2F127.0.0.1 HTTP/1.1" 200 141
+2025-03-19 23:48:52,862 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:52,865 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /ssrf?url=http%3A%2F%2F127.0.0.1 HTTP/1.1" 200 323
+2025-03-19 23:48:53,132 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '33', 'current_attack': 'SSRF', 'completed_attacks': ['SQL Injection', 'Cross-Site Scripting'], 'results': None, 'error': None}
+2025-03-19 23:48:53,133 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:53] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:48:53,252 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:53,254 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:53,255 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:53,256 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:53,256 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /proxy?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:48:53,260 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /fetch?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:48:53,260 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /upload HTTP/1.1" 200 74
+2025-03-19 23:48:53,261 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /include?file=https%3A%2F%2Fwww.example.com HTTP/1.1" 200 148
+2025-03-19 23:48:53,366 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:53,369 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /connect?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:48:53,758 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:53,762 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:53,762 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:53,763 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:53,764 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /proxy?url=http%3A%2F%2Flocalhost HTTP/1.1" 404 207
+2025-03-19 23:48:53,769 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /include?file=http%3A%2F%2Flocalhost HTTP/1.1" 200 141
+2025-03-19 23:48:53,770 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /fetch?url=http%3A%2F%2Flocalhost HTTP/1.1" 404 207
+2025-03-19 23:48:53,770 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /upload HTTP/1.1" 200 74
+2025-03-19 23:48:53,871 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:53,873 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /connect?url=http%3A%2F%2F127.0.0.1 HTTP/1.1" 404 207
+2025-03-19 23:48:54,132 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '33', 'current_attack': 'SSRF', 'completed_attacks': ['SQL Injection', 'Cross-Site Scripting'], 'results': None, 'error': None}
+2025-03-19 23:48:54,133 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:54] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:48:54,266 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:54,268 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /proxy?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:48:54,270 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:54,271 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:54,272 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:54,274 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /include?file=https%3A%2F%2Fwww.example.com HTTP/1.1" 200 148
+2025-03-19 23:48:54,276 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /fetch?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:48:54,276 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /upload HTTP/1.1" 200 74
+2025-03-19 23:48:54,374 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:54,376 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /connect?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:48:54,769 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:54,771 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /proxy?url=http%3A%2F%2F127.0.0.1%3A22 HTTP/1.1" 404 207
+2025-03-19 23:48:54,775 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:54,777 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:54,778 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:54,778 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /include?file=http%3A%2F%2F127.0.0.1%3A22 HTTP/1.1" 200 144
+2025-03-19 23:48:54,782 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /fetch?url=http%3A%2F%2F127.0.0.1%3A22 HTTP/1.1" 404 207
+2025-03-19 23:48:54,783 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /upload HTTP/1.1" 200 74
+2025-03-19 23:48:54,877 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:54,881 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /connect?url=http%3A%2F%2Flocalhost HTTP/1.1" 404 207
+2025-03-19 23:48:55,133 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '33', 'current_attack': 'SSRF', 'completed_attacks': ['SQL Injection', 'Cross-Site Scripting'], 'results': None, 'error': None}
+2025-03-19 23:48:55,133 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:55] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:48:55,273 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:55,275 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /proxy?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:48:55,280 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:55,283 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /include?file=https%3A%2F%2Fwww.example.com HTTP/1.1" 200 148
+2025-03-19 23:48:55,283 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:55,284 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:55,287 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /fetch?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:48:55,287 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /upload HTTP/1.1" 200 74
+2025-03-19 23:48:55,382 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:55,384 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /connect?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:48:55,776 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:55,778 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /proxy?url=http%3A%2F%2F127.0.0.1%3A3306 HTTP/1.1" 404 207
+2025-03-19 23:48:55,784 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:55,787 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /include?file=http%3A%2F%2F127.0.0.1%3A3306 HTTP/1.1" 200 146
+2025-03-19 23:48:55,788 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:55,789 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:55,793 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /upload HTTP/1.1" 200 74
+2025-03-19 23:48:55,794 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /fetch?url=http%3A%2F%2F127.0.0.1%3A3306 HTTP/1.1" 404 207
+2025-03-19 23:48:55,885 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:55,887 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /connect?url=http%3A%2F%2F127.0.0.1%3A22 HTTP/1.1" 404 207
+2025-03-19 23:48:56,135 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '33', 'current_attack': 'SSRF', 'completed_attacks': ['SQL Injection', 'Cross-Site Scripting'], 'results': None, 'error': None}
+2025-03-19 23:48:56,135 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:56] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:48:56,279 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:56,281 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /proxy?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:48:56,288 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:56,291 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /include?file=https%3A%2F%2Fwww.example.com HTTP/1.1" 200 148
+2025-03-19 23:48:56,294 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:56,295 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:56,298 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /upload HTTP/1.1" 200 74
+2025-03-19 23:48:56,299 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /fetch?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:48:56,388 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:56,390 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /connect?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:48:56,783 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:56,785 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /proxy?url=http%3A%2F%2F169.254.169.254%2Flatest%2Fmeta-data%2F HTTP/1.1" 404 207
+2025-03-19 23:48:56,792 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:56,795 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /include?file=http%3A%2F%2F169.254.169.254%2Flatest%2Fmeta-data%2F HTTP/1.1" 200 165
+2025-03-19 23:48:56,799 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:56,800 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:56,803 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /upload HTTP/1.1" 200 74
+2025-03-19 23:48:56,803 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /fetch?url=http%3A%2F%2F169.254.169.254%2Flatest%2Fmeta-data%2F HTTP/1.1" 404 207
+2025-03-19 23:48:56,892 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:56,894 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /connect?url=http%3A%2F%2F127.0.0.1%3A3306 HTTP/1.1" 404 207
+2025-03-19 23:48:57,132 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '33', 'current_attack': 'SSRF', 'completed_attacks': ['SQL Injection', 'Cross-Site Scripting'], 'results': None, 'error': None}
+2025-03-19 23:48:57,133 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:57] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:48:57,287 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:57,289 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /proxy?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:48:57,296 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:57,298 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /include?file=https%3A%2F%2Fwww.example.com HTTP/1.1" 200 148
+2025-03-19 23:48:57,304 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:57,305 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:57,308 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /upload HTTP/1.1" 200 74
+2025-03-19 23:48:57,309 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /fetch?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:48:57,395 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:57,397 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /connect?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:48:57,790 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:57,792 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /proxy?url=http%3A%2F%2Fmetadata.google.internal HTTP/1.1" 404 207
+2025-03-19 23:48:57,800 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:57,803 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /include?file=http%3A%2F%2Fmetadata.google.internal HTTP/1.1" 200 156
+2025-03-19 23:48:57,810 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:57,811 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:57,814 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /upload HTTP/1.1" 200 74
+2025-03-19 23:48:57,816 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /fetch?url=http%3A%2F%2Fmetadata.google.internal HTTP/1.1" 404 207
+2025-03-19 23:48:57,898 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:57,900 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /connect?url=http%3A%2F%2F169.254.169.254%2Flatest%2Fmeta-data%2F HTTP/1.1" 404 207
+2025-03-19 23:48:58,132 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '33', 'current_attack': 'SSRF', 'completed_attacks': ['SQL Injection', 'Cross-Site Scripting'], 'results': None, 'error': None}
+2025-03-19 23:48:58,133 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:58] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:48:58,293 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:58,295 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /proxy?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:48:58,304 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:58,307 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /redirect?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:48:58,316 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:58,318 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:58,320 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /upload HTTP/1.1" 200 74
+2025-03-19 23:48:58,321 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /fetch?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:48:58,401 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:58,404 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /connect?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:48:58,797 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:58,798 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /proxy?url=http%3A%2F%2F169.254.169.254%2Fmetadata%2Fv1 HTTP/1.1" 404 207
+2025-03-19 23:48:58,808 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:58,811 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /redirect?url=http%3A%2F%2F127.0.0.1 HTTP/1.1" 404 207
+2025-03-19 23:48:58,821 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:58,823 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:58,825 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /upload HTTP/1.1" 200 74
+2025-03-19 23:48:58,825 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /fetch?url=http%3A%2F%2F169.254.169.254%2Fmetadata%2Fv1 HTTP/1.1" 404 207
+2025-03-19 23:48:58,906 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:58,907 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /connect?url=http%3A%2F%2Fmetadata.google.internal HTTP/1.1" 404 207
+2025-03-19 23:48:59,133 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '33', 'current_attack': 'SSRF', 'completed_attacks': ['SQL Injection', 'Cross-Site Scripting'], 'results': None, 'error': None}
+2025-03-19 23:48:59,134 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:48:59] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:48:59,300 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:59,302 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /proxy?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:48:59,312 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:59,315 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /redirect?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:48:59,326 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:59,327 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:59,331 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /upload HTTP/1.1" 200 74
+2025-03-19 23:48:59,331 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /fetch?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:48:59,408 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:59,410 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /connect?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:48:59,803 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:59,806 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /proxy?url=http%3A%2F%2F127.0.0.1%3A6379 HTTP/1.1" 404 207
+2025-03-19 23:48:59,816 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:59,819 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /redirect?url=http%3A%2F%2Flocalhost HTTP/1.1" 404 207
+2025-03-19 23:48:59,833 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:59,833 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:59,836 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /fetch?url=http%3A%2F%2F127.0.0.1%3A6379 HTTP/1.1" 404 207
+2025-03-19 23:48:59,837 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /upload HTTP/1.1" 200 74
+2025-03-19 23:48:59,912 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:48:59,914 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /connect?url=http%3A%2F%2F169.254.169.254%2Fmetadata%2Fv1 HTTP/1.1" 404 207
+2025-03-19 23:49:00,135 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '33', 'current_attack': 'SSRF', 'completed_attacks': ['SQL Injection', 'Cross-Site Scripting'], 'results': None, 'error': None}
+2025-03-19 23:49:00,136 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:49:00] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:49:00,307 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:00,309 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /proxy?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:00,320 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:00,323 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /redirect?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:00,339 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:00,340 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:00,343 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /upload HTTP/1.1" 200 74
+2025-03-19 23:49:00,343 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /fetch?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:00,415 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:00,418 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /connect?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:00,811 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:00,812 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /proxy?url=http%3A%2F%2F127.0.0.1%3A27017 HTTP/1.1" 404 207
+2025-03-19 23:49:00,825 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:00,827 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /redirect?url=http%3A%2F%2F127.0.0.1%3A22 HTTP/1.1" 404 207
+2025-03-19 23:49:00,845 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:00,845 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:00,849 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /fetch?url=http%3A%2F%2F127.0.0.1%3A27017 HTTP/1.1" 404 207
+2025-03-19 23:49:00,850 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /upload HTTP/1.1" 200 74
+2025-03-19 23:49:00,919 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:00,922 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /connect?url=http%3A%2F%2F127.0.0.1%3A6379 HTTP/1.1" 404 207
+2025-03-19 23:49:01,132 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '33', 'current_attack': 'SSRF', 'completed_attacks': ['SQL Injection', 'Cross-Site Scripting'], 'results': None, 'error': None}
+2025-03-19 23:49:01,133 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:49:01] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:49:01,313 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:01,316 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /proxy?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:01,328 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:01,331 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /redirect?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:01,350 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:01,351 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:01,354 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /upload HTTP/1.1" 200 74
+2025-03-19 23:49:01,355 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /fetch?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:01,423 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:01,425 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /connect?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:01,736 - root - ERROR - Task execution error: 
+2025-03-19 23:49:01,817 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:01,820 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /proxy?url=http%3A%2F%2F127.0.0.1%3A8080 HTTP/1.1" 404 207
+2025-03-19 23:49:01,832 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:01,835 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /redirect?url=http%3A%2F%2F127.0.0.1%3A3306 HTTP/1.1" 404 207
+2025-03-19 23:49:01,856 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:01,857 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:01,861 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /fetch?url=http%3A%2F%2F127.0.0.1%3A8080 HTTP/1.1" 404 207
+2025-03-19 23:49:01,861 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /upload HTTP/1.1" 200 74
+2025-03-19 23:49:01,926 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:01,929 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /connect?url=http%3A%2F%2F127.0.0.1%3A27017 HTTP/1.1" 404 207
+2025-03-19 23:49:02,132 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '33', 'current_attack': 'SSRF', 'completed_attacks': ['SQL Injection', 'Cross-Site Scripting'], 'results': None, 'error': None}
+2025-03-19 23:49:02,132 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:49:02] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:49:02,321 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:02,324 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /proxy?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:02,336 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:02,339 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /redirect?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:02,362 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:02,363 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:02,366 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /fetch?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:02,366 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /upload HTTP/1.1" 200 74
+2025-03-19 23:49:02,430 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:02,432 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /connect?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:02,825 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:02,827 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /proxy?url=file%3A%2F%2F%2Fetc%2Fpasswd HTTP/1.1" 404 207
+2025-03-19 23:49:02,840 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:02,842 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /redirect?url=http%3A%2F%2F169.254.169.254%2Flatest%2Fmeta-data%2F HTTP/1.1" 404 207
+2025-03-19 23:49:02,867 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:02,868 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:02,871 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /upload HTTP/1.1" 200 74
+2025-03-19 23:49:02,871 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /fetch?url=file%3A%2F%2F%2Fetc%2Fpasswd HTTP/1.1" 404 207
+2025-03-19 23:49:02,933 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:02,935 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /connect?url=http%3A%2F%2F127.0.0.1%3A8080 HTTP/1.1" 404 207
+2025-03-19 23:49:03,135 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '33', 'current_attack': 'SSRF', 'completed_attacks': ['SQL Injection', 'Cross-Site Scripting'], 'results': None, 'error': None}
+2025-03-19 23:49:03,135 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:49:03] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:49:03,328 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:03,330 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /proxy?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:03,344 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:03,346 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /redirect?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:03,372 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:03,373 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:03,376 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /fetch?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:03,377 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /upload HTTP/1.1" 200 74
+2025-03-19 23:49:03,436 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:03,439 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /connect?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:03,832 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:03,834 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /proxy?url=dict%3A%2F%2F127.0.0.1%3A11211%2F HTTP/1.1" 404 207
+2025-03-19 23:49:03,848 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:03,850 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /redirect?url=http%3A%2F%2Fmetadata.google.internal HTTP/1.1" 404 207
+2025-03-19 23:49:03,877 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:03,879 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:03,882 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /fetch?url=dict%3A%2F%2F127.0.0.1%3A11211%2F HTTP/1.1" 404 207
+2025-03-19 23:49:03,883 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /upload HTTP/1.1" 200 74
+2025-03-19 23:49:03,941 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:03,943 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /connect?url=file%3A%2F%2F%2Fetc%2Fpasswd HTTP/1.1" 404 207
+2025-03-19 23:49:04,136 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '33', 'current_attack': 'SSRF', 'completed_attacks': ['SQL Injection', 'Cross-Site Scripting'], 'results': None, 'error': None}
+2025-03-19 23:49:04,137 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:49:04] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:49:04,335 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:04,338 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /proxy?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:04,351 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:04,353 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /redirect?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:04,384 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:04,385 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:04,387 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /fetch?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:04,388 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /upload HTTP/1.1" 200 74
+2025-03-19 23:49:04,444 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:04,446 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /connect?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:04,839 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:04,841 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /proxy?url=gopher%3A%2F%2F127.0.0.1%3A6379%2F_%2A1%250d%250a%248%250d%250aflushall%250d%250a%2A1%250d%250a%244%250d%250ainfo%250d%250a HTTP/1.1" 404 207
+2025-03-19 23:49:04,854 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:04,858 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /redirect?url=http%3A%2F%2F169.254.169.254%2Fmetadata%2Fv1 HTTP/1.1" 404 207
+2025-03-19 23:49:04,890 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:04,890 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:04,893 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /fetch?url=gopher%3A%2F%2F127.0.0.1%3A6379%2F_%2A1%250d%250a%248%250d%250aflushall%250d%250a%2A1%250d%250a%244%250d%250ainfo%250d%250a HTTP/1.1" 404 207
+2025-03-19 23:49:04,894 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /upload HTTP/1.1" 200 74
+2025-03-19 23:49:04,947 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:04,949 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /connect?url=dict%3A%2F%2F127.0.0.1%3A11211%2F HTTP/1.1" 404 207
+2025-03-19 23:49:05,133 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '33', 'current_attack': 'SSRF', 'completed_attacks': ['SQL Injection', 'Cross-Site Scripting'], 'results': None, 'error': None}
+2025-03-19 23:49:05,133 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:49:05] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:49:05,343 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:05,345 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /proxy?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:05,360 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:05,362 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /redirect?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:05,395 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:05,395 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:05,398 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /fetch?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:05,400 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /upload HTTP/1.1" 200 74
+2025-03-19 23:49:05,451 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:05,453 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /connect?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:05,846 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:05,848 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /proxy?url=ftp%3A%2F%2F127.0.0.1%3A21 HTTP/1.1" 404 207
+2025-03-19 23:49:05,863 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:05,866 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /redirect?url=http%3A%2F%2F127.0.0.1%3A6379 HTTP/1.1" 404 207
+2025-03-19 23:49:05,900 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:05,901 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:05,904 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /fetch?url=ftp%3A%2F%2F127.0.0.1%3A21 HTTP/1.1" 404 207
+2025-03-19 23:49:05,904 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "POST /upload HTTP/1.1" 200 74
+2025-03-19 23:49:05,955 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:05,957 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /connect?url=gopher%3A%2F%2F127.0.0.1%3A6379%2F_%2A1%250d%250a%248%250d%250aflushall%250d%250a%2A1%250d%250a%244%250d%250ainfo%250d%250a HTTP/1.1" 404 207
+2025-03-19 23:49:06,132 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '33', 'current_attack': 'SSRF', 'completed_attacks': ['SQL Injection', 'Cross-Site Scripting'], 'results': None, 'error': None}
+2025-03-19 23:49:06,133 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:49:06] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:49:06,349 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:06,352 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /load?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:06,369 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:06,371 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /redirect?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:06,458 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:06,460 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /connect?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:06,853 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:06,855 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /load?url=http%3A%2F%2F127.0.0.1 HTTP/1.1" 404 207
+2025-03-19 23:49:06,873 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:06,875 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /redirect?url=http%3A%2F%2F127.0.0.1%3A27017 HTTP/1.1" 404 207
+2025-03-19 23:49:06,961 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:06,964 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /connect?url=ftp%3A%2F%2F127.0.0.1%3A21 HTTP/1.1" 404 207
+2025-03-19 23:49:07,132 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '33', 'current_attack': 'SSRF', 'completed_attacks': ['SQL Injection', 'Cross-Site Scripting'], 'results': None, 'error': None}
+2025-03-19 23:49:07,132 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:49:07] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:49:07,356 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:07,358 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /load?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:07,376 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:07,379 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /redirect?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:07,859 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:07,861 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /load?url=http%3A%2F%2Flocalhost HTTP/1.1" 404 207
+2025-03-19 23:49:07,881 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:07,884 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /redirect?url=http%3A%2F%2F127.0.0.1%3A8080 HTTP/1.1" 404 207
+2025-03-19 23:49:08,134 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '33', 'current_attack': 'SSRF', 'completed_attacks': ['SQL Injection', 'Cross-Site Scripting'], 'results': None, 'error': None}
+2025-03-19 23:49:08,134 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:49:08] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:49:08,363 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:08,365 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /load?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:08,385 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:08,387 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /redirect?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:08,867 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:08,869 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /load?url=http%3A%2F%2F127.0.0.1%3A22 HTTP/1.1" 404 207
+2025-03-19 23:49:08,889 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:08,892 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /redirect?url=file%3A%2F%2F%2Fetc%2Fpasswd HTTP/1.1" 404 207
+2025-03-19 23:49:09,136 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '33', 'current_attack': 'SSRF', 'completed_attacks': ['SQL Injection', 'Cross-Site Scripting'], 'results': None, 'error': None}
+2025-03-19 23:49:09,137 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:49:09] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:49:09,370 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:09,372 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /load?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:09,393 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:09,396 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /redirect?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:09,873 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:09,875 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /load?url=http%3A%2F%2F127.0.0.1%3A3306 HTTP/1.1" 404 207
+2025-03-19 23:49:09,897 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:09,900 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /redirect?url=dict%3A%2F%2F127.0.0.1%3A11211%2F HTTP/1.1" 404 207
+2025-03-19 23:49:10,133 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '33', 'current_attack': 'SSRF', 'completed_attacks': ['SQL Injection', 'Cross-Site Scripting'], 'results': None, 'error': None}
+2025-03-19 23:49:10,133 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:49:10] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:49:10,376 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:10,379 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /load?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:10,402 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:10,405 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /redirect?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:10,880 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:10,882 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /load?url=http%3A%2F%2F169.254.169.254%2Flatest%2Fmeta-data%2F HTTP/1.1" 404 207
+2025-03-19 23:49:10,906 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:10,909 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /redirect?url=gopher%3A%2F%2F127.0.0.1%3A6379%2F_%2A1%250d%250a%248%250d%250aflushall%250d%250a%2A1%250d%250a%244%250d%250ainfo%250d%250a HTTP/1.1" 404 207
+2025-03-19 23:49:11,133 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '33', 'current_attack': 'SSRF', 'completed_attacks': ['SQL Injection', 'Cross-Site Scripting'], 'results': None, 'error': None}
+2025-03-19 23:49:11,133 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:49:11] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:49:11,383 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:11,385 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /load?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:11,411 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:11,414 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /redirect?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:11,886 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:11,889 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /load?url=http%3A%2F%2Fmetadata.google.internal HTTP/1.1" 404 207
+2025-03-19 23:49:11,915 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:11,918 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /redirect?url=ftp%3A%2F%2F127.0.0.1%3A21 HTTP/1.1" 404 207
+2025-03-19 23:49:12,134 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '33', 'current_attack': 'SSRF', 'completed_attacks': ['SQL Injection', 'Cross-Site Scripting'], 'results': None, 'error': None}
+2025-03-19 23:49:12,135 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:49:12] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:49:12,390 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:12,393 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /load?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:12,894 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:12,896 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /load?url=http%3A%2F%2F169.254.169.254%2Fmetadata%2Fv1 HTTP/1.1" 404 207
+2025-03-19 23:49:13,132 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '33', 'current_attack': 'SSRF', 'completed_attacks': ['SQL Injection', 'Cross-Site Scripting'], 'results': None, 'error': None}
+2025-03-19 23:49:13,133 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:49:13] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:49:13,397 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:13,399 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /load?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:13,900 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:13,903 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /load?url=http%3A%2F%2F127.0.0.1%3A6379 HTTP/1.1" 404 207
+2025-03-19 23:49:14,132 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '33', 'current_attack': 'SSRF', 'completed_attacks': ['SQL Injection', 'Cross-Site Scripting'], 'results': None, 'error': None}
+2025-03-19 23:49:14,133 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:49:14] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:49:14,404 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:14,406 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /load?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:14,907 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:14,910 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /load?url=http%3A%2F%2F127.0.0.1%3A27017 HTTP/1.1" 404 207
+2025-03-19 23:49:15,132 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '33', 'current_attack': 'SSRF', 'completed_attacks': ['SQL Injection', 'Cross-Site Scripting'], 'results': None, 'error': None}
+2025-03-19 23:49:15,133 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:49:15] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:49:15,411 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:15,413 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /load?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:15,915 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:15,917 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /load?url=http%3A%2F%2F127.0.0.1%3A8080 HTTP/1.1" 404 207
+2025-03-19 23:49:16,135 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '33', 'current_attack': 'SSRF', 'completed_attacks': ['SQL Injection', 'Cross-Site Scripting'], 'results': None, 'error': None}
+2025-03-19 23:49:16,136 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:49:16] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:49:16,418 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:16,420 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /load?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:16,921 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:16,923 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /load?url=file%3A%2F%2F%2Fetc%2Fpasswd HTTP/1.1" 404 207
+2025-03-19 23:49:17,132 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '33', 'current_attack': 'SSRF', 'completed_attacks': ['SQL Injection', 'Cross-Site Scripting'], 'results': None, 'error': None}
+2025-03-19 23:49:17,133 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:49:17] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:49:17,425 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:17,427 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /load?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:17,928 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:17,930 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /load?url=dict%3A%2F%2F127.0.0.1%3A11211%2F HTTP/1.1" 404 207
+2025-03-19 23:49:18,132 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '33', 'current_attack': 'SSRF', 'completed_attacks': ['SQL Injection', 'Cross-Site Scripting'], 'results': None, 'error': None}
+2025-03-19 23:49:18,132 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:49:18] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:49:18,431 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:18,434 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /load?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:18,935 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:18,938 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /load?url=gopher%3A%2F%2F127.0.0.1%3A6379%2F_%2A1%250d%250a%248%250d%250aflushall%250d%250a%2A1%250d%250a%244%250d%250ainfo%250d%250a HTTP/1.1" 404 207
+2025-03-19 23:49:19,133 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '33', 'current_attack': 'SSRF', 'completed_attacks': ['SQL Injection', 'Cross-Site Scripting'], 'results': None, 'error': None}
+2025-03-19 23:49:19,133 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:49:19] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:49:19,440 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:19,442 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /load?url=https%3A%2F%2Fwww.example.com HTTP/1.1" 404 207
+2025-03-19 23:49:19,943 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:19,945 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /load?url=ftp%3A%2F%2F127.0.0.1%3A21 HTTP/1.1" 404 207
+2025-03-19 23:49:19,946 - root - INFO - Found vulnerabilities in SSRF
+2025-03-19 23:49:19,946 - root - INFO - Progress: 66%
+2025-03-19 23:49:19,946 - root - INFO - Starting Session Hijacking scan
+2025-03-19 23:49:19,946 - urllib3.util.retry - DEBUG - Converted retries value: 3 -> Retry(total=3, connect=None, read=None, redirect=None, status=None)
+2025-03-19 23:49:20,134 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '66', 'current_attack': 'Session Hijacking', 'completed_attacks': ['SQL Injection', 'Cross-Site Scripting', 'SSRF'], 'results': None, 'error': None}
+2025-03-19 23:49:20,134 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:49:20] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:49:20,447 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): 127.0.0.1:5000
+2025-03-19 23:49:20,454 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET / HTTP/1.1" 200 13653
+2025-03-19 23:49:20,955 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:20,960 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /login HTTP/1.1" 200 13653
+2025-03-19 23:49:21,133 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '66', 'current_attack': 'Session Hijacking', 'completed_attacks': ['SQL Injection', 'Cross-Site Scripting', 'SSRF'], 'results': None, 'error': None}
+2025-03-19 23:49:21,133 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:49:21] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:49:21,461 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:21,463 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /auth HTTP/1.1" 404 207
+2025-03-19 23:49:21,964 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:21,966 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /account HTTP/1.1" 404 207
+2025-03-19 23:49:22,132 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'running', 'progress': '66', 'current_attack': 'Session Hijacking', 'completed_attacks': ['SQL Injection', 'Cross-Site Scripting', 'SSRF'], 'results': None, 'error': None}
+2025-03-19 23:49:22,133 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:49:22] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:49:22,467 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:22,469 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /profile HTTP/1.1" 404 207
+2025-03-19 23:49:22,970 - urllib3.connectionpool - DEBUG - Resetting dropped connection: 127.0.0.1
+2025-03-19 23:49:22,973 - urllib3.connectionpool - DEBUG - http://127.0.0.1:5000 "GET /dashboard HTTP/1.1" 404 207
+2025-03-19 23:49:22,973 - root - INFO - Found vulnerabilities in Session Hijacking
+2025-03-19 23:49:22,973 - root - INFO - Progress: 100%
+2025-03-19 23:49:22,973 - root - INFO - Scan completed
+2025-03-19 23:49:23,134 - root - INFO - Status update for scan 333de0ad-9b29-47e0-80c9-8861129cf74a: {'status': 'completed', 'progress': '100', 'current_attack': 'Session Hijacking', 'completed_attacks': ['SQL Injection', 'Cross-Site Scripting', 'SSRF', 'Session Hijacking'], 'results': {'sql_injection': [{'url': 'http://127.0.0.1:5000/dom', 'method': 'get', 'parameter': 'data', 'payload': "' OR '1'='1", 'type': 'Error-based SQL Injection', 'severity': 'High'}, {'url': 'http://127.0.0.1:5000/nosql_search', 'method': 'get', 'parameter': 'q', 'payload': "' OR '1'='1", 'type': 'Error-based SQL Injection', 'severity': 'High'}, {'url': 'http://127.0.0.1:5000/ldap', 'method': 'get', 'parameter': 'username', 'payload': "' OR '1'='1", 'type': 'Error-based SQL Injection', 'severity': 'High'}, {'url': 'http://127.0.0.1:5000/reset', 'method': 'post', 'parameter': 'username', 'payload': "' OR '1'='1", 'type': 'Error-based SQL Injection', 'severity': 'High'}, {'url': 'http://127.0.0.1:5000/xxe', 'method': 'post', 'parameter': 'xml', 'payload': "' OR '1'='1", 'type': 'Error-based SQL Injection', 'severity': 'High'}, {'url': 'http://127.0.0.1:5000/include', 'method': 'get', 'parameter': 'file', 'payload': "' OR '1'='1", 'type': 'Error-based SQL Injection', 'severity': 'High'}, {'url': 'http://127.0.0.1:5000/ssrf', 'method': 'get', 'parameter': 'url', 'payload': "' OR '1'='1", 'type': 'Error-based SQL Injection', 'severity': 'High'}, {'url': 'http://127.0.0.1:5000/search', 'method': 'get', 'parameter': 'q', 'payload': "' OR '1'='1", 'type': 'Error-based SQL Injection', 'severity': 'High'}], 'xss': [{'url': 'http://127.0.0.1:5000/dom', 'method': 'get', 'parameter': 'data', 'payload': '<script>Toastify({text:"XSS Test",duration:3000}).showToast();</script>', 'type': 'Cross-Site Scripting (XSS)', 'severity': 'Medium', 'evidence': 'XSS payload successfully reflected'}, {'url': 'http://127.0.0.1:5000/ldap', 'method': 'get', 'parameter': 'username', 'payload': '<script>Toastify({text:"XSS Test",duration:3000}).showToast();</script>', 'type': 'Cross-Site Scripting (XSS)', 'severity': 'Medium', 'evidence': 'XSS payload successfully reflected'}, {'url': 'http://127.0.0.1:5000/reset', 'method': 'post', 'parameter': 'username', 'payload': '<script>Toastify({text:"XSS Test",duration:3000}).showToast();</script>', 'type': 'Cross-Site Scripting (XSS)', 'severity': 'Medium', 'evidence': 'XSS payload successfully reflected'}, {'url': 'http://127.0.0.1:5000/include', 'method': 'get', 'parameter': 'file', 'payload': '<script>Toastify({text:"XSS Test",duration:3000}).showToast();</script>', 'type': 'Cross-Site Scripting (XSS)', 'severity': 'Medium', 'evidence': 'XSS payload successfully reflected'}, {'url': 'http://127.0.0.1:5000/ssrf', 'method': 'get', 'parameter': 'url', 'payload': '<script>Toastify({text:"XSS Test",duration:3000}).showToast();</script>', 'type': 'Cross-Site Scripting (XSS)', 'severity': 'Medium', 'evidence': 'XSS payload successfully reflected'}], 'ssrf': [{'url': 'http://127.0.0.1:5000/include', 'method': 'GET', 'parameter': 'file', 'payload': 'http://metadata.google.internal', 'type': 'Server-Side Request Forgery', 'severity': 'High', 'evidence': 'Cloud metadata access detected'}, {'url': 'http://127.0.0.1:5000/ssrf', 'method': 'GET', 'parameter': 'url', 'payload': 'http://127.0.0.1', 'type': 'Server-Side Request Forgery', 'severity': 'High', 'evidence': 'Significant response length difference detected'}], 'session_hijacking': []}, 'error': None}
+2025-03-19 23:49:23,134 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:49:23] "GET /scan_status/333de0ad-9b29-47e0-80c9-8861129cf74a HTTP/1.1" 200 -
+2025-03-19 23:50:57,990 - root - INFO - Starting OWASP Top 10 scan
+2025-03-19 23:50:57,991 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:50:57] "POST /owasp_scan HTTP/1.1" 200 -
+2025-03-19 23:50:57,991 - root - ERROR - Error in OWASP Top 10: Can't instantiate abstract class OWASPScanner without an implementation for abstract method 'execute_task'
+2025-03-19 23:50:57,991 - root - INFO - Scan completed
+2025-03-19 23:50:59,007 - root - INFO - Status update for scan 53a00a9a-0e65-4cf9-bedc-c6c4856dad42: {'status': 'completed', 'progress': '100', 'current_attack': 'OWASP Top 10', 'completed_attacks': [], 'results': {}, 'error': None}
+2025-03-19 23:50:59,007 - werkzeug - INFO - 127.0.0.1 - - [19/Mar/2025 23:50:59] "GET /scan_status/53a00a9a-0e65-4cf9-bedc-c6c4856dad42 HTTP/1.1" 200 -
