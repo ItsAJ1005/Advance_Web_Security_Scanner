@@ -11,6 +11,7 @@ from attacks.injection.xxe_injection import XXEInjectionScanner
 from core.base_scanner import BaseScanner
 from attacks.injection.sql_injection import SQLInjectionScanner
 from attacks.xss.xss_scanner import XSSScanner
+from attacks.injection.ldap_injection import LDAPInjectionScanner
 
 def load_config(config_path: str = "config/scanner_config.json") -> Dict:
     default_config = {
@@ -53,10 +54,22 @@ def main():
     parser.add_argument("--url", required=True, help="Target URL to scan")
     parser.add_argument("--config", default="config/scanner_config.json", help="Path to configuration file")
     parser.add_argument("--output", default="results/scan_results.json", help="Path to output results file")
+    parser.add_argument("--module", help="Specific module to run (e.g., ldap_injection, sql_injection)")
     args = parser.parse_args()
     
     setup_logging()
     config = load_config(args.config)
+    
+    scanner_mapping = {
+        'sql_injection': SQLInjectionScanner,
+        'xss': XSSScanner,
+        'xxe_injection': XXEInjectionScanner,
+        'session_hijacking': SessionHijackingScanner,
+        'brute_force': BruteForceScanner,
+        'ssrf': SSRFScanner,
+        'ldap_injection': LDAPInjectionScanner  # Add this line
+    }
+    
     enabled_attacks = config.get("enabled_attacks", [])
     
     results = {}
