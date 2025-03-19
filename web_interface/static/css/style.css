@@ -84,9 +84,15 @@ input[type="url"] {
 .results-container {
     margin-top: 30px;
     background: white;
-    padding: 25px;
+    padding: 15px;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.results-container.clearing {
+    animation: fadeOut 0.3s ease-out;
 }
 
 .vulnerability-card {
@@ -95,6 +101,12 @@ input[type="url"] {
     margin-bottom: 15px;
     padding: 15px;
     animation: slideIn 0.3s ease-out;
+    transition: all 0.3s ease;
+}
+
+.vulnerability-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
 .vulnerability-card.high {
@@ -114,6 +126,10 @@ input[type="url"] {
     padding: 20px;
     font-weight: bold;
     color: var(--secondary-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .terminal {
@@ -171,6 +187,10 @@ input[type="url"] {
 .terminal-line.success { color: #27c93f; }
 .terminal-line.warning { color: #ffbd2e; }
 
+.terminal-output.clearing {
+    animation: slideUp 0.3s ease-out;
+}
+
 .spinner {
     width: 40px;
     height: 40px;
@@ -193,6 +213,28 @@ input[type="url"] {
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-10px);
     }
 }
 
@@ -231,4 +273,28 @@ input[type="url"] {
 
 .reference-link:hover {
     text-decoration: underline;
+}
+
+.scan-stats {
+    background: linear-gradient(135deg, #6B73FF 0%, #000DFF 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.attack-info {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.attack-info.show {
+    max-height: 500px;
+}
+
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1050;
 }

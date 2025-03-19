@@ -1,3 +1,105 @@
+document.addEventListener('DOMContentLoaded', function() {
+    const scanForm = document.getElementById('scanForm');
+    const selectAll = document.getElementById('selectAll');
+    const progressBar = document.querySelector('.progress-bar');
+    const progressDiv = document.querySelector('.progress');
+    const terminalOutput = document.getElementById('terminalOutput');
+
+    // Handle Select All checkbox
+    if (selectAll) {
+        selectAll.addEventListener('change', function() {
+            document.querySelectorAll('input[name="attacks"]').forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
+        });
+    }
+
+    // Handle form submission
+    if (scanForm) {
+        scanForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const selectedAttacks = Array.from(document.querySelectorAll('input[name="attacks"]:checked'))
+                .map(cb => cb.value);
+            
+            if (selectedAttacks.length === 0) {
+                showToast('Please select at least one attack type', 'warning');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('target_url', document.getElementById('target_url').value);
+            selectedAttacks.forEach(attack => formData.append('attacks', attack));
+
+            // Show loading state
+            document.querySelector('.loader').style.display = 'block';
+            document.getElementById('resultsContent').innerHTML = '';
+
+            try {
+                const response = await fetch('/scan', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                if (data.scan_id) {
+                    pollScanStatus(data.scan_id);
+                }
+            } catch (error) {
+                handleScanError(error);
+            }
+        });
+    }
+
+    function pollScanStatus(scanId) {
+        const interval = setInterval(async () => {
+            try {
+                const response = await fetch(`/scan_status/${scanId}`);
+                const data = await response.json();
+                
+                updateProgress(data.progress);
+                
+                if (data.status === 'completed') {
+                    clearInterval(interval);
+                    displayResults(data.results);
+                    document.querySelector('.loader').style.display = 'none';
+                } else if (data.status === 'failed') {
+                    clearInterval(interval);
+                    handleScanError(new Error(data.error));
+                }
+            } catch (error) {
+                clearInterval(interval);
+                handleScanError(error);
+            }
+        }, 1000);
+    }
+
+    function updateProgress(progress) {
+        progressBar.style.width = `${progress}%`;
+        progressBar.textContent = `${progress}%`;
+    }
+
+    function finishScan() {
+        progressDiv.style.display = 'none';
+        appendToTerminal('Scan finished', 'success');
+    }
+
+    function handleScanError(error) {
+        progressDiv.style.display = 'none';
+        appendToTerminal(`Error: ${error.message}`, 'error');
+    }
+
+    function showToast(message, type) {
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        setTimeout(() => {
+            toast.remove();
+        }, 3000);
+    }
+});
+
 function appendToTerminal(message, type = '') {
     const terminal = document.getElementById('terminalOutput');
     const line = document.createElement('div');
@@ -7,77 +109,61 @@ function appendToTerminal(message, type = '') {
     terminal.scrollTop = terminal.scrollHeight;
 }
 
-document.getElementById('scanForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const form = e.target;
-    const resultsDiv = document.getElementById('results');
-    const loader = document.querySelector('.loader');
-    const resultsContent = document.getElementById('resultsContent');
-    const terminalOutput = document.getElementById('terminalOutput');
-    
-    // Clear previous results
-    resultsContent.innerHTML = '';
-    loader.style.display = 'block';
-    
-    appendToTerminal('Starting new scan...');
-    appendToTerminal(`Target URL: ${form.target_url.value}`);
-    
-    const formData = new FormData(form);
-    const selectedAttacks = formData.getAll('attacks');
-    appendToTerminal(`Selected attacks: ${selectedAttacks.join(', ')}`);
-    
-    fetch('/scan', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        loader.style.display = 'none';
-        appendToTerminal('Scan completed', 'success');
-        displayResults(data);
-    })
-    .catch(error => {
-        loader.style.display = 'none';
-        appendToTerminal(`Error: ${error.message}`, 'error');
-        resultsContent.innerHTML = `<div class="error">Error: ${error.message}</div>`;
-    });
-});
-
 function displayResults(data) {
     const resultsContent = document.getElementById('resultsContent');
-    let html = '';
-    let vulnerabilitiesFound = false;
-    
-    for (const [attackType, vulnerabilities] of Object.entries(data)) {
-        if (vulnerabilities.length > 0) {
-            vulnerabilitiesFound = true;
-            appendToTerminal(`Found ${vulnerabilities.length} vulnerabilities in ${attackType}`, 'warning');
-            
-            html += `<h3>${formatAttackType(attackType)}</h3>`;
-            vulnerabilities.forEach(vuln => {
-                html += `
-                    <div class="vulnerability-card ${vuln.severity.toLowerCase()}">
-                        <h4>${vuln.vulnerability}</h4>
-                        <p><strong>URL:</strong> ${vuln.url}</p>
-                        <p><strong>Severity:</strong> ${vuln.severity}</p>
-                        ${vuln.parameter ? `<p><strong>Parameter:</strong> ${vuln.parameter}</p>` : ''}
-                        ${vuln.payload ? `<p><strong>Payload:</strong> ${vuln.payload}</p>` : ''}
-                    </div>
-                `;
+    let html = '<div class="scan-summary">';
+    let totalVulnerabilities = 0;
+
+    // Group vulnerabilities by severity
+    const severityGroups = {
+        'High': [],
+        'Medium': [],
+        'Low': []
+    };
+
+    for (const [scanType, results] of Object.entries(data)) {
+        if (results && results.length > 0) {
+            results.forEach(vuln => {
+                if (vuln.severity) {
+                    severityGroups[vuln.severity].push({
+                        ...vuln,
+                        scanType
+                    });
+                    totalVulnerabilities++;
+                }
             });
-        } else {
-            appendToTerminal(`No vulnerabilities found in ${attackType}`, 'success');
         }
     }
-    
-    resultsContent.innerHTML = html || '<p class="no-vulns">No vulnerabilities found.</p>';
-    
-    if (vulnerabilitiesFound) {
-        appendToTerminal('⚠️ Vulnerabilities detected! Check the results below.', 'warning');
-    } else {
-        appendToTerminal('✅ No vulnerabilities detected!', 'success');
+
+    // Display summary
+    html += `<h3>Scan Complete - Found ${totalVulnerabilities} vulnerabilities</h3>`;
+
+    // Display vulnerabilities grouped by severity
+    for (const [severity, vulns] of Object.entries(severityGroups)) {
+        if (vulns.length > 0) {
+            html += `
+                <div class="severity-group ${severity.toLowerCase()}">
+                    <h4>${severity} Severity (${vulns.length})</h4>
+                    ${vulns.map(vuln => `
+                        <div class="vulnerability-card">
+                            <h5>${vuln.type || vuln.vulnerability}</h5>
+                            <p><strong>Scanner:</strong> ${formatScanType(vuln.scanType)}</p>
+                            <p><strong>URL:</strong> ${vuln.url || 'N/A'}</p>
+                            ${vuln.parameter ? `<p><strong>Parameter:</strong> ${vuln.parameter}</p>` : ''}
+                            ${vuln.evidence ? `<p><strong>Evidence:</strong> ${formatEvidence(vuln.evidence)}</p>` : ''}
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
     }
+
+    html += '</div>';
+    resultsContent.innerHTML = html;
+
+    // Hide loader and show completion message
+    document.querySelector('.loader').style.display = 'none';
+    appendToTerminal(`Scan completed - Found ${totalVulnerabilities} vulnerabilities`);
 }
 
 function formatAttackType(type) {
