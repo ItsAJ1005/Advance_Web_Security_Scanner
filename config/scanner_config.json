@@ -1,10 +1,39 @@
 {
-  "max_threads": 5,
-  "request_delay": 0.5,
+  "max_threads": 10,
+  "request_delay": 0.2,
   "timeout": 30,
   "user_agent": "Security-Scanner-v1.0",
-
   "enabled_attacks": [
-    "session_hijacking"
-  ]
+    "sql_injection",
+    "xss",
+    "xxe_injection",
+    "session_hijacking",
+    "brute_force",
+    "ssrf",
+    "api_security",
+    "owasp",
+    "ldap_injection"
+  ],
+  "defense_checks": {
+    "check_security_headers": true,
+    "check_ssl_tls": true,
+    "check_waf": true
+  },
+  "owasp_checks": {
+    "injection": true,
+    "broken_auth": true,
+    "sensitive_data": true,
+    "xxe": true,
+    "broken_access": true,
+    "security_misconfig": true,
+    "xss": true,
+    "insecure_deserialization": true,
+    "components": true,
+    "insufficient_logging": true
+  },
+  "thread_config": {
+    "max_concurrent_requests": 5,
+    "per_scanner_threads": 3,
+    "timeout_per_request": 10
+  }
 }
