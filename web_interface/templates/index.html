@@ -30,6 +30,13 @@
             max-height: 500px;
             overflow-y: auto;
         }
+        .nav-tabs .nav-link {
+            color: #495057;
+        }
+        .nav-tabs .nav-link.active {
+            color: #0d6efd;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -46,68 +53,113 @@
         <!-- Quick Actions -->
         <div class="row mb-4">
             <div class="col-md-12">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Security Scanner</h5>
-                        <form id="scanForm" class="scan-form">
-                            <div class="mb-3">
-                                <label for="target_url" class="form-label">Target URL</label>
-                                <input type="url" class="form-control" id="target_url" name="target_url" required placeholder="https://example.com">
+                <ul class="nav nav-tabs" id="scannerTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="custom-scan-tab" data-bs-toggle="tab" data-bs-target="#custom-scan" type="button" role="tab">
+                            Custom Scan
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="owasp-scan-tab" data-bs-toggle="tab" data-bs-target="#owasp-scan" type="button" role="tab">
+                            OWASP Top 10 Scanner
+                        </button>
+                    </li>
+                </ul>
+                
+                <div class="tab-content mt-3" id="scannerTabsContent">
+                    <!-- Custom Scan Tab -->
+                    <div class="tab-pane fade show active" id="custom-scan" role="tabpanel">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Custom Security Scanner</h5>
+                                <form id="scanForm" class="scan-form">
+                                    <div class="mb-3">
+                                        <label for="target_url" class="form-label">Target URL</label>
+                                        <input type="url" class="form-control" id="target_url" name="target_url" required placeholder="https://example.com">
+                                    </div>
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label">Select Attacks</label>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="attacks" value="sql_injection" id="sqlInjection">
+                                                    <label class="form-check-label" for="sqlInjection">SQL Injection</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="attacks" value="xss" id="xss">
+                                                    <label class="form-check-label" for="xss">Cross-Site Scripting</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="attacks" value="ldap_injection" id="ldapInjection">
+                                                    <label class="form-check-label" for="ldapInjection">LDAP Injection</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="attacks" value="ssrf" id="ssrf">
+                                                    <label class="form-check-label" for="ssrf">SSRF</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="attacks" value="xxe" id="xxe">
+                                                    <label class="form-check-label" for="xxe">XXE Injection</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="attacks" value="session_hijacking" id="sessionHijacking">
+                                                    <label class="form-check-label" for="sessionHijacking">Session Hijacking</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="selectAll">
+                                                    <label class="form-check-label" for="selectAll">
+                                                        <strong>Select All</strong>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Start Scan</button>
+                                </form>
                             </div>
-                            
-                            <div class="mb-3">
-                                <label class="form-label">Select Attacks</label>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="attacks" value="sql_injection" id="sqlInjection">
-                                            <label class="form-check-label" for="sqlInjection">SQL Injection</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="attacks" value="xss" id="xss">
-                                            <label class="form-check-label" for="xss">Cross-Site Scripting</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="attacks" value="ldap_injection" id="ldapInjection">
-                                            <label class="form-check-label" for="ldapInjection">LDAP Injection</label>
-                                        </div>
+                        </div>
+                    </div>
+
+                    <!-- OWASP Top 10 Scanner Tab -->
+                    <div class="tab-pane fade" id="owasp-scan" role="tabpanel">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">OWASP Top 10 Vulnerability Scanner</h5>
+                                <p class="text-muted">This scanner checks for the OWASP Top 10 web application security risks:</p>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <ul class="list-group">
+                                            <li class="list-group-item">A01:2021 - Broken Access Control</li>
+                                            <li class="list-group-item">A02:2021 - Cryptographic Failures</li>
+                                            <li class="list-group-item">A03:2021 - Injection</li>
+                                            <li class="list-group-item">A04:2021 - Insecure Design</li>
+                                            <li class="list-group-item">A05:2021 - Security Misconfiguration</li>
+                                        </ul>
                                     </div>
-                                    <div class="col-md-4">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="attacks" value="ssrf" id="ssrf">
-                                            <label class="form-check-label" for="ssrf">SSRF</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="attacks" value="xxe" id="xxe">
-                                            <label class="form-check-label" for="xxe">XXE Injection</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="attacks" value="session_hijacking" id="sessionHijacking">
-                                            <label class="form-check-label" for="sessionHijacking">Session Hijacking</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="attacks" value="brute_force" id="bruteForce">
-                                            <label class="form-check-label" for="bruteForce">Brute Force</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="attacks" value="api" id="api">
-                                            <label class="form-check-label" for="api">API Security</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="selectAll">
-                                            <label class="form-check-label" for="selectAll">Select All</label>
-                                        </div>
+                                    <div class="col-md-6">
+                                        <ul class="list-group">
+                                            <li class="list-group-item">A06:2021 - Vulnerable Components</li>
+                                            <li class="list-group-item">A07:2021 - Auth & Access Failures</li>
+                                            <li class="list-group-item">A08:2021 - Software & Data Integrity</li>
+                                            <li class="list-group-item">A09:2021 - Security Logging Failures</li>
+                                            <li class="list-group-item">A10:2021 - SSRF</li>
+                                        </ul>
                                     </div>
                                 </div>
+                                <form id="owaspScanForm">
+                                    <div class="mb-3">
+                                        <label for="owasp_target_url" class="form-label">Target URL</label>
+                                        <input type="url" class="form-control" id="owasp_target_url" name="target_url" required placeholder="https://example.com">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Start OWASP Scan</button>
+                                </form>
                             </div>
-                            
-                            <div class="mb-3">
-                                <button type="submit" class="btn btn-primary" id="startScan">Start Scan</button>
-                                <button type="button" class="btn btn-secondary" id="clearResults">Clear Results</button>
-                            </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -115,156 +167,29 @@
 
         <!-- Scan Progress Section -->
         <div class="card mb-4" id="scanProgress" style="display: none;">
-            <div class="card-header">
-                <h5 class="mb-0">Scan Progress</h5>
-            </div>
-            <div class="card-body">
-                <div class="progress mb-3">
-                    <div class="progress-bar progress-bar-striped progress-bar-animated" 
-                         role="progressbar" 
-                         style="width: 0%"
-                         aria-valuenow="0"
-                         aria-valuemin="0"
-                         aria-valuemax="100">0%</div>
-                </div>
-                
-                <div class="current-scan-status">
-                    <p class="current-attack">Initializing scan...</p>
-                    <div id="completedAttacks" class="mt-2"></div>
-                </div>
-
-                <div id="terminalOutput" class="bg-dark text-light p-3 mt-3" style="height: 200px; overflow-y: auto;">
-                    <div class="terminal-content"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Results Section -->
-        <div class="card mb-4" id="scanResults" style="display: none;">
-            <div class="card-header">
-                <h5 class="mb-0">Scan Results</h5>
-            </div>
-            <div class="card-body">
-                <div id="resultsContent"></div>
-            </div>
-        </div>
-
-        <!-- OWASP Top 10 Section -->
-        <h3 class="mb-3">OWASP Top 10 Vulnerabilities</h3>
-        <div class="row mb-4">
-            <div class="col-md-4">
-                <div class="card attack-card" data-attack="injection">
-                    <div class="card-body">
-                        <h5 class="card-title">A01:2021 - Broken Access Control</h5>
-                        <p class="card-text">Test for authentication and authorization vulnerabilities.</p>
-                        <button class="btn btn-info btn-sm info-btn">Learn More</button>
-                        <button class="btn btn-primary btn-sm scan-btn">Scan</button>
-                        <div class="vulnerability-info">
-                            <hr>
-                            <h6>Description:</h6>
-                            <p>Access control enforces policy such that users cannot act outside of their intended permissions.</p>
-                            <h6>Common Attacks:</h6>
-                            <ul>
-                                <li>Privilege Escalation</li>
-                                <li>IDOR</li>
-                                <li>Path Traversal</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Add more OWASP cards similarly -->
-        </div>
-
-        <!-- Individual Attacks Section -->
-        <h3 class="mb-3">Available Attacks</h3>
-        <div class="row mb-4">
-            <div class="col-md-3">
-                <div class="card attack-card" data-attack="sql_injection">
-                    <div class="card-body">
-                        <h5 class="card-title">SQL Injection</h5>
-                        <p class="card-text">Test for SQL injection vulnerabilities.</p>
-                        <button class="btn btn-info btn-sm info-btn">Learn More</button>
-                        <button class="btn btn-primary btn-sm scan-btn">Scan</button>
-                        <div class="vulnerability-info">
-                            <hr>
-                            <h6>Description:</h6>
-                            <p>SQL injection attacks allow attackers to manipulate database queries.</p>
-                            <h6>Detection Method:</h6>
-                            <p>Tests various payloads and analyzes responses for SQL errors or unexpected behavior.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Add more attack cards similarly -->
-        </div>
-
-        <!-- Progress Section -->
-        <div class="card mb-4" id="scanProgress" style="display: none;">
             <div class="card-header bg-primary text-white">
                 <h5 class="mb-0">Scan Progress</h5>
             </div>
             <div class="card-body">
-                <!-- Progress Bar -->
-                <div class="progress mb-3" style="height: 25px;">
-                    <div class="progress-bar progress-bar-striped progress-bar-animated" 
-                         role="progressbar" 
-                         style="width: 0%"
-                         aria-valuenow="0"
-                         aria-valuemin="0"
-                         aria-valuemax="100">0%</div>
+                <div class="progress mb-3">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
                 </div>
-                
-                <!-- Current Attack Status -->
-                <div class="current-status mb-3">
-                    <h6>Current Attack:</h6>
-                    <div class="current-attack alert alert-info">Initializing scan...</div>
-                </div>
-
-                <!-- Completed Attacks -->
-                <div class="completed-attacks mb-3">
-                    <h6>Completed Attacks:</h6>
-                    <div id="completedAttacks"></div>
-                </div>
-
-                <!-- Scanner Output -->
-                <div id="terminalOutput" class="bg-dark text-light p-3 rounded" style="height: 200px; overflow-y: auto;">
+                <div class="current-attack mb-3">Initializing scan...</div>
+                <div id="completedAttacks"></div>
+                <div class="terminal">
                     <div class="terminal-content"></div>
                 </div>
             </div>
         </div>
 
-        <!-- Results Section -->
-        <div class="card mb-4" id="scanResults" style="display: none;">
-            <div class="card-header">
+        <!-- Scan Results Section -->
+        <div class="card" id="scanResults" style="display: none;">
+            <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">Scan Results</h5>
+                <button id="clearResults" class="btn btn-sm btn-light">Clear Results</button>
             </div>
             <div class="card-body">
-                <div id="resultsContent"></div>
-            </div>
-        </div>
-
-        <!-- Terminal Output -->
-        <div id="terminalOutput" class="mt-4" style="display: none;">
-            <div class="card">
-                <div class="card-header">
-                    <h5>Scanner Output</h5>
-                </div>
-                <div class="card-body bg-dark text-light terminal-content">
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Attack Information Modal -->
-    <div class="modal fade" id="attackInfoModal">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title"></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body"></div>
+                <div id="resultsContent" class="results-container"></div>
             </div>
         </div>
     </div>
@@ -297,10 +222,26 @@
             });
 
             // Quick scan form handler
-            document.getElementById('quickScanForm').addEventListener('submit', function(e) {
+            document.getElementById('scanForm').addEventListener('submit', function(e) {
                 e.preventDefault();
                 const url = document.getElementById('target_url').value;
-                runScan(url, ['all']);
+                const attacks = Array.from(document.querySelectorAll('input[name="attacks"]:checked')).map(checkbox => checkbox.value);
+                if (!url) {
+                    alert('Please enter a target URL');
+                    return;
+                }
+                runScan(url, attacks);
+            });
+
+            // OWASP scan form handler
+            document.getElementById('owaspScanForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const url = document.getElementById('owasp_target_url').value;
+                if (!url) {
+                    alert('Please enter a target URL');
+                    return;
+                }
+                runOWASPSan(url);
             });
         });
 
@@ -314,6 +255,29 @@
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
                 body: `target_url=${encodeURIComponent(url)}&attacks=${attacks.join(',')}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.querySelector('.loader').style.display = 'none';
+                displayResults(data);
+                updateStats(data);
+            })
+            .catch(error => {
+                document.querySelector('.loader').style.display = 'none';
+                document.getElementById('resultsContent').innerHTML = `<div class="alert alert-danger">Error: ${error}</div>`;
+            });
+        }
+
+        function runOWASPSan(url) {
+            document.querySelector('.loader').style.display = 'block';
+            document.getElementById('resultsContent').innerHTML = '';
+            
+            fetch('/owasp-scan', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `target_url=${encodeURIComponent(url)}`
             })
             .then(response => response.json())
             .then(data => {

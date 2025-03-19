@@ -1,0 +1,103 @@
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h2>OWASP Top 10 Vulnerability Scanner</h2>
+            <form id="owaspScanForm">
+                <div class="form-group">
+                    <label for="owasp_target_url">Target URL:</label>
+                    <input type="url" class="form-control" id="owasp_target_url" 
+                           placeholder="https://example.com" required>
+                </div>
+                <button type="submit" class="btn btn-primary mt-2">Scan for OWASP Top 10</button>
+            </form>
+            <div id="owaspResults" class="mt-4"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+// ...existing code...
+            // Quick scan form handler
+            document.getElementById('quickScanForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const url = document.getElementById('target_url').value;
+                runScan(url, ['all']);
+            });
+        });
+
+        function runScan(url, attacks) {
+            document.getElementById('resultsContent').innerHTML = '';
+            
+            fetch('/scan', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `target_url=${encodeURIComponent(url)}&attacks=${attacks.join(',')}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                displayResults(data);
+                updateStats(data);
+            })
+            .catch(error => {
+                document.getElementById('resultsContent').innerHTML = `<div class="alert alert-danger">Error: ${error}</div>`;
+            });
+        }
+
+// Add OWASP scanner form handler
+document.getElementById('owaspScanForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const url = document.getElementById('owasp_target_url').value;
+    runOwaspScan(url);
+});
+
+function runOwaspScan(url) {
+    document.getElementById('owaspResults').innerHTML = 'Scanning...';
+    
+    fetch('/owasp_scan', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `target_url=${encodeURIComponent(url)}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        displayOwaspResults(data);
+    })
+    .catch(error => {
+        document.getElementById('owaspResults').innerHTML = 
+            `<div class="alert alert-danger">Error: ${error}</div>`;
+    });
+}
+
+function displayOwaspResults(data) {
+    const resultsDiv = document.getElementById('owaspResults');
+    let html = '<div class="card"><div class="card-body">';
+    html += '<h3>OWASP Top 10 Scan Results</h3>';
+    
+    if (data.owasp_top_10 && data.owasp_top_10.length > 0) {
+        html += '<div class="list-group">';
+        data.owasp_top_10.forEach(vuln => {
+            html += `
+                <div class="list-group-item">
+                    <h5 class="text-${vuln.severity === 'High' ? 'danger' : 
+                                    vuln.severity === 'Medium' ? 'warning' : 'info'}">
+                        ${vuln.vulnerability}
+                    </h5>
+                    <p><strong>Type:</strong> ${vuln.type}</p>
+                    <p><strong>URL:</strong> ${vuln.url}</p>
+                    <p><strong>Details:</strong> ${vuln.details}</p>
+                </div>`;
+        });
+        html += '</div>';
+    } else {
+        html += '<div class="alert alert-success">No vulnerabilities found!</div>';
+    }
+    
+    html += '</div></div>';
+    resultsDiv.innerHTML = html;
+}
+// ...existing code...
+</script>
