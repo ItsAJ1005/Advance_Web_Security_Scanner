@@ -32,6 +32,7 @@ from attacks.authentication.brute_force import BruteForceScanner
 from attacks.advanced.ssrf import SSRFScanner
 from attacks.advanced.api_scanner import APISecurityScanner
 from attacks.owasp.owasp_scanner import OWASPScanner
+from attacks.owasp.zap_scanner import run_zap_scan
 
 app = Flask(__name__)
 
@@ -138,20 +139,35 @@ def owasp_scan():
     target_url = request.form.get('target_url')
     
     if not target_url:
-        return jsonify({'error': 'No target URL provided'}), 400
-
+        return jsonify({
+            'status': 'error', 
+            'message': 'No target URL provided'
+        }), 400
+    
+    # Ensure URL has protocol
     if not target_url.startswith(('http://', 'https://')):
-        target_url = 'http://' + target_url
-
-    config = load_config()
-    scan_task = ScanTask(target_url, ['owasp'], config)
-    active_scans[scan_task.id] = scan_task
+        target_url = 'https://' + target_url
     
-    thread = threading.Thread(target=scan_task.run)
-    thread.daemon = True
-    thread.start()
+    try:
+        # Run ZAP scan
+        scan_results = run_zap_scan(target_url)
+        
+        # Log the results for debugging
+        logging.info(f"Scan Results for {target_url}: {scan_results}")
+        
+        return jsonify({
+            'status': 'completed',
+            'results': scan_results
+        })
     
-    return jsonify({'scan_id': scan_task.id})
+    except Exception as e:
+        # Log the full error for debugging
+        logging.error(f"OWASP Scan Error: {str(e)}", exc_info=True)
+        
+        return jsonify({
+            'status': 'failed',
+            'error': str(e)
+        }), 500
 
 @app.route('/scan_status/<scan_id>')
 def scan_status(scan_id):

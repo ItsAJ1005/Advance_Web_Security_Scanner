@@ -26,7 +26,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Handle OWASP scan form submission
     if (owaspScanForm) {
-        owaspScanForm.addEventListener('submit', handleOwaspScanSubmit);
+        owaspScanForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const targetUrl = document.getElementById('owasp_target_url').value;
+            
+            // Show results card
+            const scanResults = document.getElementById('scanResults');
+            if (scanResults) {
+                scanResults.style.display = 'block';
+            }
+            
+            // Run OWASP scan
+            runOWASPSan(targetUrl);
+        });
     }
 
     // Add clear results button handler
@@ -380,6 +392,43 @@ document.addEventListener('DOMContentLoaded', function() {
         resultsContent.innerHTML = html;
     }
 
+    function displayOWASPResults(results) {
+        const resultsContent = document.getElementById('resultsContent');
+        if (!resultsContent) return;
+
+        // Clear previous results
+        resultsContent.innerHTML = '';
+
+        // Check if results are empty
+        if (Object.keys(results).length === 0) {
+            resultsContent.innerHTML = '<div class="alert alert-info">No vulnerabilities detected</div>';
+            return;
+        }
+
+        // Create results HTML
+        let resultsHTML = '<h3>OWASP Top 10 Vulnerabilities</h3>';
+
+        // Iterate through vulnerability categories
+        Object.entries(results).forEach(([category, vulnerabilities]) => {
+            resultsHTML += `
+                <div class="vulnerability-category">
+                    <h4>${category}</h4>
+                    ${vulnerabilities.map(vuln => `
+                        <div class="vulnerability-item ${vuln.risk.toLowerCase()}">
+                            <strong>Type:</strong> ${vuln.type || vuln.header || 'Unknown'}<br>
+                            <strong>Risk:</strong> ${vuln.risk || 'Not specified'}<br>
+                            ${vuln.url ? `<strong>URL:</strong> ${vuln.url}<br>` : ''}
+                            ${vuln.description ? `<strong>Description:</strong> ${vuln.description}<br>` : ''}
+                            ${vuln.recommendation ? `<strong>Recommendation:</strong> ${vuln.recommendation}` : ''}
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        });
+
+        resultsContent.innerHTML = resultsHTML;
+    }
+
     function formatScanType(scanType) {
         // Convert snake_case or camelCase to Title Case
         return scanType
@@ -418,27 +467,63 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function runOWASPSan(url) {
-        // Add null checks and error handling
-        const loader = document.querySelector('.loader');
+        console.log('OWASP Scan started for URL:', url);
+
+        // Debugging: Log all potential loader elements
+        const loaderSelectors = [
+            '.loader', 
+            '#loader', 
+            '.scan-loader', 
+            '.loading-spinner'
+        ];
+
+        let loader = null;
+        for (let selector of loaderSelectors) {
+            loader = document.querySelector(selector);
+            if (loader) {
+                console.log('Loader found with selector:', selector);
+                break;
+            }
+        }
+
         const resultsContent = document.getElementById('resultsContent');
         
-        if (!loader || !resultsContent) {
-            console.error('Required DOM elements not found');
-            showToast('UI elements missing', 'error');
+        // Extensive logging for debugging
+        console.log('Loader element:', loader);
+        console.log('Results content element:', resultsContent);
+        
+        if (!loader) {
+            console.error('No loader element found. Checked selectors:', loaderSelectors);
+            alert('Loader element not found');
             return;
+        }
+        
+        if (!resultsContent) {
+            console.error('Results content element not found');
+            alert('Results display area missing');
+            return;
+        }
+        
+        // Safe loader display
+        try {
+            if (loader.style) {
+                loader.style.display = 'block';
+            } else {
+                loader.classList.add('loading');
+            }
+        } catch (e) {
+            console.error('Error showing loader:', e);
         }
         
         // Clear previous results
         resultsContent.innerHTML = '';
         
-        // Ensure loader is displayed
-        if (loader.style) {
-            loader.style.display = 'block';
-        } else {
-            console.warn('Loader element does not have style property');
+        // Ensure URL has protocol
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+            url = 'https://' + url;
         }
         
-        fetch('/owasp_scan', {
+        fetch('/owasp_scan', {  // Ensure this matches your Flask route exactly
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -446,76 +531,154 @@ document.addEventListener('DOMContentLoaded', function() {
             body: `target_url=${encodeURIComponent(url)}`
         })
         .then(response => {
+            console.log('Scan response received:', response);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             return response.json();
         })
         .then(scanResponse => {
-            console.log('OWASP Scan Initiated:', scanResponse);
+            console.log('Full scan response:', scanResponse);
             
-            // Poll for scan status
-            function checkScanStatus() {
-                fetch(`/scan_status/${scanResponse.scan_id}`)
-                .then(response => response.json())
-                .then(statusData => {
-                    console.log('OWASP Scan Status:', JSON.stringify(statusData, null, 2));
-                    
-                    if (statusData.status === 'completed') {
-                        // Hide loader
-                        if (loader && loader.style) {
-                            loader.style.display = 'none';
-                        }
-                        
-                        // Log raw results for debugging
-                        console.log('Raw OWASP Scan Results:', JSON.stringify(statusData.results, null, 2));
-                        
-                        // Ensure results are displayed
-                        if (statusData.results && statusData.results.owasp_top_10 && statusData.results.owasp_top_10.length > 0) {
-                            displayResults(statusData.results);
-                        } else {
-                            showToast('No OWASP vulnerabilities found', 'info');
-                            resultsContent.innerHTML = '<div class="alert alert-info">No vulnerabilities detected</div>';
-                        }
-                    } else if (statusData.status === 'failed') {
-                        // Hide loader
-                        if (loader && loader.style) {
-                            loader.style.display = 'none';
-                        }
-                        
-                        showToast(`OWASP Scan failed: ${statusData.error || 'Unknown error'}`, 'error');
-                        resultsContent.innerHTML = `<div class="alert alert-danger">Scan Failed: ${statusData.error || 'Unknown error'}</div>`;
-                    } else {
-                        // Continue polling if not completed
-                        setTimeout(checkScanStatus, 1000);
-                    }
-                })
-                .catch(error => {
-                    console.error('OWASP Scan Status Check Error:', error);
-                    
-                    // Hide loader
-                    if (loader && loader.style) {
-                        loader.style.display = 'none';
-                    }
-                    
-                    showToast(`Scan status error: ${error.message}`, 'error');
-                    resultsContent.innerHTML = `<div class="alert alert-danger">Error checking scan status: ${error.message}</div>`;
-                });
+            // Hide loader safely
+            try {
+                if (loader.style) {
+                    loader.style.display = 'none';
+                } else {
+                    loader.classList.remove('loading');
+                }
+            } catch (e) {
+                console.error('Error hiding loader:', e);
             }
             
-            // Start polling
-            checkScanStatus();
+            if (scanResponse.status === 'completed') {
+                console.log('Scan completed, results:', scanResponse.results);
+                displayOWASPResults(scanResponse.results);
+            } else {
+                console.warn('Scan not completed:', scanResponse);
+                showToast('Scan failed', 'error');
+                resultsContent.innerHTML = `<div class="alert alert-danger">Scan Failed: ${scanResponse.error || 'Unknown error'}</div>`;
+            }
         })
         .catch(error => {
-            console.error('OWASP Scan Initiation Error:', error);
+            console.error('FULL OWASP Scan Error:', error);
             
-            // Hide loader
-            if (loader && loader.style) {
-                loader.style.display = 'none';
+            // Hide loader safely
+            try {
+                if (loader.style) {
+                    loader.style.display = 'none';
+                } else {
+                    loader.classList.remove('loading');
+                }
+            } catch (e) {
+                console.error('Error hiding loader:', e);
             }
             
             showToast(`Scan failed: ${error.message}`, 'error');
             resultsContent.innerHTML = `<div class="alert alert-danger">Failed to start scan: ${error.message}</div>`;
+        });
+    }
+
+    function displayVulnerabilities(vulnerabilities) {
+        const container = document.getElementById('vulnerabilities-container');
+        container.innerHTML = ''; // Clear previous results
+
+        if (Object.keys(vulnerabilities).length === 0) {
+            container.innerHTML = '<p class="text-success">No vulnerabilities detected!</p>';
+            return;
+        }
+
+        // Use a Set to track unique vulnerabilities
+        const uniqueVulnerabilities = new Set();
+
+        Object.entries(vulnerabilities).forEach(([category, issues]) => {
+            issues.forEach(issue => {
+                // Create a unique key for each vulnerability
+                const vulnerabilityKey = JSON.stringify({
+                    type: issue.type,
+                    description: issue.description,
+                    recommendation: issue.recommendation
+                });
+
+                // Only add if not already present
+                if (!uniqueVulnerabilities.has(vulnerabilityKey)) {
+                    uniqueVulnerabilities.add(vulnerabilityKey);
+
+                    const vulnerabilityCard = document.createElement('div');
+                    vulnerabilityCard.className = `card vulnerability-card risk-${issue.risk.toLowerCase()}`;
+                    
+                    const riskColor = {
+                        'Critical': 'danger',
+                        'High': 'danger',
+                        'Medium': 'warning',
+                        'Low': 'info'
+                    }[issue.risk] || 'secondary';
+
+                    vulnerabilityCard.innerHTML = `
+                        <div class="card-header bg-${riskColor} text-white">
+                            <strong>${category}</strong>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">${issue.type}</h5>
+                            <p class="card-text">
+                                <strong>Risk:</strong> <span class="badge bg-${riskColor}">${issue.risk}</span><br>
+                                <strong>Description:</strong> ${issue.description}<br>
+                                <strong>Recommendation:</strong> ${issue.recommendation}
+                            </p>
+                            ${issue.url ? `<p><strong>Affected URL:</strong> ${issue.url}</p>` : ''}
+                        </div>
+                    `;
+
+                    container.appendChild(vulnerabilityCard);
+                }
+            });
+        });
+
+        // If no unique vulnerabilities were found
+        if (container.children.length === 0) {
+            container.innerHTML = '<p class="text-success">No vulnerabilities detected!</p>';
+        }
+    }
+
+    function performVulnerabilityScan() {
+        const targetUrl = document.getElementById('urlInput').value;
+        
+        // Show loading spinner
+        const vulnerabilitiesContainer = document.getElementById('vulnerabilities-container');
+        vulnerabilitiesContainer.innerHTML = `
+            <div class="text-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Scanning...</span>
+                </div>
+                <p>Performing comprehensive vulnerability scan...</p>
+            </div>
+        `;
+
+        // Ensure the scan button exists before adding event listener
+        const scanButton = document.getElementById('scanButton');
+        if (scanButton) {
+            scanButton.addEventListener('click', performVulnerabilityScan);
+        }
+
+        // Use the correct endpoint
+        fetch('/owasp-scan', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ url: targetUrl })
+        })
+        .then(response => response.json())
+        .then(data => {
+            displayVulnerabilities(data.results || {});
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            vulnerabilitiesContainer.innerHTML = `
+                <div class="alert alert-danger">
+                    Error performing vulnerability scan: ${error.message}
+                </div>
+            `;
         });
     }
 });

@@ -158,6 +158,13 @@
                                     </div>
                                     <button type="submit" class="btn btn-primary">Start OWASP Scan</button>
                                 </form>
+                                <!-- Add loader to OWASP Scan Tab -->
+                                <div class="text-center loader" id="loader" style="display: none;">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                    <p class="mt-2">Scanning for vulnerabilities...</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -190,6 +197,14 @@
             </div>
             <div class="card-body">
                 <div id="resultsContent" class="results-container"></div>
+            </div>
+        </div>
+
+        <!-- Vulnerability Scan Results Section -->
+        <div class="vulnerability-section">
+            <h2>Vulnerability Scan Results</h2>
+            <div id="vulnerabilities-container" class="vulnerabilities-grid">
+                <!-- Vulnerabilities will be dynamically populated here -->
             </div>
         </div>
     </div>
