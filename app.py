@@ -1,0 +1,26 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    app.run(debug=True)if __name__ == '__main__':        return jsonify({'error': str(e)}), 500    except Exception as e:        return jsonify(results)        results = scanner.scan()        scanner = OWASPScanner(target_url, config)    try:        return jsonify({'error': 'No target URL provided'}), 400    if not target_url:    target_url = request.form.get('target_url')def owasp_scan():@app.route('/owasp_scan', methods=['POST'])    config = json.load(config_file)with open('config/scanner_config.json') as config_file:# Load configurationapp = Flask(__name__)import jsonfrom attacks.owasp.owasp_scanner import OWASPScannerfrom flask import Flask, request, jsonify

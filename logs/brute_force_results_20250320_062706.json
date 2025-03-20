@@ -1,0 +1,356 @@
+{
+  "timestamp": "20250320_062706",
+  "total_successful_logins": 50,
+  "successful_logins": [
+    {
+      "username": "mysql_user",
+      "password": "mysql@2023",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "test_user",
+      "password": "system",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "guest!",
+      "password": "ADMIN123",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "helpdesk123",
+      "password": "Test123!@2023",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "helpdesk123",
+      "password": "Help@desk123",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "root_user",
+      "password": "root",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "guest_user",
+      "password": "help@desk",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "administrator",
+      "password": "ADMIN123",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "test",
+      "password": "Help@desk!",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "mysql_admin",
+      "password": "123admin123",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "root!",
+      "password": "test@2023",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "mysql",
+      "password": "admin123!",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "user123",
+      "password": "admin@123123",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "TEST",
+      "password": "Test123!!",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "guest_admin",
+      "password": "admin123!",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "system123",
+      "password": "123456123",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "helpdesk123",
+      "password": "system@2023",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "root_user",
+      "password": "PASSWORD123!",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "HELPDESK",
+      "password": "POSTGRES",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "root",
+      "password": "system",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "MYSQL",
+      "password": "PASSWORD123",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "admin!",
+      "password": "SUPPORT2023",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "ROOT",
+      "password": "123456123",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "HELPDESK",
+      "password": "help@desk",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "support_user",
+      "password": "mysql123",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "admin_user",
+      "password": "postgres!",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "admin123",
+      "password": "123123456",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "test_admin",
+      "password": "postgres!",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "administrator!",
+      "password": "postgres123",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "helpdesk",
+      "password": "admin@123123",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "helpdesk_user",
+      "password": "123Support2023",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "system",
+      "password": "PASSWORD123",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "mysql!",
+      "password": "admin@123",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "postgres!",
+      "password": "123Help@desk",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "administrator_user",
+      "password": "PASSWORD123",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "administrator_user",
+      "password": "123456123",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "postgres!",
+      "password": "password!",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "mysql_user",
+      "password": "admin@123",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "guest_user",
+      "password": "ROOT",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "ADMINISTRATOR",
+      "password": "Test123!@2023",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "TEST",
+      "password": "PASSWORD",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "system_admin",
+      "password": "ROOT",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "mysql123",
+      "password": "TEST",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "GUEST",
+      "password": "Test123!@2023",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "system123",
+      "password": "test123",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "ADMINISTRATOR",
+      "password": "admin@123123",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "system!",
+      "password": "mysql123",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "postgres123",
+      "password": "123guest",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "postgres_user",
+      "password": "admin123!",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    },
+    {
+      "username": "administrator123",
+      "password": "TEST123!",
+      "url": "http://127.0.0.1:5000/login",
+      "status_code": 200,
+      "response_length": 60
+    }
+  ]
+}

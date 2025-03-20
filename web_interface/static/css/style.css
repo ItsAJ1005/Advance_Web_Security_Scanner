@@ -1,0 +1,359 @@
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #3498db;
+    --danger-color: #e74c3c;
+    --success-color: #2ecc71;
+    --warning-color: #f1c40f;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f6fa;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Brute Force Vulnerability Styling */
+.brute-force-item {
+    background-color: #ffdddd;
+    border: 1px solid #ff6666;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+.brute-force-item .row {
+    margin-bottom: 5px;
+}
+
+.brute-force-item strong {
+    color: #cc0000;
+}
+
+.brute-force-item .row div {
+    word-break: break-all;
+}
+
+h1 {
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.scan-form {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+input[type="url"] {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.checkbox-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+}
+
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: normal;
+}
+
+.scan-button {
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+    transition: background-color 0.3s;
+}
+
+.scan-button:hover {
+    background-color: #2980b9;
+}
+
+.results-container {
+    margin-top: 30px;
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.results-container.clearing {
+    animation: fadeOut 0.3s ease-out;
+}
+
+.vulnerability-card {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    padding: 15px;
+    animation: slideIn 0.3s ease-out;
+    transition: all 0.3s ease;
+}
+
+.vulnerability-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.vulnerability-card.high {
+    border-left: 4px solid var(--danger-color);
+}
+
+.vulnerability-card.medium {
+    border-left: 4px solid var(--warning-color);
+}
+
+.vulnerability-card.low {
+    border-left: 4px solid var(--success-color);
+}
+
+.loader {
+    text-align: center;
+    padding: 20px;
+    font-weight: bold;
+    color: var(--secondary-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.terminal {
+    background: #1e1e1e;
+    border-radius: 6px;
+    margin: 20px 0;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.2);
+}
+
+.terminal-header {
+    background: #2d2d2d;
+    padding: 10px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.terminal-title {
+    color: #fff;
+    font-size: 14px;
+}
+
+.terminal-buttons {
+    display: flex;
+    gap: 6px;
+}
+
+.terminal-button {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.terminal-button.red { background: #ff5f56; }
+.terminal-button.yellow { background: #ffbd2e; }
+.terminal-button.green { background: #27c93f; }
+
+.terminal-content {
+    padding: 15px;
+    max-height: 300px;
+    overflow-y: auto;
+    font-family: 'Consolas', 'Monaco', monospace;
+    color: #fff;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.terminal-line {
+    margin: 5px 0;
+}
+
+.terminal-line.error { color: #ff5f56; }
+.terminal-line.success { color: #27c93f; }
+.terminal-line.warning { color: #ffbd2e; }
+
+.terminal-output.clearing {
+    animation: slideUp 0.3s ease-out;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid var(--secondary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+}
+
+.scan-status {
+    margin-top: 10px;
+    color: var(--secondary-color);
+    font-weight: bold;
+}
+
+.attack-card {
+    transition: transform 0.2s;
+}
+
+.attack-card:hover {
+    transform: translateY(-5px);
+}
+
+.vulnerability-info {
+    background-color: #f8f9fa;
+    border-left: 4px solid var(--primary-color);
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.mitigation-tip {
+    background-color: #e7f5ff;
+    border-left: 4px solid var(--secondary-color);
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.reference-link {
+    color: var(--secondary-color);
+    text-decoration: none;
+}
+
+.reference-link:hover {
+    text-decoration: underline;
+}
+
+.scan-stats {
+    background: linear-gradient(135deg, #6B73FF 0%, #000DFF 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.attack-info {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+
+.attack-info.show {
+    max-height: 500px;
+}
+
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1050;
+}
+
+.vulnerability-category {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+}
+
+.vulnerability-category h4 {
+    color: #333;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.vulnerability-item {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 10px;
+}
+
+.vulnerability-item.critical {
+    border-left: 5px solid #dc3545;
+}
+
+.vulnerability-item.high {
+    border-left: 5px solid #fd7e14;
+}
+
+.vulnerability-item.medium {
+    border-left: 5px solid #ffc107;
+}
+
+.vulnerability-item.low {
+    border-left: 5px solid #28a745;
+}
