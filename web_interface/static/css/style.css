@@ -20,6 +20,27 @@ body {
     padding: 20px;
 }
 
+/* Brute Force Vulnerability Styling */
+.brute-force-item {
+    background-color: #ffdddd;
+    border: 1px solid #ff6666;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+.brute-force-item .row {
+    margin-bottom: 5px;
+}
+
+.brute-force-item strong {
+    color: #cc0000;
+}
+
+.brute-force-item .row div {
+    word-break: break-all;
+}
+
 h1 {
     color: var(--primary-color);
     text-align: center;

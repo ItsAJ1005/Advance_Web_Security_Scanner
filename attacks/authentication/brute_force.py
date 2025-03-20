@@ -120,10 +120,27 @@ class BruteForceScanner(BaseScanner):
         self._log_brute_force_results(successful_logins)
         
         return {
-            'brute_force': successful_logins,
+            'brute_force': [
+                {
+                    **login,
+                    'type': 'Brute Force Success',
+                    'severity': 'High',
+                    'method': 'POST',
+                    'parameter': 'username, password',
+                    'payload': f'username={login["username"]}&password={login["password"]}',
+                    'evidence': f'Successful login with credentials',
+                    'details': 'Weak credentials allowed authentication bypass',
+                    'recommendation': '\n'.join([
+                        '1. Implement account lockout after multiple failed attempts',
+                        '2. Use strong password policies',
+                        '3. Enable multi-factor authentication',
+                        '4. Implement rate limiting',
+                        '5. Monitor and alert on multiple failed login attempts'
+                    ])
+                } for login in successful_logins
+            ],
             'total_attempts': len(tasks),
-            'successful_attempts': len(successful_logins),
-            'vulnerable_endpoints': list(set(task['url'] for task in tasks for login in successful_logins if login['url'] == task['url']))
+            'successful_attempts': len(successful_logins)
         }
     
     def _log_brute_force_results(self, successful_logins: List[Dict]):
@@ -151,14 +168,12 @@ class BruteForceScanner(BaseScanner):
     def execute_task(self, task: Dict) -> Optional[Dict]:
         """Advanced task execution with multiple detection methods"""
         try:
-            # Slight random delay to simulate human-like behavior
             time.sleep(self.request_delay * random.uniform(0.8, 1.2))
             
-            # Prepare login request with multiple payload formats
             login_payloads = [
                 {'username': task['username'], 'password': task['password']},
                 {'user': task['username'], 'pass': task['password']},
-                {'login': task['username'], 'pwd': task['password']},
+                {'login': task['username'], 'pwd': task['password']}
             ]
             
             headers = {
@@ -166,7 +181,6 @@ class BruteForceScanner(BaseScanner):
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
             
-            # Try multiple payload formats
             for payload in login_payloads:
                 response = requests.post(
                     task['url'], 
@@ -176,23 +190,36 @@ class BruteForceScanner(BaseScanner):
                     allow_redirects=True
                 )
                 
-                # Multiple login success detection methods
                 success_indicators = [
                     response.status_code == 200,
-                    response.status_code == 302,  # Redirect after successful login
+                    response.status_code == 302,
                     'login successful' in response.text.lower(),
                     'welcome' in response.text.lower(),
                     'dashboard' in response.text.lower(),
-                    len(response.text) > 500  # Successful login usually has more content
+                    len(response.text) > 500
                 ]
                 
                 if any(success_indicators):
                     return {
+                        'type': 'Successful Brute Force',
+                        'severity': 'High',
+                        'url': task['url'],
+                        'method': 'POST',
                         'username': task['username'],
                         'password': task['password'],
-                        'url': task['url'],
+                        'parameter': 'username, password',
+                        'payload': json.dumps(payload),
                         'status_code': response.status_code,
-                        'response_length': len(response.text)
+                        'response_length': len(response.text),
+                        'evidence': f'Successful login with username: {task["username"]}',
+                        'details': 'Authentication bypass achieved through credential stuffing',
+                        'recommendation': '\n'.join([
+                            '1. Implement account lockout after multiple failed attempts',
+                            '2. Use strong password policies',
+                            '3. Enable multi-factor authentication',
+                            '4. Implement rate limiting',
+                            '5. Monitor and alert on multiple failed login attempts'
+                        ])
                     }
             
             return None

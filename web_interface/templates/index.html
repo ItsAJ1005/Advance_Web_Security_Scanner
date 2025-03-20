@@ -10,6 +10,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <style>
         .card {
             transition: transform 0.2s;
@@ -111,6 +112,14 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" value="port_scan" name="attacks" id="port_scan">
+                                                    <label class="form-check-label" for="port_scan">
+                                                        Port Scanning
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" name="attacks" value="brute_force" id="bruteForce">
                                                     <label class="form-check-label" for="bruteForce">Brute Force</label>
                                                 </div>
@@ -146,6 +155,7 @@
                                                     </label>
                                                 </div>
                                             </div>
+
                                         </div>
                                     </div>
                                     <button type="submit" class="btn btn-primary">Start Scan</button>
