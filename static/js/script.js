@@ -1,5 +1,5 @@
 function runScan(url, attacks) {
-    console.log("Starting scan with attacks:", attacks);  // Add debug logging
+    console.log("Starting scan with attacks:", attacks);  // Debug log
     document.getElementById('resultsContent').innerHTML = '';
     
     fetch('/scan', {
@@ -11,27 +11,30 @@ function runScan(url, attacks) {
     })
     .then(response => response.json())
     .then(data => {
-        console.log("Received scan results:", data);  // Add debug logging
-        if (Object.keys(data).length === 0) {
-            throw new Error('No results received from scan');
+        console.log("Received scan results:", data);  // Debug log
+        if (data.scan_id) {
+            pollScanStatus(data.scan_id);
         }
-        displayResults(data);
-        updateStats(data);
     })
     .catch(error => {
-        console.error("Scan error:", error);  // Add error logging
+        console.error("Scan error:", error);
         document.getElementById('resultsContent').innerHTML = 
             `<div class="alert alert-danger">Error: ${error}</div>`;
     });
 }
 
 function processResults(data) {
-    console.log("Processing scan results:", data);  // Add debug logging
-    
-    // Clear all results sections first
+    console.log("Processing results:", data);  // Debug log
+
+    // Clear previous results
     document.querySelectorAll('.vulnerability-results').forEach(section => {
         section.innerHTML = '';
     });
+
+    if (data.xxe_injection) {
+        console.log("Found XXE results:", data.xxe_injection);  // Debug log
+        displayXXEResults(data.xxe_injection);
+    }
 
     if (data.ldap) {
         console.log("Processing LDAP results:", data.ldap);
@@ -65,6 +68,11 @@ function processResults(data) {
     if (data.ldap_injection) {
         console.log("Processing LDAP injection:", data.ldap_injection);
         displayLDAPResults(data.ldap_injection);
+    }
+
+    if (data.xxe_injection) {
+        console.log("Processing XXE injection:", data.xxe_injection);
+        displayXXEResults(data.xxe_injection);
     }
 }
 
@@ -219,5 +227,66 @@ function displayLDAPResults(data) {
         clone.querySelector('.recommendation').textContent = '• ' + recommendations;
         
         ldapSection.appendChild(clone);
+    });
+}
+
+function displayXXEResults(data) {
+    console.log("Displaying XXE injection results:", data);
+
+    const xxeSection = document.querySelector('#xxe-injection .vulnerability-results');
+    const summarySection = document.querySelector('#xxe-injection .vulnerability-summary');
+    const template = document.getElementById('xxe-injection-template');
+
+    if (!xxeSection || !summarySection || !template) {
+        console.error("Could not find XXE injection results sections");
+        return;
+    }
+
+    // Clear previous results
+    xxeSection.innerHTML = '';
+
+    if (!data || data.length === 0) {
+        summarySection.innerHTML = '<div class="alert alert-success">No XXE injection vulnerabilities detected.</div>';
+        return;
+    }
+
+    // Create summary
+    summarySection.innerHTML = `
+        <div class="alert alert-danger">
+            <h4 class="alert-heading">XXE Injection Vulnerabilities Detected!</h4>
+            <p><strong>Found ${data.length} potential XXE injection points</strong></p>
+            <hr>
+            <p class="mb-0">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <strong>Critical Warning:</strong> XXE injection vulnerabilities can lead to unauthorized access 
+                and information disclosure.
+            </p>
+        </div>
+    `;
+
+    // Display each vulnerability
+    data.forEach(vuln => {
+        const clone = template.content.cloneNode(true);
+
+        // Set severity badge
+        const badge = clone.querySelector('.severity-badge');
+        badge.textContent = vuln.severity;
+        badge.classList.add(vuln.severity.toLowerCase());
+
+        // Fill in vulnerability details
+        clone.querySelector('.url').textContent = vuln.url || 'N/A';
+        clone.querySelector('.method').textContent = vuln.method || 'N/A';
+        clone.querySelector('.payload').textContent = vuln.payload || 'No payload details';
+        clone.querySelector('.evidence').textContent = vuln.evidence || 'No evidence provided';
+        clone.querySelector('.details').textContent = vuln.details || 'No additional details';
+
+        // Format recommendations as a list
+        const recommendations = vuln.recommendation.split('\n')
+            .filter(rec => rec.trim())
+            .map(rec => rec.replace(/^\d+\.\s*/, ''))
+            .join('\n• ');
+        clone.querySelector('.recommendation').textContent = '• ' + recommendations;
+
+        xxeSection.appendChild(clone);
     });
 }

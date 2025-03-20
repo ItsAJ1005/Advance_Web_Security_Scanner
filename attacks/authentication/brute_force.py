@@ -17,9 +17,9 @@ class BruteForceScanner(BaseScanner):
         self.login_endpoints = config.get('login_endpoints', [
             "/login",
             "/admin/login",
-            "/auth/login",
-            "/user/login",
-            "/account/login"
+            # "/auth/login",
+            # "/user/login",
+            # "/account/login"
         ])
         
         # Expanded credential list with more variations

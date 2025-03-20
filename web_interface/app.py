@@ -81,7 +81,8 @@ class ScanTask:
                 'xxe_injection': ('XXE Injection', XXEInjectionScanner),
                 'port_scan': ('Port Scan', PortScanner),
                 'idor': ('IDOR', IDORScanner),
-                'ldap_injection': ('LDAP Injection', LDAPScanner)  # Corrected LDAP scanner key
+                'ldap_injection': ('LDAP Injection', LDAPScanner),  # Corrected LDAP scanner key
+                'xxe': ('XXE Injection', XXEInjectionScanner),  # Make sure this exact key is used
             }
 
             total = len(self.selected_attacks)
@@ -89,30 +90,29 @@ class ScanTask:
                 if attack in scanners:
                     name, scanner_class = scanners[attack]
                     self.current_attack = name
-                    logging.info(f"Starting {name} scan")
+                    logging.info(f"Starting {name} scan")  # Add debug logging
 
                     try:
                         scanner = scanner_class(self.target_url, self.config)
                         result = scanner.scan()
+                        logging.info(f"Scan result for {name}: {result}")  # Add debug logging
                         
                         if result:
-                            # Special handling for OWASP scan
-                            if attack == 'owasp':
-                                self.results[attack] = result.get('owasp_top_10', [])
+                            if attack == 'xxe':
+                                self.results['xxe_injection'] = result.get('xxe_injection', [])
+                                logging.info(f"XXE results processed: {self.results['xxe_injection']}")
                             else:
                                 self.results[attack] = result
-                            logging.info(f"Found vulnerabilities in {name}")
 
                         self.completed_attacks.append(name)
                         self.progress = int(((i + 1) / total) * 100)
-                        logging.info(f"Progress: {self.progress}%")
 
                     except Exception as e:
                         logging.error(f"Error in {name}: {e}")
                         continue
 
             self.status = "completed"
-            logging.info("Scan completed")
+            logging.info(f"Scan completed. Results: {self.results}")
 
         except Exception as e:
             self.status = "failed"

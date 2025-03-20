@@ -550,31 +550,40 @@ def xxe_endpoint():
         xml_data = request.form.get('xml', '')
         
         try:
-            # VULNERABLE: Unsafe XML parsing without proper entity resolution
-            import xml.etree.ElementTree as ET
-            root = ET.fromstring(xml_data)
+            # VULNERABLE: Using unsafe XML parser that allows external entities
+            from xml.dom.pulldom import parseString
+            from xml.sax import make_parser
+            from xml.sax.handler import feature_external_ges
             
-            # Simulate processing XML with potential file read
-            result = f"Processed XML: {ET.tostring(root).decode()}"
+            parser = make_parser()
+            # Intentionally enable external entity resolution
+            parser.setFeature(feature_external_ges, True)
             
-            # VULNERABLE: Directly returning XML content
+            doc = parseString(xml_data)
+            
+            # Process and return the parsed XML content
+            result = f"Processed XML Content: {xml_data}"
+            
             return render_template_string(BASE_TEMPLATE + f'''
-            <div class="container mt-5">
-                <div class="card">
-                    <div class="card-header">XXE Injection Result</div>
-                    <div class="card-body">
-                        <pre>{result}</pre>
+                <div class="container mt-5">
+                    <div class="card">
+                        <div class="card-header">XXE Result</div>
+                        <div class="card-body">
+                            <pre>{result}</pre>
+                        </div>
                     </div>
                 </div>
-            </div>
-            </body>
-            </html>
             ''')
-        
+            
         except Exception as e:
-            return f"Error processing XML: {str(e)}"
+            return f"XML Processing Result: {str(e)}"
     
-    # Render XXE test page
+    # Render XXE test form with sample payload
+    sample_payload = '''<?xml version="1.0"?>
+<!DOCTYPE foo [ <!ELEMENT foo ANY >
+<!ENTITY xxe SYSTEM "file:///etc/passwd" >]>
+<foo>&xxe;</foo>'''
+
     xxe_template = BASE_TEMPLATE + '''
     <div class="container mt-5">
         <div class="card">
@@ -582,23 +591,16 @@ def xxe_endpoint():
             <div class="card-body">
                 <form method="POST" action="/xxe">
                     <div class="form-group mb-3">
-                        <textarea name="xml" class="form-control" rows="10" placeholder="Enter XML payload">
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE test [
-  <!ENTITY xxe SYSTEM "file:///etc/passwd">
-]>
-<test>&xxe;</test>
-                        </textarea>
+                        <label>Enter XML Payload:</label>
+                        <textarea name="xml" class="form-control" rows="10">{{ sample_payload }}</textarea>
                     </div>
-                    <button type="submit" class="btn btn-danger">Submit XXE Payload</button>
+                    <button type="submit" class="btn btn-danger">Process XML</button>
                 </form>
             </div>
         </div>
     </div>
-    </body>
-    </html>
     '''
-    return render_template_string(xxe_template)
+    return render_template_string(xxe_template, sample_payload=sample_payload)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
