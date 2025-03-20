@@ -224,3 +224,113 @@ if __name__ == '__main__':
         main()
     except KeyboardInterrupt:
         exit_msg()
+        
+class IDORScanner:
+    def __init__(self, target_url, config):
+        self.target_url = target_url
+        self.config = config
+        self.results = []
+
+    def scan(self):
+        print(info + "Loading IDOR endpoints...")
+        endpoints = load_endpoints()
+        print(success + f"Loaded {len(endpoints)} endpoints to test")
+        
+        print(info + "Starting IDOR vulnerability scan...")
+        for endpoint in endpoints:
+            print(info2 + f"Testing endpoint: {endpoint}")
+            self.test_endpoint(self.target_url, endpoint)
+        
+        print(success + "Scan completed!")
+        return self.results
+
+    def test_endpoint(self, base_url, endpoint):
+        """Test an endpoint for IDOR vulnerabilities"""
+        # Extract parameter placeholders from the endpoint
+        params = re.findall(r'{([^}]+)}', endpoint)
+        
+        if not params:
+            # If no parameters found, test the endpoint as is
+            full_url = urljoin(base_url, endpoint)
+            self.test_single_url(full_url)
+            return
+
+        # Test each parameter
+        for param in params:
+            # Get appropriate test values based on parameter name
+            values = test_values.get(param, test_values['default'])
+            
+            for value in values:
+                # Replace the current parameter with test value
+                test_endpoint = endpoint.replace(f'{{{param}}}', value)
+                full_url = urljoin(base_url, test_endpoint)
+                self.test_single_url(full_url)
+
+    def test_single_url(self, url):
+        """Test a single URL for IDOR vulnerability"""
+        try:
+            # Try GET request
+            response = requests.get(url, headers=headers, timeout=10, allow_redirects=False)
+            self.analyze_response(url, "GET", response)
+
+            # Try POST request
+            response = requests.post(url, headers=headers, timeout=10, allow_redirects=False)
+            self.analyze_response(url, "POST", response)
+
+        except requests.exceptions.RequestException as e:
+            print(error + f"Error testing {url}: {str(e)}")
+
+    def analyze_response(self, url, method, response):
+        """Analyze the response for potential IDOR vulnerabilities"""
+        status_code = response.status_code
+        
+        if status_code == 200:
+            # Success response - potential IDOR
+            print(success + f"Potential IDOR vulnerability found!")
+            print(info + f"URL: {url}")
+            print(info + f"Method: {method}")
+            print(info + f"Status Code: {status_code}")
+            
+            # Check response size
+            content_length = len(response.content)
+            print(info + f"Response Size: {content_length} bytes")
+            
+            # Look for sensitive data patterns
+            self.check_sensitive_data(response.text)
+            
+            # Add to results
+            self.results.append({
+                'url': url,
+                'method': method,
+                'status_code': status_code,
+                'response_size': content_length
+            })
+            
+        elif status_code in [401, 403]:
+            # Access denied - might still be worth noting
+            print(info2 + f"Access denied for {url}")
+            print(info2 + f"Method: {method} | Status Code: {status_code}")
+        
+        elif status_code == 404:
+            # Resource not found
+            print(error + f"Resource not found: {url}")
+        
+        else:
+            # Other status codes
+            print(info2 + f"Unexpected response from {url}")
+            print(info2 + f"Method: {method} | Status Code: {status_code}")
+
+    def check_sensitive_data(self, response_text):
+        """Check for common sensitive data patterns in response"""
+        sensitive_patterns = [
+            r'password|passwd|pwd',
+            r'email|mail',
+            r'token|auth|key',
+            r'credit|card|ccv|cvv',
+            r'ssn|social|security',
+            r'admin|root|sudo'
+        ]
+        
+        for pattern in sensitive_patterns:
+            if re.search(pattern, response_text, re.I):
+                print(error + f"Potential sensitive data found matching pattern: {pattern}")

@@ -1,9 +1,18 @@
 # test_app.py
+import logging
+import sys
 from flask import Flask, request, render_template_string, g, session, redirect, jsonify
 import sqlite3
 import os
 import requests
 import xml.etree.ElementTree as ET
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+sys.path.append(parent_dir)
+
+from attacks.access_control.idor import IDORScanner
+from web_interface.app import load_config
 
 try:
     from flask_socketio import SocketIO, emit
@@ -20,6 +29,11 @@ if SOCKET_AVAILABLE:
 UPLOAD_FOLDER = os.path.join(os.getcwd(), 'uploads')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+users = {
+    'admin': {'password': 'admin123', 'role': 'admin'},
+    'user': {'password': 'user123', 'role': 'user'}
+}
 
 def init_db():
     db = sqlite3.connect('test.db')
@@ -676,9 +690,131 @@ def do_reset(token):
 
 @app.route('/profile/<int:user_id>')
 def profile(user_id):
-    # Vulnerable: IDOR (no access control check)
-    user = {"id": user_id, "username": f"user{user_id}", "email": f"user{user_id}@example.com"}
-    return f"<div class='container mt-5'><h1>User Profile</h1><p>{user}</p></div>"
+    # Simulate a database of user profiles
+    profiles = {
+        1: {'name': 'Alice', 'email': 'alice@example.com'},
+        2: {'name': 'Bob', 'email': 'bob@example.com'},
+        3: {'name': 'Charlie', 'email': 'charlie@example.com'}
+    }
+    
+    profile = profiles.get(user_id)
+    if profile:
+        return jsonify(profile)
+    else:
+        return jsonify({'error': 'Profile not found'}), 404
+
+@app.route('/student/<int:student_id>/grades')
+def student_grades(student_id):
+    grades = {
+        1: {'math': 'A', 'science': 'B'},
+        2: {'math': 'C', 'science': 'A'},
+        3: {'math': 'B', 'science': 'B'}
+    }
+    
+    student_grades = grades.get(student_id)
+    if student_grades:
+        return jsonify(student_grades)
+    else:
+        return jsonify({'error': 'Grades not found'}), 404
+
+@app.route('/course/<int:course_id>/enrollment')
+def course_enrollment(course_id):
+    enrollments = {
+        1: ['Alice', 'Bob'],
+        2: ['Charlie'],
+        3: ['Alice', 'Charlie']
+    }
+    
+    course_enrollment = enrollments.get(course_id)
+    if course_enrollment:
+        return jsonify(course_enrollment)
+    else:
+        return jsonify({'error': 'Enrollment not found'}), 404
+
+@app.route('/teacher/<int:teacher_id>/schedule')
+def teacher_schedule(teacher_id):
+    schedules = {
+        1: {'Monday': 'Math', 'Wednesday': 'Science'},
+        2: {'Tuesday': 'History', 'Thursday': 'Math'},
+        3: {'Monday': 'Science', 'Friday': 'History'}
+    }
+    
+    teacher_schedule = schedules.get(teacher_id)
+    if teacher_schedule:
+        return jsonify(teacher_schedule)
+    else:
+        return jsonify({'error': 'Schedule not found'}), 404
+
+@app.route('/library/book/<int:book_id>')
+def library_book_details(book_id):
+    books = {
+        1: {'title': '1984', 'author': 'George Orwell'},
+        2: {'title': 'To Kill a Mockingbird', 'author': 'Harper Lee'},
+        3: {'title': 'The Great Gatsby', 'author': 'F. Scott Fitzgerald'}
+    }
+    
+    book_details = books.get(book_id)
+    if book_details:
+        return jsonify(book_details)
+    else:
+        return jsonify({'error': 'Book not found'}), 404
+
+@app.route('/research-project/<int:project_id>')
+def research_project_details(project_id):
+    projects = {
+        1: {'title': 'AI Research', 'lead': 'Alice'},
+        2: {'title': 'Quantum Computing', 'lead': 'Bob'},
+        3: {'title': 'Blockchain', 'lead': 'Charlie'}
+    }
+    
+    project_details = projects.get(project_id)
+    if project_details:
+        return jsonify(project_details)
+    else:
+        return jsonify({'error': 'Project not found'}), 404
+
+@app.route('/alumni/<int:alumni_id>/profile')
+def alumni_profile(alumni_id):
+    profiles = {
+        1: {'name': 'Alice', 'year': '2020'},
+        2: {'name': 'Bob', 'year': '2019'},
+        3: {'name': 'Charlie', 'year': '2021'}
+    }
+    
+    alumni_profile = profiles.get(alumni_id)
+    if alumni_profile:
+        return jsonify(alumni_profile)
+    else:
+        return jsonify({'error': 'Profile not found'}), 404
+
+@app.route('/event/<int:event_id>/registration')
+def event_registration(event_id):
+    registrations = {
+        1: ['Alice', 'Bob'],
+        2: ['Charlie'],
+        3: ['Alice', 'Charlie']
+    }
+    
+    event_registration = registrations.get(event_id)
+    if event_registration:
+        return jsonify(event_registration)
+    else:
+        return jsonify({'error': 'Registration not found'}), 404
+
+@app.route('/exam/<int:exam_id>/results')
+def exam_results(exam_id):
+    results = {
+        1: {'Alice': 'A', 'Bob': 'B'},
+        2: {'Charlie': 'A'},
+        3: {'Alice': 'B', 'Charlie': 'B'}
+    }
+    
+    exam_results = results.get(exam_id)
+    if exam_results:
+        return jsonify(exam_results)
+    else:
+        return jsonify({'error': 'Results not found'}), 404
+
 
 @app.route('/admin')
 def admin():
@@ -855,6 +991,29 @@ def brute_force():
     </html>
     '''
     return render_template_string(brute_force_template)
+  
+
+@app.route('/idor_scan', methods=['POST'])
+def idor_scan():
+    target_url = request.form.get('target_url')
+    
+    if not target_url:
+        return jsonify({'error': 'No target URL provided'}), 400
+    
+    # Ensure URL has protocol
+    if not target_url.startswith(('http://', 'https://')):
+        target_url = 'http://' + target_url
+    
+    # Load configuration
+    config = load_config()
+    
+    # Initialize IDOR scanner
+    idor_scanner = IDORScanner(target_url, config)
+    
+    # Run the scan
+    results = idor_scanner.scan()
+    
+    return jsonify(results)
 
 @app.route('/update_nav')
 def update_nav():

@@ -1,5 +1,7 @@
 import logging
 
+from attacks.access_control.idor import IDORScanner
+
 # Configure logging
 logging.basicConfig(
     level=logging.DEBUG,
@@ -76,7 +78,8 @@ class ScanTask:
                 'owasp': ('OWASP Top 10', OWASPScanner),
                 'command_injection': ('Command Injection', CommandInjectionScanner),
                 'xxe_injection': ('XXE Injection', XXEInjectionScanner),
-                'port_scan': ('Port Scan', PortScanner)
+                'port_scan': ('Port Scan', PortScanner),
+                'idor': ('IDOR', IDORScanner)
             }
 
             total = len(self.selected_attacks)
