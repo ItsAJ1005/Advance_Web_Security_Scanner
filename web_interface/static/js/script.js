@@ -488,284 +488,91 @@ document.addEventListener('DOMContentLoaded', function() {
         const container = document.getElementById('vulnerabilities-container');
         container.innerHTML = ''; // Clear previous results
 
-        console.log('Full Vulnerabilities Object:', vulnerabilities);
-
+        // If no vulnerabilities, show a message
         if (Object.keys(vulnerabilities).length === 0) {
-            container.innerHTML = '<p class="text-success">No vulnerabilities detected!</p>';
+            container.innerHTML = `
+                <div class="no-vulnerabilities">
+                    <p>No vulnerabilities were detected during the scan.</p>
+                </div>
+            `;
             return;
         }
 
-        // Special handling for port scan results
-        if (vulnerabilities.port_scan && vulnerabilities.port_scan.findings && vulnerabilities.port_scan.findings.length > 0) {
-            // Determine overall severity
-            const riskSummary = vulnerabilities.port_scan.risk_summary;
-            const overallSeverity = riskSummary.high > 0 ? 'High' : 
-                (riskSummary.medium > 0 ? 'Medium' : 'Low');
+        // Create dropdown for each attack type
+        Object.entries(vulnerabilities).forEach(([attackType, results]) => {
+            // Skip empty results
+            if (!results || results.length === 0) return;
 
-            // Create a vulnerability object in the format expected by the display logic
-            vulnerabilities.port_scan = [{
-                title: 'NETWORK - Port Exposure Vulnerability',
-                description: `Discovered ${vulnerabilities.port_scan.total_open_ports} potentially exposed network services`,
-                url: vulnerabilities.port_scan.target,
-                method: 'N/A',
-                parameter: 'Network Ports',
-                payload: 'Port Scanning',
-                severity: overallSeverity,
-                details: vulnerabilities.port_scan.findings.map(finding => 
-                    `Port ${finding.port}: ${finding.service} - ${finding.details}`
-                ).join('\n'),
-                evidence: `Total Open Ports: ${vulnerabilities.port_scan.total_open_ports}\n` +
-                    `High Risk Ports: ${riskSummary.high}\n` +
-                    `Medium Risk Ports: ${riskSummary.medium}`,
-                recommendation: 'Implement network security measures to restrict unnecessary open ports'
-            }];
-        }
+            // Create attack dropdown
+            const attackDropdown = document.createElement('div');
+            attackDropdown.classList.add('attack-dropdown');
 
-        // Special handling for brute force results
-        if (vulnerabilities.brute_force && vulnerabilities.brute_force.length > 0) {
-            const bruteForceDetails = vulnerabilities.brute_force.map(attempt => `
-                <div class="vulnerability-item brute-force-item">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <strong>Username:</strong> ${attempt.username}
-                        </div>
-                        <div class="col-md-6">
-                            <strong>Password:</strong> ${attempt.password}
-                        </div>
-                    </div>
-                    <div class="row mt-2">
-                        <div class="col-md-6">
-                            <strong>URL:</strong> ${attempt.url}
-                        </div>
-                        <div class="col-md-6">
-                            <strong>Status Code:</strong> ${attempt.status_code}
-                        </div>
-                    </div>
-                    <div class="row mt-2">
-                        <div class="col-md-12">
-                            <strong>Type:</strong> ${attempt.type}
-                        </div>
-                        <div class="col-md-12">
-                            <strong>Severity:</strong> ${attempt.severity}
-                        </div>
-                        <div class="col-md-12">
-                            <strong>Payload:</strong> ${attempt.payload}
-                        </div>
-                        <div class="col-md-12">
-                            <strong>Evidence:</strong> ${attempt.evidence}
-                        </div>
-                        <div class="col-md-12">
-                            <strong>Recommendation:</strong> ${attempt.recommendation}
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-
-            vulnerabilities.brute_force = [{
-                title: 'AUTHENTICATION - Successful Brute Force Attempts',
-                description: `Found ${vulnerabilities.brute_force.length} successful login attempts:`,
-                details: bruteForceDetails,
-                severity: 'Critical'
-            }];
-        }
-
-        // Special handling for specific vulnerability types
-        const specialHandling = {
-            'brute_force': {
-                title: 'AUTHENTICATION - Brute Force Vulnerability',
-                severityClass: 'bg-danger',
-                description: 'Multiple login attempts possible without proper authentication controls.',
-                recommendations: [
-                    'Implement strict account lockout mechanisms',
-                    'Enforce strong password policies',
-                    'Add multi-factor authentication',
-                    'Implement CAPTCHA or advanced rate limiting',
-                    'Monitor and log all authentication attempts'
-                ]
-            },
-            'ldap_injection': {
-                title: 'INJECTION - LDAP Injection Vulnerability',
-                severityClass: 'bg-danger',
-                description: 'Potential vulnerability allowing manipulation of LDAP queries.',
-                recommendations: [
-                    'Implement strict input validation',
-                    'Use parameterized queries',
-                    'Sanitize all user inputs',
-                    'Apply least privilege principle',
-                    'Use prepared statements'
-                ]
-            },
-            'session_hijacking': {
-                title: 'AUTHENTICATION - Session Hijacking Vulnerability',
-                severityClass: 'bg-danger',
-                description: 'Potential unauthorized access through session manipulation.',
-                recommendations: [
-                    'Use secure, httpOnly cookies',
-                    'Implement proper session management',
-                    'Regenerate session IDs after login',
-                    'Use HTTPS for all sessions',
-                    'Implement IP and device binding'
-                ]
-            },
-            'xxe_injection': {
-                title: 'INJECTION - XML External Entity (XXE) Vulnerability',
-                severityClass: 'bg-danger',
-                description: 'Potential XML parsing vulnerability allowing external entity exploitation.',
-                recommendations: [
-                    'Disable XML external entity processing',
-                    'Use safe XML parsers',
-                    'Validate and sanitize XML inputs',
-                    'Use XML schema validation',
-                    'Limit XML document size'
-                ]
-            },
-            'sql_injection': {
-                title: 'INJECTION - SQL Injection Vulnerability',
-                severityClass: 'bg-danger',
-                description: 'Potential vulnerability allowing manipulation of database queries.',
-                recommendations: [
-                    'Use parameterized queries',
-                    'Implement input validation',
-                    'Apply least privilege principle',
-                    'Use ORM with built-in protections',
-                    'Sanitize all user inputs'
-                ]
-            },
-            'ssrf': {
-                title: 'NETWORK - Server-Side Request Forgery (SSRF)',
-                severityClass: 'bg-danger',
-                description: 'Potential vulnerability allowing server-side request manipulation.',
-                recommendations: [
-                    'Validate and sanitize URL inputs',
-                    'Use allow-lists for permitted URLs',
-                    'Implement network-level restrictions',
-                    'Disable unnecessary URL fetching functionality',
-                    'Use DNS rebinding protection'
-                ]
-            },
-            'xss': {
-                title: 'WEB - Cross-Site Scripting (XSS)',
-                severityClass: 'bg-warning',
-                description: 'Potential vulnerability allowing script injection.',
-                recommendations: [
-                    'Implement output encoding',
-                    'Use Content Security Policy (CSP)',
-                    'Validate and sanitize user inputs',
-                    'Use HttpOnly and Secure flags for cookies',
-                    'Implement input validation'
-                ]
-            },
-            'port_scan': {
-                title: 'NETWORK - Open Ports Discovered',
-                severityClass: 'bg-warning',
-                description: 'Multiple open ports detected, potentially exposing network services.',
-                recommendations: [
-                    'Close unnecessary ports',
-                    'Use firewall to restrict access',
-                    'Implement network segmentation',
-                    'Disable unused services',
-                    'Regularly audit open ports'
-                ]
-            }
-        };
-
-        // Ensure all expected categories are processed
-        const categoriesToProcess = [
-            'brute_force', 
-            'ldap_injection', 
-            'session_hijacking', 
-            'xxe_injection', 
-            'sql_injection', 
-            'ssrf', 
-            'xss',
-            'port_scan'
-        ];
-
-        categoriesToProcess.forEach(category => {
-            console.log(`Processing ${category}:`, vulnerabilities[category] || []);
+            // Dropdown header
+            const dropdownHeader = document.createElement('div');
+            dropdownHeader.classList.add('attack-dropdown-header');
             
-            // Skip if no vulnerabilities for this category
-            if (!vulnerabilities[category] || vulnerabilities[category].length === 0) {
-                return;
-            }
+            const attackTitle = {
+                'sql_injection': 'SQL Injection',
+                'xss': 'Cross-Site Scripting (XSS)',
+                'ldap_injection': 'LDAP Injection',
+                'brute_force': 'Brute Force',
+                'session_hijacking': 'Session Hijacking',
+                'ssrf': 'Server-Side Request Forgery (SSRF)',
+                'api_security': 'API Security',
+                'owasp': 'OWASP Top 10',
+                'command_injection': 'Command Injection',
+                'xxe_injection': 'XXE Injection',
+                'port_scan': 'Port Scan',
+                'idor': 'Insecure Direct Object Reference (IDOR)'
+            }[attackType] || attackType;
 
-            // Use special handling for known categories, fallback to generic for others
-            const categoryConfig = specialHandling[category] || {
-                title: `${category.toUpperCase()} Vulnerability`,
-                severityClass: 'bg-warning',
-                description: 'Potential security vulnerability detected.',
-                recommendations: ['Conduct thorough security review']
-            };
-
-            // Vulnerability Card
-            const vulnerabilityCard = document.createElement('div');
-            vulnerabilityCard.classList.add('card', 'mb-3', 'vulnerability-card');
-            
-            const cardHeader = document.createElement('div');
-            cardHeader.classList.add('card-header', categoryConfig.severityClass, 'text-white');
-            cardHeader.textContent = categoryConfig.title;
-            
-            const cardBody = document.createElement('div');
-            cardBody.classList.add('card-body');
-            cardBody.innerHTML = `
-                <p><strong>Severity:</strong> <span class="badge ${categoryConfig.severityClass}">High</span></p>
-                <p><strong>Description:</strong> ${categoryConfig.description}</p>
-                <p><strong>Recommendation:</strong> 
-                    <ul>
-                        ${categoryConfig.recommendations.map(rec => `<li>${rec}</li>`).join('')}
-                    </ul>
-                </p>
+            dropdownHeader.innerHTML = `
+                <h3>${attackTitle}</h3>
+                <span class="badge">${results.length}</span>
+                <i class="toggle-icon">▼</i>
             `;
-            
-            vulnerabilityCard.appendChild(cardHeader);
-            vulnerabilityCard.appendChild(cardBody);
-            container.appendChild(vulnerabilityCard);
 
-            // Detailed Vulnerability Table
-            const vulnerabilityTable = document.createElement('div');
-            vulnerabilityTable.classList.add('card', 'mb-3');
-            
-            const tableHeader = document.createElement('div');
-            tableHeader.classList.add('card-header', 'bg-warning', 'text-dark');
-            tableHeader.textContent = `${category.toUpperCase()} Vulnerability Details (${vulnerabilities[category].length} found)`;
-            
-            const tableBody = document.createElement('div');
-            tableBody.classList.add('card-body', 'p-0');
-            
-            const table = document.createElement('table');
-            table.classList.add('table', 'table-striped', 'table-bordered', 'mb-0');
-            
-            // Dynamic table headers based on available data
-            const headers = new Set();
-            vulnerabilities[category].forEach(issue => Object.keys(issue).forEach(key => headers.add(key)));
-            
-            table.innerHTML = `
-                <thead>
-                    <tr>
-                        ${Array.from(headers).map(header => `<th>${header.replace(/_/g, ' ').toUpperCase()}</th>`).join('')}
-                    </tr>
-                </thead>
-                <tbody>
-                    ${vulnerabilities[category].map(issue => `
-                        <tr class="table-danger">
-                            ${Array.from(headers).map(header => `
-                                <td>${issue[header] !== undefined ? issue[header] : 'N/A'}</td>
-                            `).join('')}
-                        </tr>
-                    `).join('')}
-                </tbody>
-            `;
-            
-            tableBody.appendChild(table);
-            vulnerabilityTable.appendChild(tableHeader);
-            vulnerabilityTable.appendChild(tableBody);
-            container.appendChild(vulnerabilityTable);
+            // Dropdown content
+            const dropdownContent = document.createElement('div');
+            dropdownContent.classList.add('attack-dropdown-content');
+
+            // Populate vulnerabilities
+            results.forEach((vuln, index) => {
+                const vulnerabilityItem = document.createElement('div');
+                vulnerabilityItem.classList.add('vulnerability-item');
+                
+                // Create detailed vulnerability view
+                vulnerabilityItem.innerHTML = `
+                    <div class="vulnerability-details">
+                        <label>Type:</label> ${vuln.type || 'Unknown'}
+                        <label>Severity:</label> ${vuln.severity || 'Not Specified'}
+                        <label>URL:</label> ${vuln.url || 'N/A'}
+                        <label>Method:</label> ${vuln.method || 'N/A'}
+                        <label>Parameter:</label> ${vuln.parameter || 'N/A'}
+                        <label>Payload:</label> ${vuln.payload || 'N/A'}
+                        <label>Evidence:</label> ${vuln.evidence || 'No additional evidence'}
+                        <label>Details:</label> ${vuln.details || 'No details available'}
+                        <label>Recommendation:</label>
+                        <pre>${vuln.recommendation || 'No recommendations'}</pre>
+                    </div>
+                `;
+
+                dropdownContent.appendChild(vulnerabilityItem);
+            });
+
+            // Assemble dropdown
+            attackDropdown.appendChild(dropdownHeader);
+            attackDropdown.appendChild(dropdownContent);
+
+            // Add click event to toggle dropdown
+            dropdownHeader.addEventListener('click', () => {
+                dropdownHeader.classList.toggle('open');
+                dropdownContent.classList.toggle('active');
+            });
+
+            // Add to main container
+            container.appendChild(attackDropdown);
         });
-
-        // If no vulnerabilities were found
-        if (container.children.length === 0) {
-            container.innerHTML = '<p class="text-success">No vulnerabilities detected!</p>';
-        }
     }
 
     function performVulnerabilityScan() {

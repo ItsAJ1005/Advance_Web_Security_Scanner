@@ -392,3 +392,80 @@ input[type="url"] {
 .port-scan-summary .risk-breakdown li {
     margin-bottom: 5px;
 }
+
+/* Vulnerability Accordion Styles */
+.vulnerabilities-accordion {
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
+}
+
+.attack-dropdown {
+    border: 1px solid #e0e0e0;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.attack-dropdown-header {
+    background-color: #f1f1f1;
+    padding: 15px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.3s ease;
+}
+
+.attack-dropdown-header:hover {
+    background-color: #e0e0e0;
+}
+
+.attack-dropdown-header h3 {
+    margin: 0;
+    font-size: 16px;
+}
+
+.attack-dropdown-header .badge {
+    background-color: #ff6b6b;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+}
+
+.attack-dropdown-content {
+    display: none;
+    padding: 15px;
+    background-color: white;
+}
+
+.attack-dropdown-content.active {
+    display: block;
+}
+
+.attack-dropdown-content .vulnerability-item {
+    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    margin-bottom: 10px;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.vulnerability-details {
+    margin-top: 10px;
+}
+
+.vulnerability-details label {
+    font-weight: bold;
+    display: block;
+    margin-top: 5px;
+}
+
+.attack-dropdown-header .toggle-icon {
+    transition: transform 0.3s ease;
+}
+
+.attack-dropdown-header.open .toggle-icon {
+    transform: rotate(180deg);
+}

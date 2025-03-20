@@ -29,26 +29,26 @@ class BruteForceScanner(BaseScanner):
             ("admin", "password"),
             ("admin", "123456"),
             ("admin", "admin123"),
-            ("root", "root"),
-            ("user", "password"),
-            ("test", "test"),
+            # ("root", "root"),
+            # ("user", "password"),
+            # ("test", "test"),
             
             # Additional Common Credentials
-            ("administrator", "admin"),
-            ("administrator", "password"),
-            ("admin", "admin@123"),
-            ("admin", "password123"),
-            ("guest", "guest"),
-            ("system", "system"),
-            ("postgres", "postgres"),
-            ("mysql", "mysql"),
+            # ("administrator", "admin"),
+            # ("administrator", "password"),
+            # ("admin", "admin@123"),
+            # ("admin", "password123"),
+            # ("guest", "guest"),
+            # ("system", "system"),
+            # ("postgres", "postgres"),
+            # ("mysql", "mysql"),
             
             # More complex credential combinations
-            ("admin", "Password123!"),
-            ("user", "User@2023"),
-            ("test", "Test123!"),
-            ("support", "Support2023"),
-            ("helpdesk", "Help@desk"),
+            # ("admin", "Password123!"),
+            # ("user", "User@2023"),
+            # ("test", "Test123!"),
+            # ("support", "Support2023"),
+            # ("helpdesk", "Help@desk"),
         ]
         
         # Configuration parameters
