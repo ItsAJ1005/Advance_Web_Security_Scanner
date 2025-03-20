@@ -10,3 +10,6 @@ pyjwt>=2.6.0
 cryptography>=38.0.4
 html5lib
 flask-socketio
+urllib3
+argparse
+pybase64

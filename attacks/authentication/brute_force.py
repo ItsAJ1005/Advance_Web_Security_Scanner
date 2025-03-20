@@ -137,3 +137,104 @@ class BruteForceScanner(BaseScanner):
         except Exception as e:
             logging.error(f"Error extracting CSRF token: {e}")
             return None
+
+    def brute_force_directories(self, base_url):
+        common_dirs = [
+            "admin", "login", "uploads", "images", "css", "js", 
+            "api", "dashboard", "wp-admin", "wp-content", "backup"
+        ]
+        
+        found_dirs = []
+        for dir in common_dirs:
+            url = f"{base_url}/{dir}"
+            logging.info(f"Testing directory: {url}")
+            response = self.make_request(url)  # Ensure make_request is accessible
+            if response and response.status_code == 200:
+                logging.info(f"Found directory: {url}")
+                found_dirs.append(url)
+            time.sleep(self.request_delay)  # Respect rate limiting
+        return found_dirs
+
+    def run(self):
+        # Existing scanning logic...
+        
+        # Add directory brute forcing
+        if 'directory_brute_force' in self.selected_attacks:
+            found_dirs = self.brute_force_directories(self.target_url)  # Call the method
+            self.results['directories'] = found_dirs
+            logging.info(f"Found directories: {found_dirs}")
+        
+        # Add brute forcing
+        if 'brute_force' in self.selected_attacks:
+            found_credentials = self.brute_force_credentials()
+            self.results['brute_force'] = found_credentials
+            logging.info(f"Found credentials: {found_credentials}")
+        
+        return self.results
+
+class ScanTask:
+    def __init__(self, target_url: str, selected_attacks: List[str], config: Dict):
+        self.id = str(uuid.uuid4())
+        self.target_url = target_url
+        self.selected_attacks = selected_attacks
+        self.config = config
+        self.status = "pending"
+        self.progress = 0
+        self.results = {}
+        self.error = None
+        self.current_attack = None
+        self.completed_attacks = []
+
+    def run(self):
+        try:
+            self.status = "running"
+            scanners = {
+                'sql_injection': ('SQL Injection', SQLInjectionScanner),
+                'xss': ('Cross-Site Scripting', XSSScanner),
+                'brute_force': ('Brute Force', BruteForceScanner),
+                'session_hijacking': ('Session Hijacking', SessionHijackingScanner),
+                'ssrf': ('SSRF', SSRFScanner),
+                'api_security': ('API Security', APISecurityScanner),
+                'owasp': ('OWASP Top 10', OWASPScanner)
+            }
+
+            total = len(self.selected_attacks)
+            for i, attack in enumerate(self.selected_attacks):
+                if attack in scanners:
+                    name, scanner_class = scanners[attack]
+                    self.current_attack = name
+                    logging.info(f"Starting {name} scan")
+
+                    try:
+                        scanner = scanner_class(self.target_url, self.config)
+                        result = scanner.scan()
+                        
+                        if result:
+                            # Special handling for OWASP scan
+                            if attack == 'owasp':
+                                self.results[attack] = result.get('owasp_top_10', [])
+                            else:
+                                self.results[attack] = result
+                            logging.info(f"Found vulnerabilities in {name}")
+
+                        self.completed_attacks.append(name)
+                        self.progress = int(((i + 1) / total) * 100)
+                        logging.info(f"Progress: {self.progress}%")
+
+                    except Exception as e:
+                        logging.error(f"Error in {name}: {e}")
+                        continue
+
+            # Add directory brute forcing
+            if 'directory_brute_force' in self.selected_attacks:
+                found_dirs = BruteForceScanner(self.target_url, self.config).brute_force_directories(self.target_url)
+                self.results['directories'] = found_dirs
+                logging.info(f"Found directories: {found_dirs}")
+
+            self.status = "completed"
+            logging.info("Scan completed")
+
+        except Exception as e:
+            self.status = "failed"
+            self.error = str(e)
+            logging.error(f"Scan failed: {e}")

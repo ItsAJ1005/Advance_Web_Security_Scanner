@@ -27,6 +27,31 @@ def init_db():
                   (id INTEGER PRIMARY KEY, message TEXT)''')
     db.commit()
     return db
+def test_endpoint(url):
+    print(f"Testing endpoint: {url}")
+    response = make_request(url)
+    if response:
+        print(f"Response from {url}: {response.status_code}")
+    time.sleep(1)  # Delay to avoid overwhelming the server
+
+
+def make_request(url):
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.5",
+        "Accept-Encoding": "gzip, deflate",
+        "Connection": "close",
+        "Upgrade-Insecure-Requests": "1"
+    }
+    
+    try:
+        response = requests.get(url, headers=headers, timeout=10)
+        response.raise_for_status()  # Raise an error for bad responses
+        return response
+    except requests.exceptions.RequestException as e:
+        print(f"Error making request to {url}: {e}")
+        return None
 
 BASE_TEMPLATE = '''
 <!DOCTYPE html>
@@ -663,6 +688,6 @@ if __name__ == '__main__':
         init_db()
     
     if SOCKET_AVAILABLE:
-        socketio.run(app, host='127.0.0.1', port=5000, debug=True)
+        socketio.run(app, host='127.0.0.1', port=8000, debug=True)
     else:
-        app.run(host='127.0.0.1', port=5000, debug=True)
+        app.run(host='127.0.0.1', port=8000, debug=True)
