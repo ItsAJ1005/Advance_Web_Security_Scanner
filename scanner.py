@@ -4,6 +4,7 @@ import logging
 import os
 from typing import Dict
 from concurrent.futures import ThreadPoolExecutor
+from attacks.access_control.idor import IDORScanner
 from attacks.advanced.ssrf import SSRFScanner
 from attacks.authentication.brute_force import BruteForceScanner
 from attacks.authentication.session_hijacking import SessionHijackingScanner
@@ -67,7 +68,8 @@ def main():
         'session_hijacking': SessionHijackingScanner,
         'brute_force': BruteForceScanner,
         'ssrf': SSRFScanner,
-        'ldap_injection': LDAPInjectionScanner  # Add this line
+        'ldap_injection': LDAPInjectionScanner,  # Add this line,
+        'idor': IDORScanner
     }
     
     enabled_attacks = config.get("enabled_attacks", [])
@@ -87,6 +89,8 @@ def main():
         scanners.append(BruteForceScanner(args.url, config))
     if "session_hijacking" in enabled_attacks:
         scanners.append(SessionHijackingScanner(args.url, config))
+    if "idor" in enabled_attacks:
+        scanners.append(IDORScanner(args.url, config))
     # Add additional scanners here based on the enabled attacks
     #....ADD HERE
     #

@@ -125,69 +125,102 @@ class LDAPInjectionScanner(BaseScanner):
             return {'ldap_injection': [], 'error': str(e)}
 
     def execute_task(self, task: Dict) -> Optional[Dict]:
-        try:
-            # Make baseline request
-            normal_response = self.make_request(
-                task['url'],
-                method=task['method'],
-                data={task['parameter']: 'normal_user'} if task['method'] == 'POST' else None,
-                params={task['parameter']: 'normal_user'} if task['method'] == 'GET' else None
-            )
-
-            if not normal_response:
-                return None
-
-            # Test with payloads
-            for payload in self.payloads:
-                try:
-                    response = self.make_request(
-                        task['url'],
-                        method=task['method'],
-                        data={task['parameter']: payload} if task['method'] == 'POST' else None,
-                        params={task['parameter']: payload} if task['method'] == 'GET' else None
-                    )
-
-                    if response and self.is_vulnerable(response):
-                        return {
-                            'type': 'LDAP Injection',
-                            'url': task['url'],
-                            'parameter': task['parameter'],
-                            'payload': payload,
-                            'severity': 'High',
-                            'evidence': 'LDAP injection pattern detected'
-                        }
-
-                except Exception as e:
-                    logging.debug(f"Error testing payload {payload}: {e}")
-                    continue
-
-            return None
-
-        except Exception as e:
-            logging.error(f"Error in LDAP injection task: {e}")
-            return None
-
-    def detect_ldap_injection(self, normal_response, payload_response) -> bool:
-        # Different response length
-        if abs(len(normal_response.text) - len(payload_response.text)) > 50:
-            return True
-
-        # Different status code
-        if normal_response.status_code != payload_response.status_code:
-            return True
-
-        # Check for LDAP-specific errors
-        ldap_errors = [
-            'ldap_',
-            'invalid filter',
-            'search filter',
-            'invalid DN syntax',
-            'directory service error'
+        """
+        Execute LDAP injection test for a specific task
+        
+        Args:
+            task (Dict): Task configuration for injection testing
+        
+        Returns:
+            Optional vulnerability details
+        """
+        results = []
+        
+        # Iterate through payloads
+        for payload in self.payloads:
+            try:
+                # Prepare injection request
+                modified_params = task.copy()
+                modified_params[task['parameter']] = payload
+                
+                # Send request with payload
+                response = self.make_request(
+                    task['url'], 
+                    method=task['method'], 
+                    data=modified_params
+                )
+                
+                # Check for injection indicators
+                if self.verify_ldap_injection(response, payload):
+                    return {
+                        'url': task['url'],
+                        'method': task['method'],
+                        'parameter': task['parameter'],
+                        'payload': payload,
+                        'type': 'LDAP Injection',
+                        'severity': 'High',
+                        'description': f'Potential LDAP injection vulnerability detected with payload: {payload}',
+                        'recommendation': 'Implement strict input validation and sanitization for LDAP queries'
+                    }
+            
+            except Exception as e:
+                logging.error(f"LDAP Injection test error: {e}")
+        
+        return None
+    
+    def verify_ldap_injection(self, response, payload: str) -> bool:
+        """
+        Verify if the response indicates a successful LDAP injection
+        
+        Args:
+            response: HTTP response object
+            payload (str): Injected payload
+        
+        Returns:
+            bool: True if LDAP injection is detected
+        """
+        if not response:
+            return False
+        
+        # Convert response to string for analysis
+        response_text = str(response.text).lower()
+        
+        # Injection detection indicators
+        injection_indicators = [
+            # Successful injection markers
+            'ldap',
+            'cn=',            # Common Name attribute
+            'uid=',           # User ID attribute
+            'objectclass=',   # Object class indicator
+            'memberof=',      # Group membership
+            
+            # Potential error or information disclosure
+            'directory service',
+            'authentication failed',
+            'user not found',
+            'invalid credentials',
+            
+            # Wildcard and filter manipulation signs
+            payload.lower(),  # Original payload might be reflected
+            '*)',             # Wildcard or filter manipulation
+            '(&',             # Logical AND in LDAP filter
+            '(|',             # Logical OR in LDAP filter
         ]
-
-        return any(error in payload_response.text.lower() 
-                  and error not in normal_response.text.lower() 
-                  for error in ldap_errors)
+        
+        # Check for console-based attack confirmation
+        console_script = f"""
+        <script>
+        console.warn('LDAP Injection Detected: {payload}');
+        console.log('Potential Vulnerability: Input not properly sanitized');
+        </script>
+        """
+        
+        # Detailed logging and console warning
+        if any(indicator in response_text for indicator in injection_indicators):
+            logging.warning(f"LDAP Injection detected with payload: {payload}")
+            return True
+        
+        return False
 
     def extract_forms(self, html: str) -> List[Dict]:
         try:

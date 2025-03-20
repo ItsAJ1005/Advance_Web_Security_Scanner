@@ -68,6 +68,43 @@
                     </div>
                     {% endif %}
 
+<<<<<<< HEAD
+=======
+                    <div class="attack-checkbox">
+                        <input type="checkbox" id="command_injection" name="attacks" value="command_injection">
+                        <label for="command_injection">Command Injection</label>
+                    </div>
+
+                    <div class="attack-checkbox">
+                        <input type="checkbox" id="brute_force" name="attacks" value="brute_force">
+                        <label for="brute_force">Brute Force</label>
+                        <div class="brute-force-options" style="display: none; margin-top: 10px;">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="brute_force_common" name="brute_force_options" value="common_credentials">
+                                <label class="form-check-label" for="brute_force_common">Common Credentials</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="brute_force_advanced" name="brute_force_options" value="advanced_variations">
+                                <label class="form-check-label" for="brute_force_advanced">Advanced Variations</label>
+                            </div>
+                            <div class="form-group">
+                                <label for="brute_force_max_attempts">Max Attempts:</label>
+                                <input type="number" class="form-control" id="brute_force_max_attempts" name="brute_force_max_attempts" value="20" min="1" max="100">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="attack-checkbox">
+                        <input type="checkbox" id="xxe_injection" name="attacks" value="xxe_injection">
+                        <label for="xxe_injection">XXE Injection</label>
+                    </div>
+
+                    <div class="attack-checkbox">
+                        <input type="checkbox" id="port_scan" name="attacks" value="port_scan">
+                        <label for="port_scan">Port Scan</label>
+                    </div>
+
+>>>>>>> main
                     <button type="submit" class="btn btn-primary">Launch Attack</button>
                 </form>
 
@@ -98,4 +135,18 @@
         </div>
     </div>
 </div>
+<<<<<<< HEAD
+=======
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const bruteForceCheckbox = document.getElementById('brute_force');
+    const bruteForceOptions = document.querySelector('.brute-force-options');
+    
+    bruteForceCheckbox.addEventListener('change', function() {
+        bruteForceOptions.style.display = this.checked ? 'block' : 'none';
+    });
+});
+</script>
+>>>>>>> main
 {% endblock %}

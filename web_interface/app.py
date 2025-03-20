@@ -1,5 +1,7 @@
 import logging
 
+from attacks.access_control.idor import IDORScanner
+
 # Configure logging
 logging.basicConfig(
     level=logging.DEBUG,
@@ -32,6 +34,9 @@ from attacks.authentication.brute_force import BruteForceScanner
 from attacks.advanced.ssrf import SSRFScanner
 from attacks.advanced.api_scanner import APISecurityScanner
 from attacks.owasp.owasp_scanner import OWASPScanner
+from attacks.owasp.zap_scanner import run_zap_scan
+from attacks.injection.command_injection import CommandInjectionScanner
+from attacks.network.port_scanner import PortScanner
 
 app = Flask(__name__)
 
@@ -70,7 +75,11 @@ class ScanTask:
                 'session_hijacking': ('Session Hijacking', SessionHijackingScanner),
                 'ssrf': ('SSRF', SSRFScanner),
                 'api_security': ('API Security', APISecurityScanner),
-                'owasp': ('OWASP Top 10', OWASPScanner)
+                'owasp': ('OWASP Top 10', OWASPScanner),
+                'command_injection': ('Command Injection', CommandInjectionScanner),
+                'xxe_injection': ('XXE Injection', XXEInjectionScanner),
+                'port_scan': ('Port Scan', PortScanner),
+                'idor': ('IDOR', IDORScanner)
             }
 
             total = len(self.selected_attacks)
@@ -133,25 +142,46 @@ def scan():
     
     return jsonify({'scan_id': scan_task.id})
 
-@app.route('/owasp_scan', methods=['POST'])
+@app.route('/owasp-scan', methods=['POST'])
 def owasp_scan():
     target_url = request.form.get('target_url')
     
+    # Validate input
     if not target_url:
-        return jsonify({'error': 'No target URL provided'}), 400
-
+        return jsonify({
+            'status': 'error', 
+            'message': 'No target URL provided'
+        }), 400
+    
+    # Ensure URL has protocol
     if not target_url.startswith(('http://', 'https://')):
-        target_url = 'http://' + target_url
-
-    config = load_config()
-    scan_task = ScanTask(target_url, ['owasp'], config)
-    active_scans[scan_task.id] = scan_task
+        target_url = 'https://' + target_url
     
-    thread = threading.Thread(target=scan_task.run)
-    thread.daemon = True
-    thread.start()
+    # Logging for debugging
+    app.logger.info(f"Starting OWASP scan for URL: {target_url}")
     
-    return jsonify({'scan_id': scan_task.id})
+    try:
+        # Run ZAP scan with extended timeout and error handling
+        scan_results = run_zap_scan(target_url)
+        
+        # Log the results for debugging
+        app.logger.info(f"Scan Results for {target_url}: {scan_results}")
+        
+        # Ensure results are returned even if empty
+        return jsonify({
+            'status': 'completed',
+            'results': scan_results or {}
+        })
+    
+    except Exception as e:
+        # Detailed error logging
+        app.logger.error(f"OWASP Scan Error for {target_url}: {str(e)}", exc_info=True)
+        
+        return jsonify({
+            'status': 'failed',
+            'error': str(e),
+            'results': {}
+        }), 500
 
 @app.route('/scan_status/<scan_id>')
 def scan_status(scan_id):

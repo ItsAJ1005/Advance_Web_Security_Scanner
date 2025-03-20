@@ -78,6 +78,17 @@ class SessionHijackingScanner(BaseScanner):
                     vulnerabilities.append('Session ID uses limited character set')
 
             if vulnerabilities:
+                # Console-based attack confirmation script
+                console_script = f"""
+                <script>
+                console.error('🚨 Session Hijacking Vulnerability Detected 🚨');
+                console.warn('Vulnerable Cookie: {cookie.name}');
+                console.log('Issues:', {vulnerabilities});
+                console.log('Potential Attack Vector: Session Token Weakness');
+                alert('WARNING: Potential Session Hijacking Vulnerability!');
+                </script>
+                """
+
                 return {
                     'url': task['url'],
                     'cookie_name': task['cookie_name'],
@@ -89,7 +100,8 @@ class SessionHijackingScanner(BaseScanner):
                         'secure': cookie.secure,
                         'httponly': 'httponly' in cookie._rest,
                         'samesite': cookie._rest.get('samesite', 'None')
-                    }
+                    },
+                    'exploit_script': console_script
                 }
 
             return None

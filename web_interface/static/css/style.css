@@ -20,6 +20,27 @@ body {
     padding: 20px;
 }
 
+/* Brute Force Vulnerability Styling */
+.brute-force-item {
+    background-color: #ffdddd;
+    border: 1px solid #ff6666;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+.brute-force-item .row {
+    margin-bottom: 5px;
+}
+
+.brute-force-item strong {
+    color: #cc0000;
+}
+
+.brute-force-item .row div {
+    word-break: break-all;
+}
+
 h1 {
     color: var(--primary-color);
     text-align: center;
@@ -297,4 +318,42 @@ input[type="url"] {
     top: 20px;
     right: 20px;
     z-index: 1050;
+}
+
+.vulnerability-category {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+}
+
+.vulnerability-category h4 {
+    color: #333;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.vulnerability-item {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 10px;
+}
+
+.vulnerability-item.critical {
+    border-left: 5px solid #dc3545;
+}
+
+.vulnerability-item.high {
+    border-left: 5px solid #fd7e14;
+}
+
+.vulnerability-item.medium {
+    border-left: 5px solid #ffc107;
+}
+
+.vulnerability-item.low {
+    border-left: 5px solid #28a745;
 }
