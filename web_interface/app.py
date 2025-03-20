@@ -37,6 +37,7 @@ from attacks.owasp.owasp_scanner import OWASPScanner
 from attacks.owasp.zap_scanner import run_zap_scan
 from attacks.injection.command_injection import CommandInjectionScanner
 from attacks.network.port_scanner import PortScanner
+from attacks.injection.ldap_injection import LDAPScanner  # Add this import
 
 app = Flask(__name__)
 
@@ -79,7 +80,8 @@ class ScanTask:
                 'command_injection': ('Command Injection', CommandInjectionScanner),
                 'xxe_injection': ('XXE Injection', XXEInjectionScanner),
                 'port_scan': ('Port Scan', PortScanner),
-                'idor': ('IDOR', IDORScanner)
+                'idor': ('IDOR', IDORScanner),
+                'ldap_injection': ('LDAP Injection', LDAPScanner)  # Corrected LDAP scanner key
             }
 
             total = len(self.selected_attacks)

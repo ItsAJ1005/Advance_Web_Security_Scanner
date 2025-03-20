@@ -13,6 +13,7 @@ from core.base_scanner import BaseScanner
 from attacks.injection.sql_injection import SQLInjectionScanner
 from attacks.xss.xss_scanner import XSSScanner
 from attacks.injection.ldap_injection import LDAPInjectionScanner
+from attacks.injection.ldap_injection import LDAPScanner as LDAPInjectionScanner
 
 def load_config(config_path: str = "config/scanner_config.json") -> Dict:
     default_config = {
@@ -68,7 +69,7 @@ def main():
         'session_hijacking': SessionHijackingScanner,
         'brute_force': BruteForceScanner,
         'ssrf': SSRFScanner,
-        'ldap_injection': LDAPInjectionScanner,  # Add this line,
+        'ldap_injection': LDAPInjectionScanner,  
         'idor': IDORScanner
     }
     
@@ -91,10 +92,11 @@ def main():
         scanners.append(SessionHijackingScanner(args.url, config))
     if "idor" in enabled_attacks:
         scanners.append(IDORScanner(args.url, config))
+    if "ldap_injection" in enabled_attacks:
+        scanners.append(LDAPInjectionScanner(args.url, config))
     # Add additional scanners here based on the enabled attacks
     #....ADD HERE
     #
-    
 
     with ThreadPoolExecutor(max_workers=config.get('max_threads', 5)) as executor:
         future_to_scanner = {

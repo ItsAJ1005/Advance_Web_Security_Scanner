@@ -87,6 +87,42 @@
     <div class="vulnerability-results"></div>
 </div>
 
+<!-- Add this section for LDAP scan results -->
+<div class="vulnerability-section" id="ldap-injection">
+    <h2>LDAP Injection Results</h2>
+    <div class="vulnerability-summary"></div>
+    <div class="vulnerability-results">
+        <template id="ldap-injection-template">
+            <div class="vulnerability-card">
+                <div class="card-header">
+                    <h4 class="vulnerability-type">LDAP Injection</h4>
+                    <span class="severity-badge"></span>
+                </div>
+                <div class="card-content">
+                    <div class="endpoint-details">
+                        <p><strong>Target URL:</strong> <span class="url"></span></p>
+                        <p><strong>Method:</strong> <span class="method"></span></p>
+                        <p><strong>Parameter:</strong> <span class="parameter"></span></p>
+                    </div>
+                    
+                    <div class="injection-details">
+                        <p><strong>Payload:</strong></p>
+                        <pre class="payload"></pre>
+                        <p><strong>Evidence:</strong></p>
+                        <pre class="evidence"></pre>
+                        <p><strong>Details:</strong> <span class="details"></span></p>
+                    </div>
+
+                    <div class="recommendations">
+                        <h5>Security Recommendations</h5>
+                        <pre class="recommendation"></pre>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </div>
+</div>
+
 <script>
 // ...existing code...
             // Quick scan form handler

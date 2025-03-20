@@ -6,10 +6,10 @@ import logging
 from urllib.parse import urljoin
 import re
 
-class LDAPInjectionScanner(BaseScanner):
+class LDAPScanner(BaseScanner):
     def __init__(self, target_url: str, config: Dict):
         super().__init__(target_url, config)
-        # More aggressive payloads
+        # More comprehensive payloads
         self.payloads = [
             "*",                           # Basic wildcard
             "*)",                          # Closing parenthesis
@@ -25,47 +25,26 @@ class LDAPInjectionScanner(BaseScanner):
             "*()|&'",                      # Filter breaking
             "*/*",                         # Path traversal
             "admin*))%00",                 # Null byte
-            ")(cn=*)))\x00",              # Binary null
+            ")(cn=*)))\x00",               # Binary null
             "*)(|(objectClass=*))",        # Object enumeration
             "*)(department=*)"             # Department enumeration
         ]
 
     def scan(self) -> Dict:
+        """
+        Perform LDAP injection vulnerability scanning
+        
+        Returns:
+            Dict of scan results
+        """
         try:
-            tasks = []
-            response = self.make_request(self.target_url)
-            
-            if not response:
-                return {'ldap_injection': []}
-
-            # Scan login forms
-            forms = self.extract_forms(response.text)
-            for form in forms:
-                for input_field in form.get('inputs', []):
-                    if input_field.get('type') in ['text', 'password']:
-                        tasks.append({
-                            'url': form.get('action', self.target_url),
-                            'method': form.get('method', 'POST'),
-                            'parameter': input_field.get('name', ''),
-                            'type': 'form'
-                        })
-
-            # Test common LDAP endpoints
-            endpoints = ['/login', '/auth', '/ldap', '/search']
-            for endpoint in endpoints:
-                url = f"{self.target_url.rstrip('/')}{endpoint}"
-                tasks.append({
-                    'url': url,
-                    'method': 'GET',
-                    'parameter': 'username',
-                    'type': 'endpoint'
-                })
-
-            results = self.run_concurrent_tasks(tasks)
-            return {'ldap_injection': [r for r in results if r]}
+            logging.info(f"Starting LDAP Injection scan on {self.target_url}")
             results = []
             
-            # Test all forms regardless of endpoint
+            # Prepare tasks for concurrent scanning
+            tasks = []
+            
+            # Test form inputs
             response = self.make_request(self.target_url)
             if response:
                 forms = RequestUtils.extract_forms(response.text)
@@ -74,55 +53,63 @@ class LDAPInjectionScanner(BaseScanner):
                     for input_field in form['inputs']:
                         if input_field['type'] in ['text', 'password', 'search']:
                             for payload in self.payloads:
-                                test_result = self.test_ldap_injection(
-                                    form_url,
-                                    form['method'],
-                                    input_field['name'],
-                                    payload
-                                )
-                                if test_result:
-                                    results.append({
-                                        'url': form_url,
-                                        'method': form['method'],
-                                        'parameter': input_field['name'],
-                                        'payload': payload,
-                                        'type': 'LDAP Injection',
-                                        'severity': 'High',
-                                        'evidence': test_result
-                                    })
-
+                                tasks.append({
+                                    'url': form_url,
+                                    'method': form['method'],
+                                    'parameter': input_field['name'],
+                                    'payload': payload,
+                                    'type': 'form'
+                                })
+            
             # Test common endpoints
             test_endpoints = [
-                '/ldap', '/login', '/auth', '/search', '/user', '/admin',
-                '/directory', '/profile', '/account', '/', '/api/users'
+                '/ldap', '/login', '/auth', '/search', 
+                '/user', '/admin', '/directory', 
+                '/profile', '/account', '/', '/api/users'
             ]
-
+            
             for endpoint in test_endpoints:
                 endpoint_url = urljoin(self.target_url, endpoint)
                 for param in ['username', 'user', 'query', 'q', 'search', 'id', 'uid']:
                     for payload in self.payloads:
-                        test_result = self.test_ldap_injection(
-                            endpoint_url,
-                            'GET',
-                            param,
-                            payload
-                        )
-                        if test_result:
-                            results.append({
-                                'url': endpoint_url,
-                                'method': 'GET',
-                                'parameter': param,
-                                'payload': payload,
-                                'type': 'LDAP Injection',
-                                'severity': 'High',
-                                'evidence': test_result
-                            })
-
+                        tasks.append({
+                            'url': endpoint_url,
+                            'method': 'GET',
+                            'parameter': param,
+                            'payload': payload,
+                            'type': 'endpoint'
+                        })
+            
+            # Run tasks concurrently
+            concurrent_results = self.run_concurrent_tasks(tasks)
+            
+            # Process and format results
+            for result in concurrent_results:
+                if result:
+                    results.append({
+                        'type': 'LDAP Injection',
+                        'severity': 'High',
+                        'url': result['url'],
+                        'method': result['method'],
+                        'parameter': result['parameter'],
+                        'payload': result['payload'],
+                        'evidence': f"LDAP injection detected with payload: {result['payload']}",
+                        'details': 'The application appears vulnerable to LDAP injection attacks',
+                        'recommendation': "\n".join([
+                            "1. Implement proper input validation",
+                            "2. Use LDAP search filters",
+                            "3. Escape special characters",
+                            "4. Use parameterized queries",
+                            "5. Implement least privilege access"
+                        ])
+                    })
+            
+            logging.info(f"LDAP Injection scan completed. Found {len(results)} vulnerabilities.")
             return {'ldap_injection': results}
-
+        
         except Exception as e:
-            logging.error(f"LDAP Injection scanner error: {e}")
-            return {'ldap_injection': [], 'error': str(e)}
+            logging.error(f"LDAP scanner error: {e}", exc_info=True)
+            return {'ldap_injection': []}
 
     def execute_task(self, task: Dict) -> Optional[Dict]:
         """
@@ -134,40 +121,29 @@ class LDAPInjectionScanner(BaseScanner):
         Returns:
             Optional vulnerability details
         """
-        results = []
-        
-        # Iterate through payloads
-        for payload in self.payloads:
-            try:
-                # Prepare injection request
-                modified_params = task.copy()
-                modified_params[task['parameter']] = payload
-                
-                # Send request with payload
-                response = self.make_request(
-                    task['url'], 
-                    method=task['method'], 
-                    data=modified_params
-                )
-                
-                # Check for injection indicators
-                if self.verify_ldap_injection(response, payload):
-                    return {
-                        'url': task['url'],
-                        'method': task['method'],
-                        'parameter': task['parameter'],
-                        'payload': payload,
-                        'type': 'LDAP Injection',
-                        'severity': 'High',
-                        'description': f'Potential LDAP injection vulnerability detected with payload: {payload}',
-                        'recommendation': 'Implement strict input validation and sanitization for LDAP queries'
-                    }
+        try:
+            # Prepare request parameters
+            params = {task['parameter']: task['payload']} if task['method'] == 'GET' else {}
+            data = {task['parameter']: task['payload']} if task['method'] == 'POST' else {}
             
-            except Exception as e:
-                logging.error(f"LDAP Injection test error: {e}")
+            # Make request
+            response = self.make_request(
+                task['url'], 
+                method=task['method'], 
+                params=params, 
+                data=data
+            )
+            
+            # Check for injection indicators
+            if response and self.verify_ldap_injection(response, task['payload']):
+                return task
+            
+            return None
         
-        return None
-    
+        except Exception as e:
+            logging.error(f"LDAP injection test error: {e}")
+            return None
+
     def verify_ldap_injection(self, response, payload: str) -> bool:
         """
         Verify if the response indicates a successful LDAP injection
@@ -207,51 +183,9 @@ class LDAPInjectionScanner(BaseScanner):
             '(|',             # Logical OR in LDAP filter
         ]
         
-        # Check for console-based attack confirmation
-        console_script = f"""
-        <script>
-        console.warn('LDAP Injection Detected: {payload}');
-        console.log('Potential Vulnerability: Input not properly sanitized');
-        </script>
-        """
-        
         # Detailed logging and console warning
         if any(indicator in response_text for indicator in injection_indicators):
             logging.warning(f"LDAP Injection detected with payload: {payload}")
             return True
         
         return False
-
-    def extract_forms(self, html: str) -> List[Dict]:
-        try:
-            from bs4 import BeautifulSoup
-            soup = BeautifulSoup(html, 'html.parser')
-            forms = []
-            
-            for form in soup.find_all('form'):
-                inputs = []
-                for input_field in form.find_all(['input', 'textarea']):
-                    inputs.append({
-                        'name': input_field.get('name', ''),
-                        'type': input_field.get('type', 'text')
-                    })
-                
-                forms.append({
-                    'action': form.get('action', ''),
-                    'method': form.get('method', 'get').upper(),
-                    'inputs': inputs
-                })
-            
-            return forms
-        except Exception as e:
-            logging.error(f"Error extracting forms: {e}")
-
-    def extract_url_parameters(self, url: str) -> List[str]:
-        try:
-            from urllib.parse import urlparse, parse_qs
-            parsed_url = urlparse(url)
-            params = parse_qs(parsed_url.query)
-            return list(params.keys())
-        except Exception as e:
-            logging.error(f"Error extracting URL parameters: {e}")
-            return []
