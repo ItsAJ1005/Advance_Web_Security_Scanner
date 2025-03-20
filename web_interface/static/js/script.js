@@ -37,7 +37,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             // Run OWASP scan
-            runOWASPSan(targetUrl);
+            setTimeout(() => {  
+                runOWASPSan(targetUrl);
+            }, 1000);
         });
     }
 

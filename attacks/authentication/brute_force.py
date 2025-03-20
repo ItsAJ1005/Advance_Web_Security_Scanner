@@ -131,10 +131,10 @@ class BruteForceScanner(BaseScanner):
                     'evidence': f'Successful login with credentials',
                     'details': 'Weak credentials allowed authentication bypass',
                     'recommendation': '\n'.join([
-                        '1. Implement account lockout after multiple failed attempts',
-                        '2. Use strong password policies',
-                        '3. Enable multi-factor authentication',
-                        '4. Implement rate limiting',
+                        '1. Implement account lockout after multiple failed attempts\n',
+                        '2. Use strong password policies\n',
+                        '3. Enable multi-factor authentication\n',
+                        '4. Implement rate limiting\n',
                         '5. Monitor and alert on multiple failed login attempts'
                     ])
                 } for login in successful_logins
