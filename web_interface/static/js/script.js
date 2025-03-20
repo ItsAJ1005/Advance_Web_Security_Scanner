@@ -484,6 +484,66 @@ document.addEventListener('DOMContentLoaded', function() {
         console.groupEnd();
     }
 
+    function displaySessionHijackingResults(vulnerabilities) {
+        const resultsContainer = document.getElementById('results-container');
+        resultsContainer.innerHTML = ''; // Clear previous results
+
+        vulnerabilities.forEach(vuln => {
+            // Default to N/A if fields are missing
+            const httpMethod = vuln.http_method || 'N/A';
+            const vulnerableParam = vuln.vulnerable_parameter || 'N/A';
+            const payload = vuln.payload || 'No payload details';
+            const evidence = vuln.evidence || 'No additional evidence';
+
+            // Create result card
+            const resultCard = document.createElement('div');
+            resultCard.className = 'card mb-3 border-' + (vuln.severity === 'High' ? 'danger' : 'warning');
+            
+            resultCard.innerHTML = `
+                <div class="card-header bg-${vuln.severity === 'High' ? 'danger' : 'warning'} text-white">
+                    ${vuln.type} - ${vuln.name} (${vuln.severity} Severity)
+                </div>
+                <div class="card-body">
+                    <p><strong>Vulnerable URL:</strong> ${vuln.url}</p>
+                    <p><strong>HTTP Method:</strong> ${httpMethod}</p>
+                    <p><strong>Vulnerable Parameter:</strong> ${vulnerableParam}</p>
+                    <p><strong>Payload Used:</strong> ${payload}</p>
+                    <p><strong>Evidence:</strong></p>
+                    <pre class="text-muted">${evidence}</pre>
+                    <p><strong>Details:</strong> ${vuln.details}</p>
+                    <div class="alert alert-warning">
+                        <strong>Recommendation:</strong>
+                        <pre>${vuln.recommendation}</pre>
+                    </div>
+                </div>
+            `;
+
+            resultsContainer.appendChild(resultCard);
+        });
+    }
+
+    function processResults(results) {
+        console.log('Processing Results:', results);
+        
+        // Clear previous results
+        const resultsContainer = document.getElementById('results-container');
+        resultsContainer.innerHTML = '';
+
+        // Process each attack type
+        Object.keys(results).forEach(attackType => {
+            console.log(`Processing ${attackType}:`, results[attackType]);
+            
+            switch(attackType) {
+                case 'session_hijacking':
+                    displaySessionHijackingResults(results[attackType]);
+                    break;
+                // Add other attack types as needed
+                default:
+                    console.warn(`No specific display method for ${attackType}`);
+            }
+        });
+    }
+
     function displayVulnerabilities(vulnerabilities) {
         const container = document.getElementById('vulnerabilities-container');
         container.innerHTML = ''; // Clear previous results

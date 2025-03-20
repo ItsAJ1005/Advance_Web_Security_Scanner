@@ -74,6 +74,11 @@ function processResults(data) {
         console.log("Processing XXE injection:", data.xxe_injection);
         displayXXEResults(data.xxe_injection);
     }
+
+    if (data.session_hijacking) {
+        console.log("Processing session hijacking:", data.session_hijacking);
+        displaySessionHijackingResults(data.session_hijacking);
+    }
 }
 
 // Add error handling to displayPortScanResults
@@ -288,5 +293,73 @@ function displayXXEResults(data) {
         clone.querySelector('.recommendation').textContent = '• ' + recommendations;
 
         xxeSection.appendChild(clone);
+    });
+}
+
+function displaySessionHijackingResults(data) {
+    console.log("Displaying session hijacking results:", data);
+
+    const sessionSection = document.querySelector('#session-hijacking .vulnerability-results');
+    const summarySection = document.querySelector('#session-hijacking .vulnerability-summary');
+
+    if (!sessionSection || !summarySection) {
+        console.error("Could not find session hijacking results sections");
+        return;
+    }
+
+    // Clear previous results
+    sessionSection.innerHTML = '';
+    summarySection.innerHTML = '';
+
+    if (!data || data.length === 0) {
+        summarySection.innerHTML = '<div class="alert alert-success">No session hijacking vulnerabilities detected.</div>';
+        return;
+    }
+
+    // Create summary
+    summarySection.innerHTML = `
+        <div class="alert alert-danger">
+            <h4 class="alert-heading">Session Hijacking Vulnerabilities Detected!</h4>
+            <p><strong>Found ${data.length} potential session hijacking vulnerabilities</strong></p>
+            <hr>
+            <p class="mb-0">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                <strong>Critical Warning:</strong> These vulnerabilities can lead to unauthorized access 
+                and account takeover.
+            </p>
+        </div>
+    `;
+
+    // Display each vulnerability
+    data.forEach(vuln => {
+        const findingCard = `
+            <div class="vulnerability-card mb-3">
+                <div class="card-header d-flex justify-content-between">
+                    <h4>${vuln.type}</h4>
+                    <span class="severity-badge ${vuln.severity.toLowerCase()}">${vuln.severity}</span>
+                </div>
+                <div class="card-content">
+                    <div class="vulnerability-details mb-3">
+                        <p><strong>Name:</strong> ${vuln.name || 'N/A'}</p>
+                        <p><strong>URL:</strong> ${vuln.url || 'N/A'}</p>
+                        <p><strong>Method:</strong> ${vuln.method || 'GET'}</p>
+                        <p><strong>Parameter:</strong> ${vuln.parameter || 'session_token'}</p>
+                        <p><strong>Payload:</strong></p>
+                        <pre>${vuln.payload || 'Session token analysis'}</pre>
+                        <p><strong>Evidence:</strong></p>
+                        <pre>${vuln.details || 'No additional evidence'}</pre>
+                    </div>
+                    <div class="recommendations">
+                        <h5>Security Recommendations:</h5>
+                        <ul>
+                            ${vuln.recommendation.split('\n')
+                                .map(rec => `<li>${rec.replace(/^\d+\.\s*/, '')}</li>`)
+                                .join('')}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        `;
+        sessionSection.innerHTML += findingCard;
     });
 }
