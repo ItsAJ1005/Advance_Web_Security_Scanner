@@ -33,6 +33,8 @@ from attacks.advanced.ssrf import SSRFScanner
 from attacks.advanced.api_scanner import APISecurityScanner
 from attacks.owasp.owasp_scanner import OWASPScanner
 from attacks.owasp.zap_scanner import run_zap_scan
+from attacks.injection.command_injection import CommandInjectionScanner
+from attacks.network.port_scanner import PortScanner
 
 app = Flask(__name__)
 
@@ -71,7 +73,10 @@ class ScanTask:
                 'session_hijacking': ('Session Hijacking', SessionHijackingScanner),
                 'ssrf': ('SSRF', SSRFScanner),
                 'api_security': ('API Security', APISecurityScanner),
-                'owasp': ('OWASP Top 10', OWASPScanner)
+                'owasp': ('OWASP Top 10', OWASPScanner),
+                'command_injection': ('Command Injection', CommandInjectionScanner),
+                'xxe_injection': ('XXE Injection', XXEInjectionScanner),
+                'port_scan': ('Port Scan', PortScanner)
             }
 
             total = len(self.selected_attacks)

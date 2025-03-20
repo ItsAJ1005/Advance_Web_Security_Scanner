@@ -694,53 +694,136 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        // Use a Set to track unique vulnerabilities
-        const uniqueVulnerabilities = new Set();
+        // Special handling for specific vulnerability types
+        const specialHandling = {
+            'brute_force': {
+                title: 'AUTHENTICATION - Brute Force Vulnerability',
+                severityClass: 'bg-danger',
+                description: 'Multiple login attempts possible without proper authentication controls.',
+                recommendations: [
+                    'Implement strict account lockout mechanisms',
+                    'Enforce strong password policies',
+                    'Add multi-factor authentication',
+                    'Implement CAPTCHA or advanced rate limiting',
+                    'Monitor and log all authentication attempts'
+                ]
+            },
+            'ldap_injection': {
+                title: 'INJECTION - LDAP Injection Vulnerability',
+                severityClass: 'bg-danger',
+                description: 'Potential vulnerability allowing manipulation of LDAP queries.',
+                recommendations: [
+                    'Implement strict input validation',
+                    'Use parameterized queries',
+                    'Sanitize all user inputs',
+                    'Apply least privilege principle',
+                    'Use prepared statements'
+                ]
+            },
+            'session_hijacking': {
+                title: 'AUTHENTICATION - Session Hijacking Vulnerability',
+                severityClass: 'bg-danger',
+                description: 'Potential unauthorized access through session manipulation.',
+                recommendations: [
+                    'Use secure, httpOnly cookies',
+                    'Implement proper session management',
+                    'Regenerate session IDs after login',
+                    'Use HTTPS for all sessions',
+                    'Implement IP and device binding'
+                ]
+            },
+            'xxe_injection': {
+                title: 'INJECTION - XML External Entity (XXE) Vulnerability',
+                severityClass: 'bg-danger',
+                description: 'Potential XML parsing vulnerability allowing external entity exploitation.',
+                recommendations: [
+                    'Disable XML external entity processing',
+                    'Use safe XML parsers',
+                    'Validate and sanitize XML inputs',
+                    'Use XML schema validation',
+                    'Limit XML document size'
+                ]
+            }
+        };
 
+        // Process each vulnerability type
         Object.entries(vulnerabilities).forEach(([category, issues]) => {
-            issues.forEach(issue => {
-                // Create a unique key for each vulnerability
-                const vulnerabilityKey = JSON.stringify({
-                    type: issue.type,
-                    description: issue.description,
-                    recommendation: issue.recommendation
-                });
+            if (issues.length === 0) return;
 
-                // Only add if not already present
-                if (!uniqueVulnerabilities.has(vulnerabilityKey)) {
-                    uniqueVulnerabilities.add(vulnerabilityKey);
+            // Use special handling for known categories, fallback to generic for others
+            const categoryConfig = specialHandling[category] || {
+                title: `${category.toUpperCase()} Vulnerability`,
+                severityClass: 'bg-warning',
+                description: 'Potential security vulnerability detected.',
+                recommendations: ['Conduct thorough security review']
+            };
 
-                    const vulnerabilityCard = document.createElement('div');
-                    vulnerabilityCard.className = `card vulnerability-card risk-${issue.risk.toLowerCase()}`;
-                    
-                    const riskColor = {
-                        'Critical': 'danger',
-                        'High': 'danger',
-                        'Medium': 'warning',
-                        'Low': 'info'
-                    }[issue.risk] || 'secondary';
+            // Vulnerability Card
+            const vulnerabilityCard = document.createElement('div');
+            vulnerabilityCard.classList.add('card', 'mb-3', 'vulnerability-card');
+            
+            const cardHeader = document.createElement('div');
+            cardHeader.classList.add('card-header', categoryConfig.severityClass, 'text-white');
+            cardHeader.textContent = categoryConfig.title;
+            
+            const cardBody = document.createElement('div');
+            cardBody.classList.add('card-body');
+            cardBody.innerHTML = `
+                <p><strong>Severity:</strong> <span class="badge ${categoryConfig.severityClass}">High</span></p>
+                <p><strong>Description:</strong> ${categoryConfig.description}</p>
+                <p><strong>Recommendation:</strong> 
+                    <ul>
+                        ${categoryConfig.recommendations.map(rec => `<li>${rec}</li>`).join('')}
+                    </ul>
+                </p>
+            `;
+            
+            vulnerabilityCard.appendChild(cardHeader);
+            vulnerabilityCard.appendChild(cardBody);
+            container.appendChild(vulnerabilityCard);
 
-                    vulnerabilityCard.innerHTML = `
-                        <div class="card-header bg-${riskColor} text-white">
-                            <strong>${category}</strong>
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title">${issue.type}</h5>
-                            <p class="card-text">
-                                <strong>Risk:</strong> <span class="badge bg-${riskColor}">${issue.risk}</span><br>
-                                <strong>Description:</strong> ${issue.description}<br>
-                                <strong>Recommendation:</strong> ${issue.recommendation}
-                            </p>
-                            ${issue.url ? `<p><strong>Affected URL:</strong> ${issue.url}</p>` : ''}
-                        </div>
-                    `;
-
-                    container.appendChild(vulnerabilityCard);
-                }
-            });
+            // Detailed Vulnerability Table
+            const vulnerabilityTable = document.createElement('div');
+            vulnerabilityTable.classList.add('card', 'mb-3');
+            
+            const tableHeader = document.createElement('div');
+            tableHeader.classList.add('card-header', 'bg-warning', 'text-dark');
+            tableHeader.textContent = `${category.toUpperCase()} Vulnerability Details (${issues.length} found)`;
+            
+            const tableBody = document.createElement('div');
+            tableBody.classList.add('card-body', 'p-0');
+            
+            const table = document.createElement('table');
+            table.classList.add('table', 'table-striped', 'table-bordered', 'mb-0');
+            
+            // Dynamic table headers based on available data
+            const headers = new Set();
+            issues.forEach(issue => Object.keys(issue).forEach(key => headers.add(key)));
+            
+            table.innerHTML = `
+                <thead>
+                    <tr>
+                        ${Array.from(headers).map(header => `<th>${header.replace(/_/g, ' ').toUpperCase()}</th>`).join('')}
+                    </tr>
+                </thead>
+                <tbody>
+                    ${issues.map(issue => `
+                        <tr class="table-danger">
+                            ${Array.from(headers).map(header => `
+                                <td>${issue[header] !== undefined ? issue[header] : 'N/A'}</td>
+                            `).join('')}
+                        </tr>
+                    `).join('')}
+                </tbody>
+            `;
+            
+            tableBody.appendChild(table);
+            vulnerabilityTable.appendChild(tableHeader);
+            vulnerabilityTable.appendChild(tableBody);
+            container.appendChild(vulnerabilityTable);
         });
 
-        // If no unique vulnerabilities were found
+        // If no vulnerabilities were found
         if (container.children.length === 0) {
             container.innerHTML = '<p class="text-success">No vulnerabilities detected!</p>';
         }
