@@ -51,6 +51,35 @@
     </div>
 </div>
 
+<!-- Update the IDOR section template -->
+<div class="vulnerability-section" id="idor">
+    <h2>IDOR Vulnerabilities</h2>
+    <div class="vulnerability-summary"></div>
+    <div class="vulnerability-results">
+        <template id="idor-template">
+            <div class="vulnerability-card">
+                <div class="card-header">
+                    <h4 class="vulnerability-type"></h4>
+                    <span class="severity-badge"></span>
+                </div>
+                <div class="card-content">
+                    <p><strong>Vulnerable URL:</strong> <span class="url"></span></p>
+                    <p><strong>HTTP Method:</strong> <span class="method"></span></p>
+                    <p><strong>Vulnerable Parameter:</strong> <span class="parameter"></span></p>
+                    <p><strong>Payload Used:</strong></p>
+                    <pre class="payload"></pre>
+                    <p><strong>Evidence:</strong> <span class="evidence"></span></p>
+                    <p><strong>Details:</strong> <span class="details"></span></p>
+                    <div class="recommendations">
+                        <h5>Recommendation:</h5>
+                        <pre class="recommendation"></pre>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </div>
+</div>
+
 <script>
 // ...existing code...
             // Quick scan form handler
@@ -192,12 +221,108 @@ function displayBruteForceResults(results) {
     });
 }
 
+function displayIdorResults(results) {
+    const idorSection = document.querySelector('#idor .vulnerability-results');
+    const summarySection = document.querySelector('#idor .vulnerability-summary');
+    const template = document.getElementById('idor-template');
+    
+    // Clear previous results
+    idorSection.innerHTML = '';
+    
+    if (!results || results.length === 0) {
+        summarySection.innerHTML = '<p class="text-success">No IDOR vulnerabilities detected.</p>';
+        return;
+        // Group results by resource type for better organization
+    const resourceTypes = {
+        student: { name: 'Student Records', count: 0, description: 'Academic grades and personal information' },
+        course: { name: 'Course Data', count: 0, description: 'Enrollment and course details' },
+        teacher: { name: 'Teacher Information', count: 0, description: 'Teaching schedules and assignments' },
+        library: { name: 'Library Records', count: 0, description: 'Book details and borrowing records' },
+        'research-project': { name: 'Research Projects', count: 0, description: 'Confidential research data' },
+        alumni: { name: 'Alumni Data', count: 0, description: 'Graduate information' },
+        event: { name: 'Event Data', count: 0, description: 'Event registrations' },
+        exam: { name: 'Exam Results', count: 0, description: 'Sensitive examination data' }
+    };
+
+    // Count vulnerabilities by type
+    results.forEach(result => {
+        const type = result.url.split('/')[3];
+        if (resourceTypes[type]) {
+            resourceTypes[type].count++;
+        }
+    });
+
+    // Create comprehensive summary
+    summarySection.innerHTML = `
+        <div class="alert alert-danger">
+            <h4 class="alert-heading">Critical Security Risk: Multiple IDOR Vulnerabilities Detected!</h4>
+            <p><strong>Total vulnerable endpoints found: ${results.length}</strong></p>
+            <hr>
+            <div class="vulnerability-impact">
+                <h5>Affected Systems:</h5>
+                <ul>
+                    ${Object.entries(resourceTypes)
+                        .filter(([_, data]) => data.count > 0)
+                        .map(([_, data]) => `
+                            <li><strong>${data.name}:</strong> ${data.count} vulnerable endpoints found
+                            <br><small class="text-danger">${data.description}</small></li>
+                        `).join('')}
+                </ul>
+            </div>
+            <hr>
+            <p class="mb-0">
+                <strong>Critical Warning:</strong> These vulnerabilities allow unauthorized access to sensitive data
+                through predictable resource IDs.
+            </p>
+        </div>
+    `;
+
+    // Display vulnerabilities grouped by resource type
+    Object.entries(resourceTypes).forEach(([type, data]) => {
+        const typeResults = results.filter(r => r.url.includes(`/${type}/`));
+        if (typeResults.length > 0) {
+            const typeHeader = document.createElement('div');
+            typeHeader.className = 'resource-type-header mt-4 mb-3';
+            typeHeader.innerHTML = `
+                <h4 class="text-danger">${data.name} Vulnerabilities</h4>
+                <p class="text-muted">Found ${typeResults.length} vulnerable endpoints</p>
+            `;
+            idorSection.appendChild(typeHeader);
+
+            typeResults.forEach(result => {
+                const clone = template.content.cloneNode(true);
+                
+                // Fill in basic details
+                clone.querySelector('.url').textContent = result.url;
+                clone.querySelector('.method').textContent = result.method;
+                clone.querySelector('.status-code').textContent = result.status_code;
+                clone.querySelector('.response-size').textContent = result.response_size;
+
+                // Add resource-specific analysis
+                const vulnAnalysis = clone.querySelector('.vulnerability-analysis ul');
+                vulnAnalysis.innerHTML = `
+                    <li>Direct object reference to ${type} ID ${result.url.split('/')[4]}</li>
+                    <li>No authentication check detected</li>
+                    <li>Response size: ${result.response_size} bytes indicates successful data retrieval</li>
+                    <li>Sequential ID enumeration possible</li>
+                `;
+
+                idorSection.appendChild(clone);
+            });
+        }
+    });
+}
+
 // Update existing processResults function
 function processResults(data) {
     // ...existing code...
     if (data.brute_force) {
         console.log("Processing brute_force:", data.brute_force);
         displayBruteForceResults(data.brute_force);
+    }
+    if (data.idor) {
+        console.log("Processing IDOR:", data.idor);
+        displayIdorResults(data.idor);
     }
     // ...existing code...
 }
@@ -321,6 +446,109 @@ function processResults(data) {
     background: #fff3cd;
     border: 1px solid #ffeeba;
     border-radius: 4px;
+}
+
+.endpoint-details {
+    background: #fff3cd;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    border: 1px solid #ffeeba;
+}
+
+.technical-impact {
+    background: #f8d7da;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    border: 1px solid #f5c6cb;
+}
+
+.technical-impact h5 {
+    color: #721c24;
+    margin-top: 0;
+}
+
+.technical-impact ul {
+    margin-bottom: 0;
+}
+
+/* Add these styles */
+.severity-badge.critical {
+    background: linear-gradient(45deg, #dc3545, #c82333);
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.attack-details {
+    background: #fff3cd;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    border: 1px solid #ffeeba;
+}
+
+.impact-assessment {
+    background: #f8d7da;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    border: 1px solid #f5c6cb;
+}
+
+.vulnerability-card h5 {
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    font-weight: 600;
+}
+
+.vulnerability-card ul {
+    margin-bottom: 0;
+    padding-left: 1.25rem;
+}
+
+.vulnerability-card li {
+    margin-bottom: 0.5rem;
+}
+
+.vulnerability-impact {
+    background: #f8d7da;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    margin-top: 1rem;
+}
+
+.vulnerability-impact h5 {
+    color: #721c24;
+    margin-bottom: 0.5rem;
+}
+
+.vulnerability-impact ul {
+    margin-bottom: 0;
+}
+
+.vulnerability-analysis {
+    background: #e2e3e5;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}
+
+.attack-success {
+    background: #f8d7da;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    border: 1px solid #f5c6cb;
+}
+
+.vulnerability-card pre {
+    background: #f8f9fa;
+    padding: 0.5rem;
+    border-radius: 4px;
+    margin-top: 0.25rem;
+    font-size: 0.9rem;
 }
 /* ...existing styles... */
 </style>

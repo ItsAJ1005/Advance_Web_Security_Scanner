@@ -1,9 +1,10 @@
-import os, sys, time, socket, argparse, zipfile, requests
+import os, sys, time, socket, argparse, zipfile, requests, logging
 from os import popen, system
-import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
+from typing import Dict, List, Optional
 import re
+from core.base_scanner import BaseScanner
 
 # COLOURS
 from colorama import Fore, Back, Style
@@ -38,10 +39,10 @@ def line_print(n):
 
 banner = f"""
 {red}      ________  ____  ____     _____   __
-{cyan}    /  _/ __ \/ __ \/ __ \   /  _/ | / /
+{cyan}    /  _/ __ \\/ __ \\/ __ \\   /  _/ | / /
 {yellow}  / // / / / / / / /_/ /   / //  |/ / 
 {blue}  _/ // /_/ / /_/ / _, _/  _/ // /|  /  
-{red} /___/_____/\____/_/ |_|  /___/_/ |_/ 
+{red} /___/_____/\\____/_/ |_|  /___/_/ |_/ 
 {blue}A IDOR Vulnerability Scanner Tool For Web Applications
 {red}  
 {yellow}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -225,24 +226,94 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         exit_msg()
         
-class IDORScanner:
-    def __init__(self, target_url, config):
-        self.target_url = target_url
-        self.config = config
+class IDORScanner(BaseScanner):
+    def __init__(self, target_url: str, config: Dict):
+        """Initialize IDOR Scanner"""
+        super().__init__(target_url, config)
         self.results = []
+        self.headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+            "Accept-Language": "en-US,en;q=0.5",
+            "Accept-Encoding": "gzip, deflate",
+            "Connection": "close",
+            "Upgrade-Insecure-Requests": "1"
+        }
 
-    def scan(self):
-        print(info + "Loading IDOR endpoints...")
-        endpoints = load_endpoints()
-        print(success + f"Loaded {len(endpoints)} endpoints to test")
+    def scan(self) -> Dict:
+        """
+        Scan for IDOR vulnerabilities
         
-        print(info + "Starting IDOR vulnerability scan...")
-        for endpoint in endpoints:
-            print(info2 + f"Testing endpoint: {endpoint}")
-            self.test_endpoint(self.target_url, endpoint)
+        Returns:
+            Dict: Scan results
+        """
+        try:
+            results = []
+            
+            # Test common endpoints for IDOR vulnerabilities
+            test_paths = [
+                ('student', '/student/{}/grades', 'Student grades'),
+                ('course', '/course/{}/enrollment', 'Course enrollment'),
+                ('teacher', '/teacher/{}/schedule', 'Teacher schedule'),
+                ('library', '/library/book/{}', 'Book details'),
+                ('research', '/research-project/{}', 'Research project'),
+                ('alumni', '/alumni/{}/profile', 'Alumni profile'),
+                ('event', '/event/{}/registration', 'Event registration'),
+                ('exam', '/exam/{}/results', 'Exam results')
+            ]
+
+            for resource_type, path_template, description in test_paths:
+                for i in range(1, 4):  # Test IDs 1-3
+                    path = path_template.format(i)
+                    url = self.target_url.rstrip('/') + path
+                    response = self.make_request(url)
+                    
+                    if response and response.status_code == 200:
+                        results.append({
+                            "type": "IDOR Vulnerability",
+                            "severity": "High",
+                            "url": url,
+                            "method": "GET",
+                            "parameter": "id",
+                            "payload": f"Direct access to ID: {i}",
+                            "evidence": f"Successful access with response size: {len(response.text)}",
+                            "details": f"Unauthorized access to {description} through predictable ID",
+                            "recommendation": "\n".join([
+                                "1. Implement proper authentication and authorization checks",
+                                "2. Use unpredictable IDs (UUID/GUID)",
+                                "3. Validate user permissions for each access",
+                                "4. Implement access control logging",
+                                "5. Add rate limiting to prevent enumeration"
+                            ])
+                        })
+
+            return {"idor": results}
+        except Exception as e:
+            logging.error(f"IDOR scanner error: {e}")
+            return {"idor": []}
+
+    def make_request(self, url: str, method: str = "GET", **kwargs) -> Optional[requests.Response]:
+        """
+        Make HTTP request with error handling
         
-        print(success + "Scan completed!")
-        return self.results
+        Args:
+            url (str): Target URL
+            method (str): HTTP method
+            **kwargs: Additional request parameters
+            
+        Returns:
+            Optional[requests.Response]: Response object or None on error
+        """
+        try:
+            kwargs['headers'] = kwargs.get('headers', self.headers)
+            kwargs['timeout'] = kwargs.get('timeout', 10)
+            kwargs['allow_redirects'] = kwargs.get('allow_redirects', False)
+            
+            response = requests.request(method, url, **kwargs)
+            return response
+        except Exception as e:
+            logging.error(f"Request error for {url}: {e}")
+            return None
 
     def test_endpoint(self, base_url, endpoint):
         """Test an endpoint for IDOR vulnerabilities"""
@@ -334,3 +405,89 @@ class IDORScanner:
         for pattern in sensitive_patterns:
             if re.search(pattern, response_text, re.I):
                 print(error + f"Potential sensitive data found matching pattern: {pattern}")
+
+    def execute_task(self, task: Dict) -> Optional[Dict]:
+        """
+        Execute IDOR vulnerability test for a specific task
+        
+        Args:
+            task (Dict): Task details containing URL and parameters to test
+            
+        Returns:
+            Optional[Dict]: Vulnerability details if found, None otherwise
+        """
+        try:
+            url = task.get('url')
+            method = task.get('method', 'GET')
+            
+            response = self.make_request(url, method=method)
+            if not response:
+                return None
+                
+            # Check if we can access the resource (status code 200)
+            if response.status_code == 200:
+                # Extract the resource type and ID from the URL
+                path_parts = urlparse(url).path.split('/')
+                resource_type = path_parts[1] if len(path_parts) > 1 else 'unknown'
+                resource_id = path_parts[3] if len(path_parts) > 3 else 'unknown'
+                
+                return {
+                    "type": "IDOR Vulnerability",
+                    "severity": "High",
+                    "url": url,
+                    "method": method,
+                    "parameter": "id",
+                    "payload": f"Direct access to {resource_type} ID: {resource_id}",
+                    "evidence": f"Successful access with response size: {len(response.text)} bytes",
+                    "details": f"Unauthorized access to {resource_type} resource through predictable ID",
+                    "recommendation": "\n".join([
+                        "1. Implement proper authentication and authorization checks",
+                        "2. Use unpredictable IDs (UUID/GUID)",
+                        "3. Validate user permissions for each access",
+                        "4. Implement access control logging",
+                        "5. Add rate limiting to prevent enumeration"
+                    ])
+                }
+                
+        except Exception as e:
+            logging.error(f"Error in IDOR task execution: {e}")
+            return None
+
+    def scan(self) -> Dict:
+        """Scan for IDOR vulnerabilities"""
+        try:
+            tasks = []
+            
+            # Test paths for different resources
+            test_paths = [
+                ('student', '/student/{}/grades', 'Student grades'),
+                ('course', '/course/{}/enrollment', 'Course enrollment'),
+                ('teacher', '/teacher/{}/schedule', 'Teacher schedule'),
+                ('library', '/library/book/{}', 'Book details'),
+                ('research', '/research-project/{}', 'Research project'),
+                ('alumni', '/alumni/{}/profile', 'Alumni profile'),
+                ('event', '/event/{}/registration', 'Event registration'),
+                ('exam', '/exam/{}/results', 'Exam results')
+            ]
+
+            # Create tasks for each resource and ID
+            for resource_type, path_template, description in test_paths:
+                for i in range(1, 4):  # Test IDs 1-3
+                    path = path_template.format(i)
+                    url = self.target_url.rstrip('/') + path
+                    tasks.append({
+                        'url': url,
+                        'method': 'GET',
+                        'resource_type': resource_type,
+                        'description': description
+                    })
+
+            # Run tasks concurrently
+            results = self.run_concurrent_tasks(tasks)
+            valid_results = [r for r in results if r is not None]
+
+            return {'idor': valid_results}
+
+        except Exception as e:
+            logging.error(f"IDOR scanner error: {e}")
+            return {'idor': []}
