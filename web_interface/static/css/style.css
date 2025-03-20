@@ -357,3 +357,38 @@ input[type="url"] {
 .vulnerability-item.low {
     border-left: 5px solid #28a745;
 }
+
+/* Port Scan Styling */
+.port-scan-item {
+    background-color: #f4f4f4;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    padding: 15px;
+}
+
+.port-scan-item strong {
+    color: #333;
+}
+
+.port-scan-summary {
+    background-color: #e6f2ff;
+    border: 1px solid #99ccff;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    padding: 15px;
+}
+
+.port-scan-summary h4 {
+    color: #0066cc;
+    margin-bottom: 15px;
+}
+
+.port-scan-summary .risk-breakdown ul {
+    list-style-type: disc;
+    padding-left: 20px;
+}
+
+.port-scan-summary .risk-breakdown li {
+    margin-bottom: 5px;
+}

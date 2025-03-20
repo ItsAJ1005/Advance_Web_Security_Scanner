@@ -80,6 +80,13 @@
     </div>
 </div>
 
+<!-- Add this section for the port scan results -->
+<div class="vulnerability-section" id="port-scan">
+    <h2>Port Scan Vulnerabilities</h2>
+    <div class="vulnerability-summary"></div>
+    <div class="vulnerability-results"></div>
+</div>
+
 <script>
 // ...existing code...
             // Quick scan form handler
@@ -550,5 +557,31 @@ function processResults(data) {
     margin-top: 0.25rem;
     font-size: 0.9rem;
 }
+
+.port-info {
+    background: #e9ecef;
+    padding: 1rem;
+    border-radius: 4px;
+    border-left: 4px solid #6c757d;
+}
+
+.risk-distribution {
+    padding: 0.5rem;
+    background: rgba(0,0,0,0.05);
+    border-radius: 4px;
+}
+
+.risk-distribution p {
+    margin-bottom: 0.5rem;
+}
+
+.evidence-section pre {
+    background: #f8f9fa;
+    padding: 0.75rem;
+    border-radius: 4px;
+    border: 1px solid #dee2e6;
+    font-size: 0.9rem;
+}
+
 /* ...existing styles... */
 </style>

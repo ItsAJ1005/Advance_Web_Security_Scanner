@@ -7,161 +7,168 @@ from core.base_scanner import BaseScanner
 
 class PortScanner(BaseScanner):
     def __init__(self, target_url: str, config: Dict):
-        """
-        Initialize Port Scanner
-        
-        Args:
-            target_url (str): Target URL to scan
-            config (Dict): Configuration dictionary
-        """
         super().__init__(target_url, config)
         
-        # Common ports to scan
-        self.common_ports = [
-            # Web ports
-            80, 443, 8080, 8443, 
+        # Expanded port list with descriptions
+        self.port_details = {
+            # Web Services
+            80: {'service': 'HTTP', 'description': 'Unencrypted web traffic', 'risk': 'Medium'},
+            443: {'service': 'HTTPS', 'description': 'Encrypted web traffic', 'risk': 'Low'},
+            8080: {'service': 'HTTP-ALT', 'description': 'Alternative HTTP port', 'risk': 'Medium'},
+            8443: {'service': 'HTTPS-ALT', 'description': 'Alternative HTTPS port', 'risk': 'Low'},
             
-            # Database ports
-            3306, 5432, 27017, 1433, 
+            # Database Ports
+            3306: {'service': 'MySQL', 'description': 'MySQL Database', 'risk': 'High'},
+            5432: {'service': 'PostgreSQL', 'description': 'PostgreSQL Database', 'risk': 'High'},
+            27017: {'service': 'MongoDB', 'description': 'MongoDB Database', 'risk': 'High'},
+            1433: {'service': 'MSSQL', 'description': 'Microsoft SQL Server', 'risk': 'High'},
             
-            # Service ports
-            22, 21, 25, 53, 
+            # Administrative Ports
+            22: {'service': 'SSH', 'description': 'Secure Shell', 'risk': 'Medium'},
+            21: {'service': 'FTP', 'description': 'File Transfer Protocol', 'risk': 'High'},
+            23: {'service': 'Telnet', 'description': 'Telnet Remote Access', 'risk': 'Critical'},
+            3389: {'service': 'RDP', 'description': 'Remote Desktop Protocol', 'risk': 'High'},
             
-            # Application ports
-            3000, 5000, 7000, 8000, 
+            # Service Ports
+            25: {'service': 'SMTP', 'description': 'Mail Server', 'risk': 'Medium'},
+            53: {'service': 'DNS', 'description': 'Domain Name System', 'risk': 'Medium'},
+            161: {'service': 'SNMP', 'description': 'Network Management', 'risk': 'High'},
+            445: {'service': 'SMB', 'description': 'File Sharing', 'risk': 'High'},
             
-            # Custom ports
-            config.get('custom_ports', [])
+            # Application Ports
+            3000: {'service': 'Node.js', 'description': 'Node.js Applications', 'risk': 'Medium'},
+            5000: {'service': 'Flask/Python', 'description': 'Python Web Applications', 'risk': 'Medium'},
+            7000: {'service': 'Custom Apps', 'description': 'Custom Applications', 'risk': 'Medium'},
+            8000: {'service': 'Dev Server', 'description': 'Development Server', 'risk': 'Medium'}
+        }
+        
+        self.common_ports = list(self.port_details.keys()) + config.get('custom_ports', [])
+        self.timeout = config.get('timeout', 1)
+        self.max_workers = config.get('max_workers', 50)
+        self.results = []
+
+    def execute_task(self, task: Dict) -> Optional[Dict]:
+        """Execute port scanning task"""
+        try:
+            ip = task['ip']
+            port = task['port']
+            port_info = self.port_details.get(port, {
+                'service': 'Unknown',
+                'description': 'Unknown service',
+                'risk': 'Unknown'
+            })
+
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.settimeout(self.timeout)
+            result = sock.connect_ex((ip, port))
+            sock.close()
+
+            if result == 0:
+                return {
+                    'type': 'Open Port',
+                    'severity': port_info['risk'],
+                    'port': port,
+                    'service': port_info['service'],
+                    'description': port_info['description'],
+                    'details': f"Port {port} ({port_info['service']}) is open",
+                    'recommendation': self.get_port_recommendations(port, port_info['service']),
+                    'evidence': f"Successfully connected to port {port}"
+                }
+            return None
+
+        except Exception as e:
+            logging.error(f"Error scanning port {port}: {e}")
+            return None
+
+    def get_port_recommendations(self, port: int, service: str) -> str:
+        """Get security recommendations based on port and service"""
+        recommendations = {
+            'HTTP': [
+                "1. Enable HTTPS and redirect all HTTP traffic",
+                "2. Implement security headers",
+                "3. Use WAF protection"
+            ],
+            'HTTPS': [
+                "1. Keep SSL/TLS certificates up to date",
+                "2. Use strong cipher suites",
+                "3. Enable HSTS"
+            ],
+            'MySQL': [
+                "1. Restrict remote access",
+                "2. Use strong authentication",
+                "3. Keep database updated"
+            ],
+            'SSH': [
+                "1. Use key-based authentication",
+                "2. Disable root login",
+                "3. Change default port"
+            ],
+            'FTP': [
+                "1. Use SFTP instead",
+                "2. Restrict anonymous access",
+                "3. Enable encryption"
+            ]
+        }
+        
+        default_recs = [
+            "1. Restrict access if not needed",
+            "2. Use firewall rules",
+            "3. Monitor for suspicious activity"
         ]
         
-        # Timeout for port connection
-        self.timeout = config.get('timeout', 1)
-        
-        # Maximum concurrent port scans
-        self.max_workers = config.get('max_workers', 50)
-    
+        return "\n".join(recommendations.get(service, default_recs))
+
     def scan(self) -> Dict:
-        """
-        Scan ports for the target URL
-        
-        Returns:
-            Dict: Scan results with open ports
-        """
+        """Scan ports and return detailed results"""
         try:
-            # Extract hostname from URL
             parsed_url = urlparse(self.target_url)
             hostname = parsed_url.hostname
             
             if not hostname:
-                logging.error("Invalid target URL")
                 return {'port_scan': []}
             
-            # Resolve IP
             try:
                 ip = socket.gethostbyname(hostname)
             except socket.gaierror:
                 logging.error(f"Could not resolve hostname: {hostname}")
                 return {'port_scan': []}
             
-            # Scan ports concurrently
-            open_ports = self.scan_ports(ip)
+            # Create tasks for concurrent scanning
+            tasks = [
+                {'ip': ip, 'port': port}
+                for port in self.common_ports
+            ]
             
-            return {
-                'port_scan': open_ports,
-                'target_ip': ip,
-                'hostname': hostname
+            # Run concurrent scans
+            scan_results = self.run_concurrent_tasks(tasks)
+            valid_results = [r for r in scan_results if r]
+            
+            # Group results by risk level
+            grouped_results = {
+                'critical': [],
+                'high': [],
+                'medium': [],
+                'low': []
             }
-        
+            
+            for result in valid_results:
+                risk_level = result['severity'].lower()
+                if risk_level in grouped_results:
+                    grouped_results[risk_level].append(result)
+            
+            summary = {
+                'target': hostname,
+                'ip': ip,
+                'total_open_ports': len(valid_results),
+                'risk_summary': {
+                    level: len(results)
+                    for level, results in grouped_results.items()
+                },
+                'findings': valid_results
+            }
+            
+            return {'port_scan': summary}
+
         except Exception as e:
             logging.error(f"Port scanning error: {e}")
-            return {'port_scan': [], 'error': str(e)}
-    
-    def scan_ports(self, ip: str) -> List[Dict]:
-        """
-        Scan ports concurrently
-        
-        Args:
-            ip (str): IP address to scan
-        
-        Returns:
-            List[Dict]: List of open ports with details
-        """
-        open_ports = []
-        
-        with concurrent.futures.ThreadPoolExecutor(max_workers=self.max_workers) as executor:
-            # Create futures for port scanning
-            futures = {
-                executor.submit(self.check_port, ip, port): port 
-                for port in self.common_ports
-            }
-            
-            for future in concurrent.futures.as_completed(futures):
-                port = futures[future]
-                try:
-                    result = future.result()
-                    if result:
-                        open_ports.append(result)
-                except Exception as e:
-                    logging.error(f"Error scanning port {port}: {e}")
-        
-        return open_ports
-    
-    def check_port(self, ip: str, port: int) -> Optional[Dict]:
-        """
-        Check if a specific port is open
-        
-        Args:
-            ip (str): IP address
-            port (int): Port number
-        
-        Returns:
-            Optional[Dict]: Port details if open, else None
-        """
-        try:
-            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            sock.settimeout(self.timeout)
-            
-            result = sock.connect_ex((ip, port))
-            sock.close()
-            
-            if result == 0:
-                # Attempt to determine service
-                service = self.get_service_name(port)
-                
-                return {
-                    'port': port,
-                    'status': 'open',
-                    'service': service
-                }
-            
-            return None
-        
-        except Exception as e:
-            logging.error(f"Port connection error on {port}: {e}")
-            return None
-    
-    def get_service_name(self, port: int) -> str:
-        """
-        Get service name for a given port
-        
-        Args:
-            port (int): Port number
-        
-        Returns:
-            str: Service name
-        """
-        services = {
-            80: 'HTTP',
-            443: 'HTTPS',
-            22: 'SSH',
-            21: 'FTP',
-            25: 'SMTP',
-            3306: 'MySQL',
-            5432: 'PostgreSQL',
-            8080: 'HTTP Proxy',
-            3000: 'Node.js',
-            5000: 'Flask/Python',
-            27017: 'MongoDB'
-        }
-        
-        return services.get(port, 'Unknown')
+            return {'port_scan': []}

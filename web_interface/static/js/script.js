@@ -334,6 +334,21 @@ document.addEventListener('DOMContentLoaded', function() {
         Object.entries(results).forEach(([scanType, findings]) => {
             console.log(`Processing ${scanType}:`, JSON.stringify(findings, null, 2));
             
+            // Special handling for port_scan
+            if (scanType === 'port_scan' && findings.findings) {
+                findings = findings.findings.map(finding => ({
+                    type: 'Open Port',
+                    severity: finding.severity,
+                    url: `${findings.target}:${finding.port}`,
+                    method: 'N/A',
+                    parameter: finding.service,
+                    payload: 'Port Scanning',
+                    evidence: finding.details,
+                    details: finding.description,
+                    recommendation: finding.recommendation
+                }));
+            }
+            
             // Ensure findings is an array
             const vulnerabilityList = Array.isArray(findings) ? findings : 
                 (findings.vulnerabilities || [findings]);
@@ -481,19 +496,28 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         // Special handling for port scan results
-        if (vulnerabilities.port_scan && vulnerabilities.port_scan.length > 0) {
-            const portScanDetails = vulnerabilities.port_scan.map(port => `
-                <div class="vulnerability-item">
-                    <strong>Port:</strong> ${port.port} 
-                    <strong>Status:</strong> ${port.status} 
-                    <strong>Service:</strong> ${port.service}
-                </div>
-            `).join('');
+        if (vulnerabilities.port_scan && vulnerabilities.port_scan.findings && vulnerabilities.port_scan.findings.length > 0) {
+            // Determine overall severity
+            const riskSummary = vulnerabilities.port_scan.risk_summary;
+            const overallSeverity = riskSummary.high > 0 ? 'High' : 
+                (riskSummary.medium > 0 ? 'Medium' : 'Low');
 
+            // Create a vulnerability object in the format expected by the display logic
             vulnerabilities.port_scan = [{
-                title: 'NETWORK - Open Ports Discovered',
-                description: `Found ${vulnerabilities.port_scan.length} open ports on the target:`,
-                details: portScanDetails
+                title: 'NETWORK - Port Exposure Vulnerability',
+                description: `Discovered ${vulnerabilities.port_scan.total_open_ports} potentially exposed network services`,
+                url: vulnerabilities.port_scan.target,
+                method: 'N/A',
+                parameter: 'Network Ports',
+                payload: 'Port Scanning',
+                severity: overallSeverity,
+                details: vulnerabilities.port_scan.findings.map(finding => 
+                    `Port ${finding.port}: ${finding.service} - ${finding.details}`
+                ).join('\n'),
+                evidence: `Total Open Ports: ${vulnerabilities.port_scan.total_open_ports}\n` +
+                    `High Risk Ports: ${riskSummary.high}\n` +
+                    `Medium Risk Ports: ${riskSummary.medium}`,
+                recommendation: 'Implement network security measures to restrict unnecessary open ports'
             }];
         }
 
