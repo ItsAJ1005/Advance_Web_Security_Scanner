@@ -342,7 +342,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     url: `${findings.target}:${finding.port}`,
                     method: 'N/A',
                     parameter: finding.service,
-                    payload: 'Port Scanning',
+                    payload: "Port Scanning",
                     evidence: finding.details,
                     details: finding.description,
                     recommendation: finding.recommendation
@@ -575,7 +575,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                         vuln.severity === 'Medium' ? 'table-warning' : 
                                         'table-info'
                                     }">
-                                        <td>${vuln.vulnerability_type || 'Unknown'}</td>
+                                        <td>${vuln.type || 'Unknown'}</td>
                                         <td>${vuln.vulnerable_url || 'N/A'}</td>
                                         <td>${vuln.severity || 'Low'}</td>
                                         <td>${vuln.details || 'No specific details'}</td>
@@ -584,6 +584,15 @@ document.addEventListener('DOMContentLoaded', function() {
                                 `).join('')}
                             </tbody>
                         </table>
+                        <div class="card-footer">
+                            <p class="text-muted">
+                                <strong>Total Vulnerabilities:</strong> ${vulnerabilities.length} 
+                                | <strong>Highest Severity:</strong> ${
+                                    vulnerabilities.some(v => v.severity === 'High') ? 'High' : 
+                                    vulnerabilities.some(v => v.severity === 'Medium') ? 'Medium' : 'Low'
+                                }
+                            </p>
+                        </div>
                     </div>
                 `;
                 resultsContent.appendChild(dirFuzzingResults);

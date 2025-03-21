@@ -104,27 +104,28 @@ class DirectoryBruteForcer:
             # Detailed vulnerability assessment
             vulnerability_details = {
                 'type': 'Directory Exposure',
+                'url': url,
                 'payload': url,
-                'http_method': 'GET',
-                'vulnerable_parameter': path,
+                'parameter': path,
                 'payload_used': path,
+                'method': 'GET',
                 'status_code': str(response.status_code),
-                'severity': 'Medium',
                 'evidence': f"Accessible directory: {path}",
                 'details': 'Directory is publicly accessible',
-                'recommendation': 'Restrict directory access, implement proper authentication'
+                'recommendation': 'Restrict directory access, implement proper authentication',
+                'severity': 'Medium'
             }
             
             # Additional checks for specific high-risk directories
             high_risk_dirs = ['admin', 'login', 'upload', 'config', '.env', '.git', 'backup']
             if any(high_risk_dir in path.lower() for high_risk_dir in high_risk_dirs):
-                vulnerability_details['vulnerability_type'] = 'Sensitive Directory Exposure'
+                vulnerability_details['type'] = 'Sensitive Directory Exposure'
                 vulnerability_details['severity'] = 'High'
                 vulnerability_details['recommendation'] = 'Immediately restrict access to sensitive directories'
             
             # Check for directory listing
             if '<title>Index of' in response.text or 'Directory listing' in response.text:
-                vulnerability_details['vulnerability_type'] = 'Directory Listing Enabled'
+                vulnerability_details['type'] = 'Directory Listing Enabled'
                 vulnerability_details['severity'] = 'High'
                 vulnerability_details['recommendation'] = 'Disable directory listing in web server configuration'
             
