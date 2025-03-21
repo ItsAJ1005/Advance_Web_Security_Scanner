@@ -100,9 +100,9 @@ class SessionHijackingScanner(BaseScanner):
                             'severity': test['severity'],
                             'details': result,
                             'recommendation': self.get_recommendations(test['name']),
-                            'http_method': test['http_method'],
-                            'vulnerable_parameter': test['vulnerable_parameter'],
-                            'payload': None,  # No specific payload for session tests
+                            'method': test['http_method'],
+                            'parameter': test['vulnerable_parameter'],
+                            'payload': "None : No specific payload for session tests",  # No specific payload for session tests
                             'evidence': self.generate_evidence(result)
                         }
                         vulnerabilities.append(vulnerability)
