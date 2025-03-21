@@ -544,94 +544,106 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    function displayVulnerabilities(vulnerabilities) {
-        const container = document.getElementById('vulnerabilities-container');
-        container.innerHTML = ''; // Clear previous results
-
-        // If no vulnerabilities, show a message
-        if (Object.keys(vulnerabilities).length === 0) {
-            container.innerHTML = `
-                <div class="no-vulnerabilities">
-                    <p>No vulnerabilities were detected during the scan.</p>
-                </div>
-            `;
-            return;
-        }
-
-        // Create dropdown for each attack type
-        Object.entries(vulnerabilities).forEach(([attackType, results]) => {
-            // Skip empty results
-            if (!results || results.length === 0) return;
-
-            // Create attack dropdown
-            const attackDropdown = document.createElement('div');
-            attackDropdown.classList.add('attack-dropdown');
-
-            // Dropdown header
-            const dropdownHeader = document.createElement('div');
-            dropdownHeader.classList.add('attack-dropdown-header');
+    function displayVulnerabilities(results) {
+        const resultsContent = document.getElementById('resultsContent');
+        
+        Object.keys(results).forEach(attackType => {
+            const vulnerabilities = results[attackType];
             
-            const attackTitle = {
-                'sql_injection': 'SQL Injection',
-                'xss': 'Cross-Site Scripting (XSS)',
-                'ldap_injection': 'LDAP Injection',
-                'brute_force': 'Brute Force',
-                'session_hijacking': 'Session Hijacking',
-                'ssrf': 'Server-Side Request Forgery (SSRF)',
-                'api_security': 'API Security',
-                'owasp': 'OWASP Top 10',
-                'command_injection': 'Command Injection',
-                'xxe_injection': 'XXE Injection',
-                'port_scan': 'Port Scan',
-                'idor': 'Insecure Direct Object Reference (IDOR)'
-            }[attackType] || attackType;
-
-            dropdownHeader.innerHTML = `
-                <h3>${attackTitle}</h3>
-                <span class="badge">${results.length}</span>
-                <i class="toggle-icon">▼</i>
-            `;
-
-            // Dropdown content
-            const dropdownContent = document.createElement('div');
-            dropdownContent.classList.add('attack-dropdown-content');
-
-            // Populate vulnerabilities
-            results.forEach((vuln, index) => {
-                const vulnerabilityItem = document.createElement('div');
-                vulnerabilityItem.classList.add('vulnerability-item');
-                
-                // Create detailed vulnerability view
-                vulnerabilityItem.innerHTML = `
-                    <div class="vulnerability-details">
-                        <label>Type:</label> ${vuln.type || 'Unknown'}
-                        <label>Severity:</label> ${vuln.severity || 'Not Specified'}
-                        <label>URL:</label> ${vuln.url || 'N/A'}
-                        <label>Method:</label> ${vuln.method || 'N/A'}
-                        <label>Parameter:</label> ${vuln.parameter || 'N/A'}
-                        <label>Payload:</label> ${vuln.payload || 'N/A'}
-                        <label>Evidence:</label> ${vuln.evidence || 'No additional evidence'}
-                        <label>Details:</label> ${vuln.details || 'No details available'}
-                        <label>Recommendation:</label>
-                        <pre>${vuln.recommendation || 'No recommendations'}</pre>
+            if (attackType === 'dir_fuzzing') {
+                const dirFuzzingResults = document.createElement('div');
+                dirFuzzingResults.classList.add('card', 'mb-3');
+                dirFuzzingResults.innerHTML = `
+                    <div class="card-header bg-warning text-white">
+                        <strong>Directory Fuzzing Vulnerabilities</strong>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Vulnerability Type</th>
+                                    <th>URL</th>
+                                    <th>Severity</th>
+                                    <th>Details</th>
+                                    <th>Recommendation</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dirFuzzingVulnerabilities">
+                                ${vulnerabilities.map(vuln => `
+                                    <tr class="${
+                                        vuln.severity === 'High' ? 'table-danger' : 
+                                        vuln.severity === 'Medium' ? 'table-warning' : 
+                                        'table-info'
+                                    }">
+                                        <td>${vuln.vulnerability_type || 'Unknown'}</td>
+                                        <td>${vuln.vulnerable_url || 'N/A'}</td>
+                                        <td>${vuln.severity || 'Low'}</td>
+                                        <td>${vuln.details || 'No specific details'}</td>
+                                        <td>${vuln.recommendation || 'Review security configuration'}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
                     </div>
                 `;
+                resultsContent.appendChild(dirFuzzingResults);
+            } else {
+                // Existing code for other attack types
+                const vulnerabilityList = Array.isArray(vulnerabilities) ? vulnerabilities : 
+                    (vulnerabilities.vulnerabilities || [vulnerabilities]);
+                
+                if (vulnerabilityList.length > 0) {
+                    let html = `
+                        <div class="vulnerability-group mb-4">
+                            <h4 class="alert alert-secondary">${formatScanType(attackType)}</h4>
+                            <div class="list-group">
+                    `;
+                    
+                    vulnerabilityList.forEach(finding => {
+                        // Ensure all expected fields exist
+                        const safeFind = {
+                            type: finding.type || finding.vulnerability || 'Vulnerability Found',
+                            severity: finding.severity || 'Unknown',
+                            url: finding.url || 'N/A',
+                            method: finding.method || 'N/A',
+                            parameter: finding.parameter || 'N/A',
+                            payload: finding.payload || 'No payload details',
+                            evidence: finding.evidence || 'No additional evidence',
+                            details: finding.details || 'No specific details',
+                            recommendation: finding.recommendation || 'Implement proper security measures'
+                        };
 
-                dropdownContent.appendChild(vulnerabilityItem);
-            });
-
-            // Assemble dropdown
-            attackDropdown.appendChild(dropdownHeader);
-            attackDropdown.appendChild(dropdownContent);
-
-            // Add click event to toggle dropdown
-            dropdownHeader.addEventListener('click', () => {
-                dropdownHeader.classList.toggle('open');
-                dropdownContent.classList.toggle('active');
-            });
-
-            // Add to main container
-            container.appendChild(attackDropdown);
+                        const severityColor = getSeverityColor(safeFind.severity);
+                        
+                        html += `
+                            <div class="list-group-item">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-1">${safeFind.type}</h5>
+                                    <span class="badge bg-${severityColor}">${safeFind.severity}</span>
+                                </div>
+                                <div class="vulnerability-details">
+                                    <p class="mb-1"><strong>Vulnerable URL:</strong> ${safeFind.url}</p>
+                                    <p class="mb-1"><strong>HTTP Method:</strong> ${safeFind.method}</p>
+                                    <p class="mb-1"><strong>Vulnerable Parameter:</strong> ${safeFind.parameter}</p>
+                                    <div class="payload-section">
+                                        <strong>Payload Used:</strong>
+                                        <pre class="bg-light p-2 rounded"><code>${escapeHtml(safeFind.payload)}</code></pre>
+                                    </div>
+                                    <p class="mb-1"><strong>Evidence:</strong> ${safeFind.evidence}</p>
+                                    <p class="mb-1"><strong>Details:</strong> ${safeFind.details}</p>
+                                    <div class="mt-2 recommendation-section">
+                                        <strong>Recommendation:</strong>
+                                        <p class="mb-0">${safeFind.recommendation}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    html += '</div></div>';
+                    resultsContent.innerHTML += html;
+                }
+            }
         });
     }
 

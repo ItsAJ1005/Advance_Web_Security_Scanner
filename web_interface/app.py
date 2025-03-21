@@ -38,6 +38,7 @@ from attacks.owasp.zap_scanner import run_zap_scan
 from attacks.injection.command_injection import CommandInjectionScanner
 from attacks.network.port_scanner import PortScanner
 from attacks.injection.ldap_injection import LDAPScanner  # Add this import
+from attacks.directory_fuzzing.directory_brute_forcer import DirectoryBruteForcer  # Fix import
 
 app = Flask(__name__)
 
@@ -83,6 +84,7 @@ class ScanTask:
                 'idor': ('IDOR', IDORScanner),
                 'ldap_injection': ('LDAP Injection', LDAPScanner),  # Corrected LDAP scanner key
                 'xxe': ('XXE Injection', XXEInjectionScanner),  # Make sure this exact key is used
+                'dir_fuzzing': ('Directory Fuzzing', DirectoryBruteForcer),  # Add directory fuzzing
             }
 
             total = len(self.selected_attacks)
