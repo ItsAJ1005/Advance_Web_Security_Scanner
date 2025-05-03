@@ -2,7 +2,7 @@
 
 Hello and welcome to the Advanced Web Vulnerability Scanner project!
 
-This description is intended to provide a detailed overview of our project’s architecture, core functionalities, and contribution guidelines. Whether you’re planning to fix a bug, add a new feature, or simply learn from our codebase, this document will help you understand how the project is organized and how everything fits together.
+This description is intended to provide a detailed overview of our project's architecture, core functionalities, and contribution guidelines. Whether you're planning to fix a bug, add a new feature, or simply learn from our codebase, this document will help you understand how the project is organized and how everything fits together.
 
 ---
 
@@ -14,56 +14,97 @@ The Advanced Web Vulnerability Scanner is a modular, Python-based tool designed 
 
 ## 2. File Structure Breakdown
 
-```
-Adv web-vulnerability-scanner/
+```plaintext
+Advance_Web_Security_Scanner/
+├── .git/
+├── .gitignore
+├── LICENSE
+├── .venv/
+├── zap/
+│   ├── xml/
+│   ├── plugin/
+│   ├── license/
+│   ├── lib/
+│   ├── lang/
+│   ├── db/
+│   ├── zap-2.16.0.jar
+│   ├── zap.bat
+│   ├── zap.ico
+│   ├── zap.sh
+│   └── README
+├── tools/
+├── templates/
+├── static/
 ├── core/
+│   ├── __pycache__/
 │   ├── __init__.py
 │   ├── base_scanner.py
-│   └── utils.py
+│   ├── defense_mechanism.py
+│   ├── patterns.py
+│   ├── request_utils.py
+│   ├── scanner_imports.py
+│   ├── scan_orchestrator.py
+│   ├── utils.py
+│   ├── vulnerability_detector.py
+│   └── vulnerability_verifier.py
 ├── attacks/
+│   ├── __pycache__/
 │   ├── __init__.py
-│   ├── injection/
-│   │   ├── __init__.py
-│   │   ├── sql_injection.py
-│   │   ├── nosql_injection.py
-│   │   ├── ldap_injection.py
-│   │   └── xxe_injection.py
-│   ├── xss/
-│   │   ├── __init__.py
-│   │   ├── stored_xss.py
-│   │   ├── reflected_xss.py
-│   │   └── dom_xss.py
-│   ├── authentication/
-│   │   ├── __init__.py
-│   │   ├── brute_force.py
-│   │   ├── session_hijacking.py
-│   │   └── password_reset.py
 │   ├── access_control/
+│   │   ├── __pycache__/
+│   │   └── idor.py
+│   ├── advanced/
+│   │   ├── __pycache__/
+│   │   ├── api_scanner.py
+│   │   └── ssrf.py
+│   ├── authentication/
+│   │   ├── __pycache__/
+│   │   ├── brute_force.py
+│   │   └── session_hijacking.py
+│   ├── directory_fuzzing/
+│   │   ├── __pycache__/
 │   │   ├── __init__.py
-│   │   ├── idor.py
-│   │   └── privilege_escalation.py
-│   ├── file_handling/
-│   │   ├── __init__.py
-│   │   ├── file_upload.py
-│   │   └── file_inclusion.py
-│   └── advanced/
-│       ├── __init__.py
-│       ├── ssrf.py
-│       ├── websocket.py
-│       └── api_abuse.py
+│   │   └── directory_brute_forcer.py
+│   ├── injection/
+│   │   ├── __pycache__/
+│   │   ├── ldap_injection.py
+│   │   ├── xxe_injection.py
+│   │   ├── command_injection.py
+│   │   └── sql_injection.py
+│   ├── network/
+│   │   ├── __pycache__/
+│   │   └── port_scanner.py
+│   ├── owasp/
+│   │   ├── owasp_scanner.py
+│   │   └── zap_scanner.py
+│   └── xss/
+│       ├── __pycache__/
+│       └── xss_scanner.py
+├── config/
+│   └── scanner_config.json
+├── web_interface/
+│   ├── __pycache__/
+│   ├── app.py
+│   ├── static/
+│   └── templates/
+├── Website/
+│   ├── test_app.py
+│   └── test.db
+├── logs/
+│   └── brute_force_results_20250321_211947.json
 ├── payloads/
 │   ├── sql_injection.txt
 │   ├── xss.txt
 │   └── command_injection.txt
 ├── results/
 │   └── .gitkeep
-├── config/
-│   └── scanner_config.json
-├── Website/
-│   ├── test_app.py
-│   └── test.db
-├── requirements.txt
+├── scanner_debug.log
 ├── scanner.py
+├── app.py
+├── run.py
+├── setup.py
+├── requirements.txt
+├── test_zap_scanner.py
 └── README.md
 ```
 
@@ -143,7 +184,7 @@ Adv web-vulnerability-scanner/
   - **Configuration File (`config/scanner_config.json`)**:  
     Sets parameters such as maximum concurrent threads, delay between requests, timeout settings, and user agent.
   - **Concurrency Handling:**  
-    The project uses Python’s `ThreadPoolExecutor` in `scanner.py` to run multiple scanners concurrently, improving performance on larger scans.
+    The project uses Python's `ThreadPoolExecutor` in `scanner.py` to run multiple scanners concurrently, improving performance on larger scans.
 
 ---
 
